@@ -9,7 +9,6 @@ import 'auth_screen.dart';
 bool _checkTagValidity(DateTime startDate, DateTime lastDate) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
-  //TODO Fix seconds and minutes and etc
   return startDate.isBefore(today) && lastDate.isAfter(today) ||
       startDate.isBefore(today) && lastDate.isAtSameMomentAs(today) ||
       startDate.isAtSameMomentAs(today) && lastDate.isAfter(today) ||
@@ -23,14 +22,9 @@ class ScanScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // try {
     ref.read(nfcProvider.notifier).readTag().catchError((e) {
       print(e.toString());
     });
-    /* } catch (e) {
-      //TODO Display warning
-      print(e.toString());
-    } */
     final eventTag = ref.watch(nfcProvider)?.tag;
     final nfcError = ref.watch(nfcProvider)?.error;
 
@@ -110,7 +104,7 @@ class ScanScreen extends ConsumerWidget {
                 print("TAP");
                 ref.read(nfcProvider.notifier).reset();
               }),
-              child: Center(child: Text('$nfcError')),
+              child: Center(child: Text(nfcError)),
             ),
         ],
       ),
