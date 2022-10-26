@@ -98,7 +98,15 @@ class AuthScreen extends StatelessWidget {
                               Column(
                                 children: const [
                                   Text(
-                                    '- APP 4 -\nControlo de Acessos',
+                                    'APP 4',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 29),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
+                                    'CONTROLO DE ACESSOS',
                                     style: TextStyle(
                                         color: accentColor,
                                         fontWeight: FontWeight.bold,
