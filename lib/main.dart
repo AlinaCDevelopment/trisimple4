@@ -8,6 +8,7 @@ import 'package:upgrader/upgrader.dart';
 import 'constants/colors.dart';
 import 'screens/auth_screen.dart';
 
+//TODO Set at start the screen size instead of using media queries everywhere
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }

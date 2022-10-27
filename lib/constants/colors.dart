@@ -26,6 +26,7 @@ const gradientColors = <Color>[
   Color(0xFF9672FB),
   Color(0xFFD772FB),
 ];
+
 const secondColor = Color(0xFF8780BA);
 
 const hintColor = secondColor;
