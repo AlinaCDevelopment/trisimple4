@@ -93,9 +93,9 @@ class ScanScreen extends ConsumerWidget {
           if (eventTag != null)
             GestureDetector(
               onTap: (() {
-                /*  print("TAP");
+                print("TAP");
                 print("DATA_INICIOOOOO" + eventTag.startDate.toString());
-                print("DATA_FIMMMMMMMM" + eventTag.endDate.toString()); */
+                print("DATA_FIMMMMMMMM" + eventTag.endDate.toString());
                 ref.read(nfcProvider.notifier).reset();
               }),
               child: ValidationMessage(eventTag: eventTag!),
