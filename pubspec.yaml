@@ -69,8 +69,14 @@ flutter:
 
   assets:
     - assets/images/logo.png
+    - assets/images/menu.png
+    - assets/images/valid.png
+    - assets/images/invalid.png
     - assets/images/dropdown.png
     - assets/images/scan.png
+    - assets/images/en.png
+    - assets/images/pt.png
+    - assets/images/overlayCircles.png
 
   fonts:
     - family: Ubuntu

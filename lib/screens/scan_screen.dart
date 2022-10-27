@@ -1,5 +1,6 @@
 import 'package:app_4/models/event_tag.dart';
 import 'package:app_4/services/nfc_service.dart';
+import 'package:app_4/widgets/appDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,6 +21,7 @@ class ScanScreen extends ConsumerWidget {
   static const routeName = 'scan';
   final String title = 'Festival Mais Solidário';
   final String deviceModel = 'L2 #14';
+  final bool isPT = true;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,40 +32,68 @@ class ScanScreen extends ConsumerWidget {
     final nfcError = ref.watch(nfcProvider)?.error;
 
     return Scaffold(
-      drawer: const Drawer(),
+      drawer: AppDrawer(),
       appBar: AppBar(
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text('APP 4'),
-              Text('CONTROLO DE ACESSOS'),
-            ],
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, AuthScreen.routeName);
-              },
-            )
-          ]),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'APP 4',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'CONTROLO DE ACESSOS',
+                  style: TextStyle(
+                      fontSize: 12, color: Color.fromRGBO(150, 115, 250, 1)),
+                ),
+              ],
+            ),
+          ],
+        ),
+        titleSpacing: 0,
+        actions: [
+          IconButton(
+            icon: Padding(
+              padding:
+                  const EdgeInsets.only(left: 3.0, right: 5, top: 1, bottom: 1),
+              child: Image.asset(
+                  isPT ? 'assets/images/pt.png' : 'assets/images/en.png'),
+            ),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, AuthScreen.routeName);
+            },
+          )
+        ],
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset('assets/images/menu.png'),
+            ),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          );
+        }),
+      ),
       body: Container(
         decoration: const BoxDecoration(gradient: backGradient),
         child: Stack(
           children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 50.0, vertical: 30.0),
-                child: MultiCircleContainer(
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 30.0),
                   child: Column(
                     children: [
                       Text(
                         title,
                         style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 27,
+                            fontSize: 25,
                             fontWeight: FontWeight.normal),
                         textAlign: TextAlign.center,
                       ),
@@ -72,33 +102,77 @@ class ScanScreen extends ConsumerWidget {
                         style: const TextStyle(
                             color: backColor,
                             fontWeight: FontWeight.bold,
-                            fontSize: 27),
+                            fontSize: 25),
                         textAlign: TextAlign.center,
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Pode aproximar.',
-                    style: TextStyle(fontSize: 31),
-                    textAlign: TextAlign.center,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50.0, vertical: 30.0),
+                    child: Stack(children: [
+                      Center(
+                          child:
+                              Image.asset('assets/images/overlayCircles.png')),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(49.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Image.asset('assets/images/scan.png'),
+                              const Text(
+                                'Pode aproximar.',
+                                style:
+                                    TextStyle(fontSize: 22, color: backColor),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]),
                   ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Image.asset('assets/images/scan.png'),
-                  SizedBox(
-                    height: 50,
-                  )
-                ],
-              ),
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          right: 60.0, left: 60.0, bottom: 10),
+                      child: SearchButton(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 70.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Contato responsável técnico\n do evento para pedido de suporte:',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: backColor, fontSize: 13),
+                          ),
+                          Text(
+                            '+351 962 260 499',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 150,
+                )
+              ],
             ),
             if (eventTag != null)
               GestureDetector(
@@ -211,7 +285,14 @@ class ValidationMessage extends StatelessWidget {
         _checkTagValidity(eventTag.startDate, eventTag.endDate);
     final durationDays = eventTag.endDate.day - eventTag.startDate.day + 1;
     final validationText = availability ? 'VÁLIDO' : 'INVÁLIDO';
-    final durationText = 'Bilhate Passe $durationDays Dias';
+    String durationText;
+
+    if (eventTag.endDate.difference(eventTag.startDate).inDays > 0) {
+      durationText = 'Bilhete Passe $durationDays Dias';
+    } else {
+      durationText =
+          'Bilhete Diário ${eventTag.startDate.day} ${_getMonth(eventTag.startDate.month)} ${eventTag.startDate.year}';
+    }
     final datesInfoText = 'Das ${eventTag.startDate.hour}h do dia ' +
         '${eventTag.startDate.day}-${eventTag.startDate.month}-${eventTag.startDate.year}, ' +
         'até ${eventTag.startDate.hour}h do dia ' +
@@ -222,22 +303,37 @@ class ValidationMessage extends StatelessWidget {
             MediaQuery.of(context).size.height / 3,
         width: MediaQuery.of(context).size.width -
             MediaQuery.of(context).size.width / 8,
-        decoration: BoxDecoration(color: Colors.white),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Padding(
+              padding:
+                  const EdgeInsets.only(right: 100.0, left: 100.0, top: 50),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: availability
+                    ? Image.asset('assets/images/valid.png')
+                    : Image.asset('assets/images/invalid.png'),
+              ),
+            ),
             Text(
               validationText,
               style: TextStyle(color: Colors.black, fontSize: 40),
             ),
-            Text(
-              durationText,
-              style: TextStyle(color: Colors.grey, fontSize: 23),
-            ),
-            Text(
-              datesInfoText,
-              style: TextStyle(color: Colors.grey, fontSize: 13),
+            Column(
+              children: [
+                Text(
+                  durationText,
+                  style: TextStyle(color: Colors.grey, fontSize: 23),
+                ),
+                Text(
+                  datesInfoText,
+                  style: TextStyle(color: Colors.grey, fontSize: 13),
+                ),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -273,6 +369,61 @@ class ValidationMessage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  String _getMonth(int month) {
+    switch (month) {
+      case 1:
+        return 'Janeiro';
+      case 2:
+        return 'Fevereiro';
+      case 3:
+        return 'Março';
+      case 4:
+        return 'Abril';
+      case 5:
+        return 'Maio';
+      case 6:
+        return 'Junho';
+      case 7:
+        return 'Julho';
+      case 8:
+        return 'Agosto';
+      case 9:
+        return 'Setembro';
+      case 10:
+        return 'Outubro';
+      case 11:
+        return 'Novembro';
+      default:
+        return 'Dezembro';
+    }
+  }
+}
+
+class SearchButton extends StatelessWidget {
+  const SearchButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(ScanScreen.routeName);
+      },
+      child: Container(
+          height: 48,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+              color: backColor),
+          child: const Center(
+            child: Text(
+              'Procurar',
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+          )),
     );
   }
 }
