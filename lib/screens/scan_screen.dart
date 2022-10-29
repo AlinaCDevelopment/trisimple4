@@ -32,7 +32,9 @@ class ScanScreen extends ConsumerWidget {
     final nfcError = ref.watch(nfcProvider)?.error;
 
     return Scaffold(
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(
+        selectedRouteName: routeName,
+      ),
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,

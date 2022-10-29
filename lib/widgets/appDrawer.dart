@@ -1,10 +1,11 @@
 import 'package:app_4/constants/colors.dart';
+import 'package:app_4/screens/scan_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class AppDrawer extends StatefulWidget {
-  const AppDrawer({super.key});
+  const AppDrawer({required this.selectedRouteName, super.key});
+
+  final String selectedRouteName;
 
   @override
   State<AppDrawer> createState() => _AppDrawerState();
@@ -27,12 +28,10 @@ class _AppDrawerState extends State<AppDrawer> {
               margin: null,
               child: Row(
                 children: [
-                  Container(
-                    child: Image.asset(
-                      'assets/images/logo.png',
-                      width: 200,
-                      height: 100,
-                    ),
+                  Image.asset(
+                    'assets/images/logo.png',
+                    width: 200,
+                    height: 100,
                   ),
                 ],
               ),
@@ -52,7 +51,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: const [
                       Text(
                         'APP4\nCONTROLO DE ACESSOS',
                         style: TextStyle(
@@ -70,50 +69,10 @@ class _AppDrawerState extends State<AppDrawer> {
               ],
             ),
           ),
-          ListTile(
-            title: const Text('SCAN TAG BY NFC'),
-            selectedColor: backColor,
-            tileColor: Colors.black,
-            selectedTileColor: backColor,
-            selected: tilesSelected[0],
-            onTap: () {
-              // tilesSelected.setAll(0, [false]);
-              //TODO Go to Scan
-            },
-          ),
-          ListTile(
-            title: const Text('SCAN TAG BY NFC'),
-            selectedColor: backColor,
-            tileColor: Colors.black,
-            selectedTileColor: backColor,
-            selected: tilesSelected[0],
-            onTap: () {
-              // tilesSelected.setAll(0, [false]);
-              //TODO Go to SETTING
-            },
-          ),
-          ListTile(
-            title: const Text('SCAN TAG BY NFC'),
-            selectedColor: backColor,
-            tileColor: Colors.black,
-            selectedTileColor: backColor,
-            selected: tilesSelected[0],
-            onTap: () {
-              // tilesSelected.setAll(0, [false]);
-              //TODO Go to Scan
-            },
-          ),
-          ListTile(
-            title: const Text('SCAN TAG BY NFC'),
-            selectedColor: backColor,
-            tileColor: Colors.black,
-            selectedTileColor: backColor,
-            selected: tilesSelected[0],
-            onTap: () {
-              // tilesSelected.setAll(0, [false]);
-              //TODO Go to Scan
-            },
-          ),
+          DrawerTile(
+              routeName: ScanScreen.routeName,
+              isSelected: ScanScreen.routeName == widget.selectedRouteName,
+              title: 'SCAN TAG BY NFC'),
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
@@ -121,7 +80,7 @@ class _AppDrawerState extends State<AppDrawer> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: const [
                   Text(
                     'Contato responsável técnico\n do evento para pedido de suporte:',
                     style: TextStyle(color: Colors.grey, fontSize: 13),
@@ -149,6 +108,34 @@ class _AppDrawerState extends State<AppDrawer> {
           )
         ],
       ),
+    );
+  }
+}
+
+class DrawerTile extends StatelessWidget {
+  const DrawerTile({
+    Key? key,
+    required this.isSelected,
+    required this.title,
+    required this.routeName,
+  }) : super(key: key);
+
+  final bool isSelected;
+  final String title;
+  final String routeName;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      selectedColor: Colors.white,
+      tileColor: Colors.white,
+      textColor: backColor,
+      selectedTileColor: backColor,
+      selected: isSelected,
+      onTap: () {
+        Navigator.pushReplacementNamed(context, routeName);
+      },
     );
   }
 }
