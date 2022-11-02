@@ -32,9 +32,11 @@ class NfcNotifier extends StateNotifier<NfcState> {
             final startDate = await _readDateTime(mifare, _startDateOffsets);
             final endDate = await _readDateTime(mifare, _endDateOffsets);
             final id = await _readId();
+            final eventId = await _readEventId();
 
             state = NfcState(
-                tag: EventTag(id, startDate: startDate, endDate: endDate));
+                tag: EventTag(id, eventId,
+                    startDate: startDate, endDate: endDate));
           } else {
             state = NfcState(error: "A sua tag não é suportada!");
           }
@@ -73,6 +75,10 @@ class NfcNotifier extends StateNotifier<NfcState> {
   }
 
   Future<int> _readId() async {
+    return 0;
+  }
+
+  Future<int> _readEventId() async {
     return 0;
   }
 }

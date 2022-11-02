@@ -40,6 +40,9 @@ dependencies:
   upgrader: ^4.9.0
   flutter_launcher_icons: ^0.10.0
   sqflite: ^2.1.0+1
+  http: ^0.13.5
+  connectivity_plus: ^3.0.2
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +76,7 @@ flutter:
     - assets/images/valid.png
     - assets/images/invalid.png
     - assets/images/dropdown.png
+    - assets/images/error.png
     - assets/images/scan.png
     - assets/images/en.png
     - assets/images/pt.png

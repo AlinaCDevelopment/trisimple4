@@ -1,6 +1,11 @@
 import 'package:app_4/constants/assets_routes.dart';
-import 'package:app_4/screens/scan_screen.dart';
+import 'package:app_4/models/database/device.dart';
+import 'package:app_4/screens/container_screen.dart';
+import 'package:app_4/services/auth_service.dart';
+import 'package:app_4/views/scan_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/colors.dart';
 import '../widgets/utility/empty_scroll_behaviour.dart';
@@ -30,146 +35,9 @@ class AuthScreen extends StatelessWidget {
       buildDropItem('equipamento 3', '3'),
       buildDropItem('equipamento 4', '4')
     ]);
-    const inputSpacement = SizedBox(
-      height: 8,
-    );
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: Container(
-        decoration: const BoxDecoration(gradient: backGradient),
-        child: CustomScrollView(
-          scrollBehavior: EmptyScrollBehaviour(),
-          physics: const ClampingScrollPhysics(),
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: false,
-              fillOverscroll: false,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            right: 40, left: 40, top: 100, bottom: 20),
-                        child: Image.asset(logoImageRoute)),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: const [
-                          Icon(
-                            Icons.lock_outline,
-                            size: 30,
-                          ),
-                          Text(
-                            'Área Reservada',
-                            style: TextStyle(
-                                color: backColor,
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 90, right: 90, bottom: 45),
-                      child: Text(
-                        'Só é permitida a entrada a pessoas autorizadas pela Trisimple',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).backgroundColor,
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20))),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 48, vertical: 30),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
-                                children: const [
-                                  Text(
-                                    'APP 4',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 29),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    'CONTROLO DE ACESSOS',
-                                    style: TextStyle(
-                                        color: accentColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 29),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    '(1.0.0)',
-                                    style: TextStyle(
-                                      fontSize: 19,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Form(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    AuthDropdown(events,
-                                        hintText: 'Seleciona o evento'),
-                                    inputSpacement,
-                                    AuthDropdown(equipments,
-                                        hintText: 'Seleciona o equipamento'),
-                                    inputSpacement,
-                                    const PasswordInput(),
-                                    inputSpacement,
-                                    SubmitButton(),
-                                    const SizedBox(
-                                      height: 50,
-                                    ),
-                                    Column(children: const [
-                                      Text(
-                                        'Para mais informações envie email para:',
-                                        style: TextStyle(
-                                            fontSize: _bottomFontSize),
-                                      ),
-                                      Text(
-                                        'info@trisimple.pt',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: _bottomFontSize),
-                                      ),
-                                    ]),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  ]),
-            )
-          ],
-        ),
-      ),
-    );
+        resizeToAvoidBottomInset: true,
+        body: AuthView(events: events, equipments: equipments));
   }
 
   DropdownMenuItem<dynamic> buildDropItem(String name, String value) {
@@ -177,16 +45,177 @@ class AuthScreen extends StatelessWidget {
   }
 }
 
-class SubmitButton extends StatelessWidget {
+class AuthView extends StatelessWidget {
+  const AuthView({
+    Key? key,
+    required this.events,
+    required this.equipments,
+  }) : super(key: key);
+
+  final inputSpacement = const SizedBox(
+    height: 8,
+  );
+  final List<DropdownMenuItem> events;
+  final List<DropdownMenuItem> equipments;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(gradient: backGradient),
+      child: CustomScrollView(
+        scrollBehavior: EmptyScrollBehaviour(),
+        physics: const ClampingScrollPhysics(),
+        slivers: [
+          SliverFillRemaining(
+            hasScrollBody: false,
+            fillOverscroll: false,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(
+                          right: 40, left: 40, top: 100, bottom: 20),
+                      child: Image.asset(logoImageRoute)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: const [
+                        Icon(
+                          Icons.lock_outline,
+                          size: 30,
+                        ),
+                        Text(
+                          'Área Reservada',
+                          style: TextStyle(
+                              color: backColor,
+                              fontSize: 21,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 90, right: 90, bottom: 45),
+                    child: Text(
+                      'Só é permitida a entrada a pessoas autorizadas pela Trisimple',
+                      style: TextStyle(
+                        fontSize: 13,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).backgroundColor,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 48, vertical: 30),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: const [
+                                Text(
+                                  'APP 4',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 29),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  'CONTROLO DE ACESSOS',
+                                  style: TextStyle(
+                                      color: accentColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  '(1.0.0)',
+                                  style: TextStyle(
+                                    fontSize: 19,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Form(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  AuthDropdown(events,
+                                      hintText: 'Seleciona o evento'),
+                                  inputSpacement,
+                                  AuthDropdown(equipments,
+                                      hintText: 'Seleciona o equipamento'),
+                                  inputSpacement,
+                                  const PasswordInput(),
+                                  inputSpacement,
+                                  SubmitButton(),
+                                  const SizedBox(
+                                    height: 50,
+                                  ),
+                                  Column(children: const [
+                                    Text(
+                                      'Para mais informações envie email para:',
+                                      style:
+                                          TextStyle(fontSize: _bottomFontSize),
+                                    ),
+                                    Text(
+                                      'info@trisimple.pt',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: _bottomFontSize),
+                                    ),
+                                  ]),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ]),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class SubmitButton extends ConsumerWidget {
   const SubmitButton({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed(ScanScreen.routeName);
+      onTap: () async {
+        /* 
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('device', 'TODO');
+        await prefs.setString('event', 'TODO'); */
+        await ref.read(authProvider.notifier).authenticate(
+            device: 'device', event: 'event', password: 'password');
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ContainerScreen()),
+        );
       },
       child: Container(
           height: 48,
@@ -198,7 +227,7 @@ class SubmitButton extends StatelessWidget {
                   begin: Alignment.topRight)),
           child: const Center(
             child: Text(
-              'Inscreve-te',
+              'Registar',
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           )),
