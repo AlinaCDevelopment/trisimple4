@@ -1,3 +1,3 @@
-class Device {
+class Event {
   final String name = 'placeholder';
 }
