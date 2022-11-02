@@ -5,6 +5,7 @@ import 'package:app_4/services/auth_service.dart';
 import 'package:app_4/views/scan_view.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upgrader/upgrader.dart';
@@ -15,6 +16,13 @@ import 'screens/auth_screen.dart';
 //TODO Set at start the screen size instead of using media queries everywhere
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
+      overlays: [SystemUiOverlay.top]);
+  await SystemChrome.setSystemUIChangeCallback(
+    (systemOverlaysAreVisible) async {
+      print("tghjklç");
+    },
+  );
   runApp(const ProviderScope(child: MyApp()));
 }
 

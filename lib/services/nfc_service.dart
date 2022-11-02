@@ -56,6 +56,10 @@ class NfcNotifier extends StateNotifier<NfcState> {
     );
   }
 
+  Future<bool> isNfcAvailable() async {
+    return await NfcManager.instance.isAvailable();
+  }
+
   void reset() {
     state = NfcState();
   }

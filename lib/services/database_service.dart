@@ -32,6 +32,7 @@ class DatabaseState {
 class DatabaseNotifier extends StateNotifier<DatabaseState> {
   final _baseAPI = 'https://dev.trisimple.pt';
   DatabaseNotifier(super.state);
+
   Future<void> readDevices() async {
     List<Device> devices = List.empty(growable: true);
     final result = await http.get(Uri.https('$_baseAPI/equipamentos'));
