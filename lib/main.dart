@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:upgrader/upgrader.dart';
 
 import 'constants/colors.dart';
@@ -43,7 +44,16 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', 'EN'),
+          Locale('pt', 'PT'),
+        ],
+        title: 'Trisimple 4',
         theme: ThemeData(
             fontFamily: 'Ubuntu',
             brightness: Brightness.dark,

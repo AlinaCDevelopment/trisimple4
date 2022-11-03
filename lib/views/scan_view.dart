@@ -1,4 +1,5 @@
 import 'package:app_4/models/event_tag.dart';
+import 'package:app_4/services/auth_service.dart';
 import 'package:app_4/services/nfc_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,9 +17,17 @@ class ScanView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final equipamento = ref.read(authProvider).authData!.equipamento;
+    final evento = ref.read(authProvider).authData!.evento;
     return ScanContainer(
       ref: ref,
-      nfcUserChild: ScanBody(ref: ref, parentContext: parentContext),
+      nfcUserChild: ScanBody(
+        ref: ref,
+        parentContext: parentContext,
+        title: evento.nome,
+        deviceModel:
+            '${equipamento.tipoEquipamento}#${equipamento.numeroEquipamento}',
+      ),
     );
   }
 }
@@ -96,12 +105,14 @@ class ScanBody extends StatelessWidget {
     Key? key,
     required this.parentContext,
     required this.ref,
+    required this.title,
+    required this.deviceModel,
   }) : super(key: key);
 
   final BuildContext parentContext;
   final WidgetRef ref;
-  final String title = 'Festival Mais Solidário';
-  final String deviceModel = 'L2 #14';
+  final String title;
+  final String deviceModel;
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +216,6 @@ class ScanBody extends StatelessWidget {
         if (eventTag != null)
           GestureDetector(
             onTap: (() {
-              print("TAP");
               ref.read(nfcProvider.notifier).reset();
             }),
             child: ValidationMessage(parentContext, eventTag: eventTag!),
@@ -213,7 +223,6 @@ class ScanBody extends StatelessWidget {
         if (nfcError != null)
           GestureDetector(
             onTap: (() {
-              print("TAP");
               ref.read(nfcProvider.notifier).reset();
             }),
             child: ErrorMessage(parentContext),

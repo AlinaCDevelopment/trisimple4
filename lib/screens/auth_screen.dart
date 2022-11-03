@@ -1,7 +1,9 @@
 import 'package:app_4/constants/assets_routes.dart';
-import 'package:app_4/models/database/device.dart';
+import 'package:app_4/models/database/equipamento.dart';
+import 'package:app_4/models/database/evento.dart';
 import 'package:app_4/screens/container_screen.dart';
 import 'package:app_4/services/auth_service.dart';
+import 'package:app_4/services/database_service.dart';
 import 'package:app_4/views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,7 +25,7 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final events = List<DropdownMenuItem<dynamic>>.from([
+    /*  final events = List<DropdownMenuItem<dynamic>>.from([
       buildDropItem('evento 1', '1'),
       buildDropItem('evento 2', '2'),
       buildDropItem('evento 3', '3'),
@@ -34,29 +36,15 @@ class AuthScreen extends StatelessWidget {
       buildDropItem('equipamento 2', '2'),
       buildDropItem('equipamento 3', '3'),
       buildDropItem('equipamento 4', '4')
-    ]);
-    return Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: AuthView(events: events, equipments: equipments));
-  }
-
-  DropdownMenuItem<dynamic> buildDropItem(String name, String value) {
-    return DropdownMenuItem(value: value, child: DropdownText(name));
+    ]); */
+    return Scaffold(resizeToAvoidBottomInset: true, body: AuthView());
   }
 }
 
 class AuthView extends StatelessWidget {
-  const AuthView({
-    Key? key,
-    required this.events,
-    required this.equipments,
-  }) : super(key: key);
-
-  final inputSpacement = const SizedBox(
-    height: 8,
-  );
-  final List<DropdownMenuItem> events;
-  final List<DropdownMenuItem> equipments;
+  DropdownMenuItem<dynamic> _buildDropItem(String name, dynamic value) {
+    return DropdownMenuItem(value: value, child: DropdownText(name));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,39 +138,40 @@ class AuthView extends StatelessWidget {
                             const SizedBox(
                               height: 30,
                             ),
-                            Form(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  AuthDropdown(events,
-                                      hintText: 'Seleciona o evento'),
-                                  inputSpacement,
-                                  AuthDropdown(equipments,
-                                      hintText: 'Seleciona o equipamento'),
-                                  inputSpacement,
-                                  const PasswordInput(),
-                                  inputSpacement,
-                                  SubmitButton(),
-                                  const SizedBox(
-                                    height: 50,
-                                  ),
-                                  Column(children: const [
-                                    Text(
-                                      'Para mais informações envie email para:',
-                                      style:
-                                          TextStyle(fontSize: _bottomFontSize),
-                                    ),
-                                    Text(
-                                      'info@trisimple.pt',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: _bottomFontSize),
-                                    ),
-                                  ]),
-                                ],
-                              ),
-                            )
+                            FutureBuilder<Map<String, dynamic>>(
+                                future: _getDatabaseData(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.data != null) {
+                                    List<Evento>? eventos =
+                                        snapshot.data!['eventos'];
+                                    List<Equipamento>? equipamentos =
+                                        snapshot.data!['equipamentos'];
+                                    List<DropdownMenuItem>? itemsEventos;
+                                    List<DropdownMenuItem>? itemsEquipamentos;
+                                    //_TypeError (type 'List<dynamic>' is not a subtype of type 'List<DropdownMenuItem<dynamic>>?')
+                                    if (eventos != null) {
+                                      itemsEventos = eventos
+                                          .map((e) =>
+                                              _buildDropItem(e.nome, e.id))
+                                          .toList();
+                                    }
+                                    if (equipamentos != null) {
+                                      itemsEquipamentos = equipamentos
+                                          .map((equip) => _buildDropItem(
+                                              equip.numeroEquipamento, equip))
+                                          .toList();
+                                    }
+
+                                    return AuthForm(
+                                        eventos: itemsEventos ?? [],
+                                        equipamentos: itemsEquipamentos ?? []);
+                                  } else {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                })
                           ],
                         ),
                       ),
@@ -190,6 +179,61 @@ class AuthView extends StatelessWidget {
                   )
                 ]),
           )
+        ],
+      ),
+    );
+  }
+
+  Future<Map<String, dynamic>> _getDatabaseData() async {
+    Map<String, dynamic> data = {};
+    data['equipamentos'] = await DatabaseService.instance.readEquips();
+    print('data: ${data['equipamentos']}');
+    data['eventos'] = await DatabaseService.instance.readEventos();
+    return data;
+  }
+}
+
+class AuthForm extends StatelessWidget {
+  const AuthForm({
+    Key? key,
+    required this.eventos,
+    required this.equipamentos,
+  }) : super(key: key);
+
+  final List<DropdownMenuItem> eventos;
+  final inputSpacement = const SizedBox(
+    height: 8,
+  );
+  final List<DropdownMenuItem> equipamentos;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AuthDropdown(eventos, hintText: 'Seleciona o evento'),
+          inputSpacement,
+          AuthDropdown(equipamentos, hintText: 'Seleciona o equipamento'),
+          inputSpacement,
+          const PasswordInput(),
+          inputSpacement,
+          const SubmitButton(),
+          const SizedBox(
+            height: 50,
+          ),
+          Column(children: const [
+            Text(
+              'Para mais informações envie email para:',
+              style: TextStyle(fontSize: _bottomFontSize),
+            ),
+            Text(
+              'info@trisimple.pt',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: _bottomFontSize),
+            ),
+          ]),
         ],
       ),
     );
@@ -205,12 +249,8 @@ class SubmitButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () async {
-        /* 
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('device', 'TODO');
-        await prefs.setString('event', 'TODO'); */
         await ref.read(authProvider.notifier).authenticate(
-            device: 'device', event: 'event', password: 'password');
+            equipamento: 'TODO', evento: 'TODO', password: 'password');
 
         Navigator.push(
           context,

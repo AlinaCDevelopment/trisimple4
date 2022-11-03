@@ -1,16 +1,21 @@
+import 'dart:convert';
+
+import 'package:app_4/models/database/equipamento.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/database/evento.dart';
+
 class AuthData {
-  final String device;
+  final Equipamento equipamento;
   // final int deviceId;
-  final String event;
+  final Evento evento;
   // final int eventId;
   AuthData({
-    required this.device,
+    required this.equipamento,
     //   required this.deviceId,
-    required this.event,
+    required this.evento,
     //  required this.eventId,
   });
 }
@@ -28,17 +33,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<bool> authenticateFromPreviousLogs() async {
     final prefs = await SharedPreferences.getInstance();
-    final device = prefs.getString('device');
-    final event = prefs.getString('event');
-    print('device: $device');
-    print('event: $event');
+    final equipamentoJson = prefs.getString('equipamento');
+    final eventoJson = prefs.getString('evento');
+    print('equipamento: $equipamentoJson');
+    print('evento: $eventoJson');
     AuthState authState;
-    if (device != null &&
-        event != null &&
-        device.isNotEmpty &&
-        event.isNotEmpty) {
+    if (equipamentoJson != null &&
+        eventoJson != null &&
+        equipamentoJson.isNotEmpty &&
+        eventoJson.isNotEmpty) {
+      final equipamento = Equipamento.fromJson(json.decode(equipamentoJson));
+      final evento = Evento.fromJson(json.decode(eventoJson));
       authState = AuthState(
-          authData: AuthData(device: device, event: event), initialized: true);
+          authData: AuthData(equipamento: equipamento, evento: evento),
+          initialized: true);
     } else {
       authState = AuthState(initialized: true);
     }
@@ -47,10 +55,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> authenticate(
-      {required String device,
-      required String event,
+      {required String equipamento,
+      required String evento,
       required String password}) async {
-    await _setDeviceAuth(device, event);
+    await _setDeviceAuth(equipamento, evento);
   }
 
   Future<void> resetAuth() async {
