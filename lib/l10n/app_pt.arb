@@ -1,3 +1,19 @@
 {
-    "helloWorld": "¡Hola Mundo!"
+    "exit": "SAIR",
+    "scan": "SCAN",
+    "contactsLabel": "Contato responsável técnico\ndo evento para pedido de suporte:",
+
+
+    "eventSelectHint": "Seleciona o evento",
+    "equipSelectHint": "Seleciona o equipamento",
+    "passwordHint": "Insere a palavra-passe",
+    "emailLabel": "Para mais informações envie email para:",
+    "signIn": "Registar",
+    "controlAccess": "CONTROLO DE ACESSOS",
+    "reservedArea": "Área Reservada",
+    "authorizedPeople": "Só é permitida a entrada a pessoas autorizadas pela Trisimple",
+
+    "approachNfc": "Pode aproximar.",
+    "search": "Procurar.",
+    "unavailableNfc": "NFC INDISPONÍVEL"
 }

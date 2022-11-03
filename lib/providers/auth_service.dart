@@ -21,15 +21,14 @@ class AuthData {
 }
 
 class AuthState {
-  final bool initialized;
   final AuthData? authData;
 
-  AuthState({this.authData, required this.initialized});
+  AuthState({this.authData});
 }
 
 @immutable
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier() : super(AuthState(initialized: false));
+  AuthNotifier() : super(AuthState());
 
   Future<bool> authenticateFromPreviousLogs() async {
     final prefs = await SharedPreferences.getInstance();
@@ -45,20 +44,24 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final equipamento = Equipamento.fromJson(json.decode(equipamentoJson));
       final evento = Evento.fromJson(json.decode(eventoJson));
       authState = AuthState(
-          authData: AuthData(equipamento: equipamento, evento: evento),
-          initialized: true);
+          authData: AuthData(equipamento: equipamento, evento: evento));
     } else {
-      authState = AuthState(initialized: true);
+      authState = AuthState();
     }
     this.state = authState;
     return authState.authData != null;
   }
 
-  Future<void> authenticate(
-      {required String equipamento,
-      required String evento,
+  Future<bool> authenticate(
+      {required Equipamento equipamento,
+      required Evento evento,
       required String password}) async {
-    await _setDeviceAuth(equipamento, evento);
+
+    this.state =
+        AuthState(authData: AuthData(equipamento: equipamento, evento: evento));
+    await _setDeviceAuth(
+        json.encode(equipamento.toJson()), json.encode(evento.toJson()));
+    return true;
   }
 
   Future<void> resetAuth() async {
@@ -67,8 +70,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> _setDeviceAuth(String device, String event) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('device', device);
-    await prefs.setString('event', event);
+    await prefs.setString('equipamento', device);
+    await prefs.setString('evento', event);
+    await authenticateFromPreviousLogs();
   }
 }
 

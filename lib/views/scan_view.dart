@@ -1,7 +1,7 @@
-import 'package:app_4/models/event_tag.dart';
-import 'package:app_4/services/auth_service.dart';
-import 'package:app_4/services/nfc_service.dart';
+import 'package:app_4/providers/auth_service.dart';
+import 'package:app_4/providers/nfc_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants/colors.dart';
@@ -9,10 +9,6 @@ import '../widgets/ui/overlay_messages.dart';
 
 class ScanView extends ConsumerWidget {
   const ScanView(this.parentContext, {super.key});
-  static const routeName = 'scan';
-  final String title = 'Festival Mais Solidário';
-  final String deviceModel = 'L2 #14';
-  final bool isPT = true;
   final BuildContext parentContext;
 
   @override
@@ -49,12 +45,12 @@ class ScanContainer extends StatelessWidget {
           if ((snapshot.data!)) {
             bodyPresented = nfcUserChild;
           } else {
-            bodyPresented = const Center(
+            bodyPresented = Center(
                 child: Padding(
-              padding: EdgeInsets.only(bottom: 100.0),
+              padding: const EdgeInsets.only(bottom: 100.0),
               child: Text(
-                "NFC UNAVAILABLE",
-                style: TextStyle(
+                AppLocalizations.of(context)!.unavailableNfc,
+                style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 25,
                     shadows: [
@@ -69,7 +65,7 @@ class ScanContainer extends StatelessWidget {
           decoration: const BoxDecoration(gradient: backGradient),
           child: bodyPresented,
           //May need to be deleted TODO test with Nfc device
-          constraints: BoxConstraints.expand(),
+          constraints: const BoxConstraints.expand(),
         );
       },
     );
@@ -90,10 +86,10 @@ class SearchButton extends StatelessWidget {
           decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(50)),
               color: backColor),
-          child: const Center(
+          child: Center(
             child: Text(
-              'Procurar',
-              style: TextStyle(fontSize: 20, color: Colors.white),
+              AppLocalizations.of(context)!.search,
+              style: const TextStyle(fontSize: 20, color: Colors.white),
             ),
           )),
     );
@@ -168,9 +164,9 @@ class ScanBody extends StatelessWidget {
                             height: 10,
                           ),
                           Image.asset('assets/images/scan.png'),
-                          const Text(
-                            'Pode aproximar.',
-                            style: TextStyle(fontSize: 22, color: backColor),
+                          Text(
+                            AppLocalizations.of(context)!.approachNfc,
+                            style: const TextStyle(fontSize: 22, color: backColor),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -189,13 +185,13 @@ class ScanBody extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 70.0),
                   child: Column(
-                    children: const [
+                    children: [
                       Text(
-                        'Contato responsável técnico\n do evento para pedido de suporte:',
+                        AppLocalizations.of(context)!.contactsLabel,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: backColor, fontSize: 13),
+                        style: const TextStyle(color: backColor, fontSize: 13),
                       ),
-                      Text(
+                      const Text(
                         '+351 962 260 499',
                         textAlign: TextAlign.center,
                         style: TextStyle(

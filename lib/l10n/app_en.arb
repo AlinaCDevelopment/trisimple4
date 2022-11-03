@@ -1,6 +1,21 @@
 {
-    "helloWorld": "Hello World!",
-    "@helloWorld": {
-      "description": "The conventional newborn programmer greeting"
-    }
+    "exit": "EXIT",
+    "scan": "SCAN",
+    "contactsLabel": "Contact of the technician\nin charge of the event for support",
+
+    "eventSelectHint": "Select the event",
+    "equipSelectHint": "Select the quipment",
+    "passwordHint": "Insert the password",
+    "emailLabel": "For more informations, send an email to:",
+    "signIn": "Sign In",
+    "controlAccess": "ACCESSES CONTROL",
+    "reservedArea": "Reserved Area",
+    "authorizedPeople": "Solely people authorized by Trisimple are allowed in",
+    
+    "approachNfc": "May approach.",
+    "search": "Search.",
+    "unavailableNfc": "NFC UNAVAILABLE",
+
+    "valid": "Valid"
 }
+

@@ -1,10 +1,11 @@
 import 'package:app_4/models/innerView.dart';
-import 'package:app_4/services/auth_service.dart';
+import 'package:app_4/providers/auth_service.dart';
+import 'package:app_4/providers/locale_provider.dart';
 import 'package:app_4/views/scan_view.dart';
-import 'package:app_4/views/settings_view%20.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,7 +24,6 @@ class _ContainerScreenState extends State<ContainerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var isPT = true;
     final screens = {
       'scan': ScanView(context),
     };
@@ -39,14 +39,14 @@ class _ContainerScreenState extends State<ContainerScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     'APP 4',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'CONTROLO DE ACESSOS',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.controlAccess,
+                    style: const TextStyle(
                         fontSize: 12, color: Color.fromRGBO(150, 115, 250, 1)),
                   ),
                 ],
@@ -55,17 +55,22 @@ class _ContainerScreenState extends State<ContainerScreen> {
           ),
           titleSpacing: 0,
           actions: [
-            IconButton(
-              icon: Padding(
-                padding: const EdgeInsets.only(
-                    left: 3.0, right: 5, top: 1, bottom: 1),
-                child: Image.asset(
-                    isPT ? 'assets/images/pt.png' : 'assets/images/en.png'),
-              ),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, AuthScreen.routeName);
-              },
-            )
+            Consumer(builder: (context, ref, _) {
+              final isPt = ref.read(localeProvider).languageCode == 'pt';
+              return IconButton(
+                icon: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 3.0, right: 5, top: 1, bottom: 1),
+                  child: Image.asset(
+                      isPt ? 'assets/images/pt.png' : 'assets/images/en.png'),
+                ),
+                onPressed: () {
+                  ref
+                      .read(localeProvider.notifier)
+                      .setLocale(isPt ? 'en' : 'pt');
+                },
+              );
+            })
           ],
           leading: Builder(builder: (context) {
             return IconButton(
@@ -90,7 +95,7 @@ class _ContainerScreenState extends State<ContainerScreen> {
                     child: DrawerHeader(
                       decoration:
                           BoxDecoration(color: Colors.black.withOpacity(0.8)),
-                      padding: EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.only(left: 10),
                       margin: null,
                       child: Row(
                         children: [
@@ -117,15 +122,16 @@ class _ContainerScreenState extends State<ContainerScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text(
-                                'APP4\nCONTROLO DE ACESSOS',
-                                style: TextStyle(
+                                'APP4\n ${AppLocalizations.of(context)!.controlAccess}',
+                                style: const TextStyle(
                                     color: backColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15),
                               ),
-                              Text(
+                              const Text(
+                                //TODO
                                 'Festival Mais Solidário',
                                 style:
                                     TextStyle(color: Colors.grey, fontSize: 15),
@@ -137,27 +143,29 @@ class _ContainerScreenState extends State<ContainerScreen> {
                     ),
                   ),
                   DrawerTile(
-                      onTap: () {
-                        setState(() {
-                          _selectedRouteName = 'scan';
-                        });
-                      },
-                      isSelected: 'scan' == _selectedRouteName,
-                      title: 'SCAN'),
+                    onTap: () {
+                      setState(() {
+                        _selectedRouteName = 'scan';
+                      });
+                    },
+                    isSelected: 'scan' == _selectedRouteName,
+                    title: AppLocalizations.of(context)!.scan,
+                  ),
                   Consumer(
                     builder: (context, ref, child) {
                       return DrawerTile(
-                          onTap: () async {
-                            ref.read(authProvider.notifier).resetAuth();
-                            SystemChannels.platform
-                                .invokeMethod('SystemNavigator.pop');
-                          },
-                          isSelected: false,
-                          title: 'EXIT');
+                        onTap: () async {
+                          ref.read(authProvider.notifier).resetAuth();
+                          SystemChannels.platform
+                              .invokeMethod('SystemNavigator.pop');
+                        },
+                        isSelected: false,
+                        title: AppLocalizations.of(context)!.exit,
+                      );
                     },
                   ),
-                  DrawerTile(
-                      onTap: () {}, isSelected: false, title: 'HISTÓRICO'),
+                  /* DrawerTile(
+                      onTap: () {}, isSelected: false, title: 'HISTÓRICO'), */
                 ],
               ),
               Padding(
@@ -165,22 +173,22 @@ class _ContainerScreenState extends State<ContainerScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      'Contato responsável técnico\n do evento para pedido de suporte:',
-                      style: TextStyle(color: Colors.grey, fontSize: 13),
+                      AppLocalizations.of(context)!.contactsLabel,
+                      style: const TextStyle(color: Colors.grey, fontSize: 13),
                     ),
-                    Text(
+                    const Text(
                       '+351 962 260 499',
                       style: TextStyle(
                           color: backColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 13),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
-                    Text(
+                    const Text(
                       'www.trisimple.pt',
                       style: TextStyle(
                           color: backColor,

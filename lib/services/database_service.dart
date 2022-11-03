@@ -21,27 +21,21 @@ class DatabaseService {
       List<Equipamento> equipamentos = List.empty(growable: true);
 
       final result = await http.get(Uri.parse('$_baseAPI/equipamentos'));
-      print(result.body);
       final List<dynamic> resultJson = json.decode(result.body);
       for (var equipJson in resultJson) {
-        print('EQUIPAMENTO: \n $equipJson');
         final estadoEquip =
             await _getEstadoEquip(equipJson['id_estado'] as int);
-        print('222');
         final tipoEquip = await _getTipoEquip(equipJson['id_tipo']);
-        print('3333');
 
         equipamentos.add(Equipamento(
             id: equipJson['id'],
             numeroEquipamento: equipJson['numero_equipamento'],
             tipoEquipamento: tipoEquip,
             estadoEquipamento: estadoEquip));
-        print('444: $equipamentos');
       }
-      print("adwadaw");
       return equipamentos;
     } catch (e) {
-      print('readEquips: $e');
+      print('readEquips ERROR: $e');
     }
   }
 
@@ -50,7 +44,6 @@ class DatabaseService {
       List<Evento> eventos = List.empty(growable: true);
 
       final result = await http.get(Uri.parse('$_baseAPI/eventos'));
-      print("Eventos: ${result.body}");
       final List<dynamic> resultJson = json.decode(result.body);
 
       for (var equipJson in resultJson) {

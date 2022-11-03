@@ -1,7 +1,7 @@
 import 'dart:io';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app_4/screens/container_screen.dart';
-import 'package:app_4/services/auth_service.dart';
+import 'package:app_4/providers/auth_service.dart';
 import 'package:app_4/views/scan_view.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -12,18 +12,15 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:upgrader/upgrader.dart';
 
 import 'constants/colors.dart';
+import 'providers/locale_provider.dart';
 import 'screens/auth_screen.dart';
 
 //TODO Set at start the screen size instead of using media queries everywhere
+//TODO Fix localizations with iOS: https://www.codeandweb.com/babeledit/tutorials/how-to-translate-your-flutter-apps
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
-      overlays: [SystemUiOverlay.top]);
-  await SystemChrome.setSystemUIChangeCallback(
-    (systemOverlaysAreVisible) async {
-      print("tghjklç");
-    },
-  );
+      overlays: []);
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -37,22 +34,14 @@ class MyApp extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final connectivityResult = await (Connectivity().checkConnectivity());
       isConnectedToWifi = connectivityResult == ConnectivityResult.wifi;
-      if (connectivityResult == ConnectivityResult.wifi) {
-        print('wifi : $isConnectedToWifi');
-      }
     });
+    final locale = ref.watch(localeProvider);
 
     return MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: locale,
         debugShowCheckedModeBanner: false,
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('en', 'EN'),
-          Locale('pt', 'PT'),
-        ],
         title: 'Trisimple 4',
         theme: ThemeData(
             fontFamily: 'Ubuntu',
@@ -73,9 +62,7 @@ class MyApp extends ConsumerWidget {
             ? UpgradeAlert(
                 upgrader: Upgrader(
                     // durationUntilAlertAgain: const Duration(hours: 8),
-                    minAppVersion: '2.0.0',
                     canDismissDialog: false,
-                    countryCode: 'lu.lafiducia.la_fiducia',
                     dialogStyle: Platform.isIOS
                         ? UpgradeDialogStyle.cupertino
                         : UpgradeDialogStyle.material),
@@ -119,7 +106,6 @@ class MyApp extends ConsumerWidget {
         future: ref.read(authProvider.notifier).authenticateFromPreviousLogs(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
-            print('Is initialized: ${snapshot.data}');
             if (snapshot.data!) {
               return const ContainerScreen();
             } else {
