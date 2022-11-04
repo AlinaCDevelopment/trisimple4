@@ -13,16 +13,16 @@ class ScanView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final equipamento = ref.read(authProvider).equipamento!;
-    final evento = ref.read(authProvider).evento!;
+    final equipamento = ref.read(authProvider).equipamento;
+    final evento = ref.read(authProvider).evento;
     return ScanContainer(
       ref: ref,
       nfcUserChild: ScanBody(
         ref: ref,
         parentContext: parentContext,
-        title: evento.nome,
+        title: evento?.nome ?? '',
         deviceModel:
-            '${equipamento.tipoEquipamento}#${equipamento.numeroEquipamento}',
+            '${equipamento?.tipoEquipamento}#${equipamento?.numeroEquipamento}',
       ),
     );
   }
@@ -85,7 +85,7 @@ class SearchButton extends StatelessWidget {
           height: 48,
           decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(50)),
-              color: backColor),
+              color: backMaterialColor),
           child: Center(
             child: Text(
               AppLocalizations.of(context)!.search,
@@ -138,7 +138,7 @@ class ScanBody extends StatelessWidget {
                   Text(
                     deviceModel,
                     style: const TextStyle(
-                        color: backColor,
+                        color: backMaterialColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 25),
                     textAlign: TextAlign.center,
@@ -166,8 +166,8 @@ class ScanBody extends StatelessWidget {
                           Image.asset('assets/images/scan.png'),
                           Text(
                             AppLocalizations.of(context)!.approachNfc,
-                            style:
-                                const TextStyle(fontSize: 22, color: backColor),
+                            style: const TextStyle(
+                                fontSize: 22, color: backMaterialColor),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -190,7 +190,8 @@ class ScanBody extends StatelessWidget {
                       Text(
                         AppLocalizations.of(context)!.contactsLabel,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(color: backColor, fontSize: 13),
+                        style: const TextStyle(
+                            color: backMaterialColor, fontSize: 13),
                       ),
                       const Text(
                         '+351 962 260 499',

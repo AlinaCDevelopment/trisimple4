@@ -66,6 +66,7 @@ class _ContainerScreenState extends State<ContainerScreen> {
                       isPt ? 'assets/images/pt.png' : 'assets/images/en.png'),
                 ),
                 onPressed: () {
+                  print('pop');
                   ref
                       .read(localeProvider.notifier)
                       .setLocale(isPt ? 'en' : 'pt');
@@ -110,14 +111,15 @@ class _ContainerScreenState extends State<ContainerScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 20.0),
                     child: Row(
                       children: [
-                        Container(
+                        /*  Container(
                           height: 100,
                           width: 70,
                           color: Colors.grey,
-                        ),
+                        ), */
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Column(
@@ -125,9 +127,9 @@ class _ContainerScreenState extends State<ContainerScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'APP4\n ${AppLocalizations.of(context)!.controlAccess}',
+                                'APP4\n${AppLocalizations.of(context)!.controlAccess}',
                                 style: const TextStyle(
-                                    color: backColor,
+                                    color: backMaterialColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15),
                               ),
@@ -156,13 +158,13 @@ class _ContainerScreenState extends State<ContainerScreen> {
                       return DrawerTile(
                         onTap: () async {
                           ref.read(authProvider.notifier).resetAuth();
-                          Navigator.pushReplacement(
+                          /*   Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const AuthScreen()),
-                          );
-                          // SystemChannels.platform
-                          //     .invokeMethod('SystemNavigator.pop');
+                          ); */
+                          SystemChannels.platform
+                              .invokeMethod('SystemNavigator.pop');
                         },
                         isSelected: false,
                         title: AppLocalizations.of(context)!.exit,
@@ -186,7 +188,7 @@ class _ContainerScreenState extends State<ContainerScreen> {
                     const Text(
                       '+351 962 260 499',
                       style: TextStyle(
-                          color: backColor,
+                          color: backMaterialColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 13),
                     ),
@@ -196,7 +198,7 @@ class _ContainerScreenState extends State<ContainerScreen> {
                     const Text(
                       'www.trisimple.pt',
                       style: TextStyle(
-                          color: backColor,
+                          color: backMaterialColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 16),
                     ),
@@ -232,8 +234,8 @@ class DrawerTile extends StatelessWidget {
         title: Text(title),
         selectedColor: Colors.white,
         tileColor: Colors.grey.shade200,
-        textColor: backColor,
-        selectedTileColor: backColor,
+        textColor: backMaterialColor,
+        selectedTileColor: backMaterialColor,
         selected: isSelected,
         onTap: onTap,
         trailing: const Padding(

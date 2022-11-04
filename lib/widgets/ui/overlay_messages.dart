@@ -1,6 +1,7 @@
 //TODO and POPUP CONTAINER FOR VALID POPUP AND INVALID AND ERROR AND BUILD THEM FROM SCAN
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../models/event_tag.dart';
 
@@ -27,7 +28,7 @@ class ErrorMessage extends StatelessWidget {
                   const EdgeInsets.only(right: 100.0, left: 100.0, top: 50),
               child: Image.asset('assets/images/error.png'),
             ),
-             Text(
+            Text(
               AppLocalizations.of(context)!.error,
               style: TextStyle(color: Colors.black, fontSize: 40),
             ),
@@ -122,11 +123,20 @@ class ValidationMessage extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Container(
+                    SizedBox(
+                      height: 80,
+                      width: 80,
+                      child: QrImage(
+                        data: "1234567890",
+                        version: QrVersions.auto,
+                        //size: 200.0,
+                      ),
+                    ),
+                    /* Container(
                       decoration: BoxDecoration(color: Colors.grey),
                       height: 80,
                       width: 80,
-                    ),
+                    ), */
                     Text(
                       AppLocalizations.of(context)!.ticket,
                       style: TextStyle(fontSize: 17, color: Colors.black54),

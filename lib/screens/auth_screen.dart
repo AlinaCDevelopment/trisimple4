@@ -4,10 +4,8 @@ import 'package:app_4/models/database/evento.dart';
 import 'package:app_4/screens/container_screen.dart';
 import 'package:app_4/providers/auth_service.dart';
 import 'package:app_4/services/database_service.dart';
-import 'package:app_4/views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../constants/colors.dart';
@@ -66,7 +64,7 @@ class AuthView extends StatelessWidget {
                         Text(
                           AppLocalizations.of(context)!.reservedArea,
                           style: const TextStyle(
-                              color: backColor,
+                              color: backMaterialColor,
                               fontSize: 21,
                               fontWeight: FontWeight.bold),
                         )
@@ -250,7 +248,9 @@ class AuthForm extends StatelessWidget {
       builder: (context, ref, container) {
         return GestureDetector(
           onTap: () async {
-            if (_equipSelected != null && _eventoSelected != null) {
+            if (_equipSelected != null &&
+                _eventoSelected != null &&
+                _password.isNotEmpty) {
               bool valid = await ref.read(authProvider.notifier).authenticate(
                   equipamento: _equipSelected!,
                   evento: _eventoSelected!,
@@ -265,9 +265,32 @@ class AuthForm extends StatelessWidget {
                 );
               } else {
                 print('password not correct');
-                //TODO Wrong password WARNING
+                AlertDialog alert = AlertDialog(
+                  title: Text("COULD NOT AUTHENTICATE"),
+                  content: Text("Wrong Password."),
+                  actions: [],
+                );
+
+                // show the dialog
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return alert;
+                  },
+                );
               }
             } else {
+              AlertDialog alert = AlertDialog(
+                title: Text("COULD NOT AUTHENTICATE"),
+                content: Text("Some fields were not filled."),
+                actions: [],
+              );
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return alert;
+                },
+              );
               //TODO Fill in EVERYTHING WARNING
             }
           },

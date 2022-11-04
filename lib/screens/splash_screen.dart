@@ -9,7 +9,13 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Center(child: Image.asset(logoImageRoute)),
+      color: Colors.black.withOpacity(0.8),
+      child: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [Image.asset(logoImageRoute), CircularProgressIndicator()],
+      )),
     );
   }
 }

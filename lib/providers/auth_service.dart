@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app_4/models/database/equipamento.dart';
 import 'package:app_4/services/database_service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,22 +24,41 @@ class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState());
 
   Future<bool> authenticateFromPreviousLogs() async {
-    final prefs = await SharedPreferences.getInstance();
-    final equipamentoId = prefs.getInt('equipamento');
-    final eventoId = prefs.getInt('evento');
-    print('equipamento: $equipamentoId');
-    print('evento: $eventoId');
-    AuthState authState;
-    if (equipamentoId != null && eventoId != null) {
-      final equipamento =
-          await DatabaseService.instance.readEquipById(equipamentoId);
-      final evento = await DatabaseService.instance.readEventoById(eventoId);
-      authState = AuthState(equipamento: equipamento, evento: evento);
-    } else {
-      authState = AuthState();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final equipJsonString = prefs.getString('equipamento');
+      final eventoJsonString = prefs.getString('evento');
+      print('equipamento: $equipJsonString');
+      print('evento: $eventoJsonString');
+      AuthState authState;
+      if (equipJsonString != null && eventoJsonString != null) {
+        final equipamentoLocal = Equipamento.fromJson(equipJsonString);
+        final eventoLocal = Evento.fromJson(eventoJsonString);
+
+        final connectivity = await Connectivity().checkConnectivity();
+        final isConnected = connectivity == ConnectivityResult.wifi;
+        //If wifi is available get the latest version of the event and equipment from the database
+        //Else use the ones stored inside the preferences
+        if (isConnected) {
+          final equipamento =
+              await DatabaseService.instance.readEquipById(equipamentoLocal.id);
+          final evento =
+              await DatabaseService.instance.readEventoById(eventoLocal.id);
+          authState = AuthState(equipamento: equipamento, evento: evento);
+        } else {
+          authState =
+              AuthState(equipamento: equipamentoLocal, evento: eventoLocal);
+        }
+      } else {
+        authState = AuthState();
+      }
+
+      this.state = authState;
+      return authState.equipamento != null && authState.evento != null;
+    } catch (e) {
+      resetAuth();
+      return false;
     }
-    this.state = authState;
-    return authState.equipamento != null && authState.evento != null;
   }
 
   Future<bool> authenticate(
@@ -49,7 +69,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     final isPasswordCorrect = await DatabaseService.instance.tryLogin(password);
     if (isPasswordCorrect) {
-      final authSet = await _setDeviceAuth(equipamento.id, evento.id);
+      final authSet = await _setDeviceAuth(equipamento, evento);
       return authSet;
     }
     return false;
@@ -61,10 +81,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
     await prefs.remove('evento');
   }
 
-  Future<bool> _setDeviceAuth(int deviceId, int eventId) async {
+  Future<bool> _setDeviceAuth(Equipamento equipamento, Evento evento) async {
+    //TODO Replace ID with storing JSON again to have this working offline
     final prefs = await SharedPreferences.getInstance();
-    final equipSet = await prefs.setInt('equipamento', deviceId);
-    final eventoSet = await prefs.setInt('evento', eventId);
+    final equipSet =
+        await prefs.setString('equipamento', equipamento.toJson().toString());
+    final eventoSet =
+        await prefs.setString('evento', evento.toJson().toString());
     if (eventoSet && equipSet) {
       await authenticateFromPreviousLogs();
       return true;
