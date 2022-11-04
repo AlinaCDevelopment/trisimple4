@@ -13,7 +13,8 @@ import '../constants/colors.dart';
 import 'auth_screen.dart';
 
 class ContainerScreen extends StatefulWidget {
-  const ContainerScreen({super.key});
+  const ContainerScreen({super.key, required this.title});
+  final String title;
 
   @override
   State<ContainerScreen> createState() => _ContainerScreenState();
@@ -130,9 +131,8 @@ class _ContainerScreenState extends State<ContainerScreen> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15),
                               ),
-                              const Text(
-                                //TODO
-                                'Festival Mais Solidário',
+                              Text(
+                                widget.title,
                                 style:
                                     TextStyle(color: Colors.grey, fontSize: 15),
                               ),
@@ -156,8 +156,13 @@ class _ContainerScreenState extends State<ContainerScreen> {
                       return DrawerTile(
                         onTap: () async {
                           ref.read(authProvider.notifier).resetAuth();
-                          SystemChannels.platform
-                              .invokeMethod('SystemNavigator.pop');
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AuthScreen()),
+                          );
+                          // SystemChannels.platform
+                          //     .invokeMethod('SystemNavigator.pop');
                         },
                         isSelected: false,
                         title: AppLocalizations.of(context)!.exit,

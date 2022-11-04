@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 class Evento {
   late final String nome;
   late final int id;
   Evento({required this.id, required this.nome});
 
-  Evento.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    nome = json['nome'];
+  Evento.fromJson(String jsonString) {
+    final jsonMap = json.decode(jsonString);
+    id = jsonMap['id'];
+    nome = jsonMap['nome'];
   }
   Map<String, dynamic> toJson() {
     return {

@@ -18,7 +18,6 @@ const _inputFontSize = 16.0;
 const _bottomFontSize = 13.0;
 
 final _inputRadius = BorderRadius.circular(50);
-String _password = '';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
@@ -138,7 +137,7 @@ class AuthView extends StatelessWidget {
                                         snapshot.data!['equipamentos'];
                                     List<DropdownMenuItem>? itemsEventos;
                                     List<DropdownMenuItem>? itemsEquipamentos;
-
+                                    //_TypeError (type 'List<dynamic>' is not a subtype of type 'List<DropdownMenuItem<dynamic>>?')
                                     if (eventos != null) {
                                       itemsEventos = eventos
                                           .map((evento) => _buildDropItem(
@@ -146,10 +145,16 @@ class AuthView extends StatelessWidget {
                                           .toList();
                                     }
 
+                                    //TODO Remove
+                                    itemsEventos = [Evento(id: 1, nome: 'nome')]
+                                        .map((e) =>
+                                            _buildDropItem(e.nome, e.toJson()))
+                                        .toList();
                                     if (equipamentos != null) {
                                       itemsEquipamentos = equipamentos
                                           .map((equip) => _buildDropItem(
-                                              equip.numeroEquipamento, equip))
+                                              equip.numeroEquipamento,
+                                              equip.toJson()))
                                           .toList();
                                     }
 
@@ -209,8 +214,8 @@ class AuthForm extends StatelessWidget {
         children: [
           AuthDropdown(
             eventos,
-            onChanged: (value) {
-              _eventoSelected = value;
+            onChanged: (String value) {
+              _eventoSelected = Evento.fromJson(value);
             },
             hintText: AppLocalizations.of(context)!.eventSelectHint,
           ),
@@ -218,7 +223,7 @@ class AuthForm extends StatelessWidget {
           AuthDropdown(
             equipamentos,
             onChanged: (value) {
-              _equipSelected = value;
+              _equipSelected = Equipamento.fromJson(value);
             },
             hintText: AppLocalizations.of(context)!.equipSelectHint,
           ),
@@ -254,9 +259,9 @@ class AuthForm extends StatelessWidget {
               bool valid = await ref.read(authProvider.notifier).authenticate(
                   equipamento: _equipSelected!,
                   evento: _eventoSelected!,
-                  password: _password);
+                  password: 'password');
               if (valid) {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ContainerScreen(
@@ -264,7 +269,6 @@ class AuthForm extends StatelessWidget {
                           )),
                 );
               } else {
-                print('password not correct');
                 //TODO Wrong password WARNING
               }
             } else {
@@ -306,9 +310,6 @@ class _PasswordInputState extends State<PasswordInput> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      onChanged: (value) {
-        _password = value;
-      },
       obscureText: !_isPasswordVisible,
       style: const TextStyle(color: hintColor),
       decoration: InputDecoration(
@@ -354,7 +355,7 @@ class AuthDropdown extends StatefulWidget {
   }) : super(key: key);
   final List<DropdownMenuItem<dynamic>> dropdownItems;
   final String hintText;
-  final Function(dynamic value)? onChanged;
+  final Function(String value)? onChanged;
 
   @override
   State<AuthDropdown> createState() => _AuthDropdownState();

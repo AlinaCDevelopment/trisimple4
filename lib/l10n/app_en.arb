@@ -16,6 +16,11 @@
     "search": "Search.",
     "unavailableNfc": "NFC UNAVAILABLE",
 
-    "valid": "Valid"
+    "valid": "VALID",
+    "invalid": "INVALID",
+    "ticket": "Ticket",
+    "bracelet": "Bracelet",
+
+    "error": "Error"
 }
 

@@ -13,8 +13,8 @@ class ScanView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final equipamento = ref.read(authProvider).authData!.equipamento;
-    final evento = ref.read(authProvider).authData!.evento;
+    final equipamento = ref.read(authProvider).equipamento!;
+    final evento = ref.read(authProvider).evento!;
     return ScanContainer(
       ref: ref,
       nfcUserChild: ScanBody(
@@ -166,7 +166,8 @@ class ScanBody extends StatelessWidget {
                           Image.asset('assets/images/scan.png'),
                           Text(
                             AppLocalizations.of(context)!.approachNfc,
-                            style: const TextStyle(fontSize: 22, color: backColor),
+                            style:
+                                const TextStyle(fontSize: 22, color: backColor),
                             textAlign: TextAlign.center,
                           ),
                         ],

@@ -1,5 +1,5 @@
 //TODO and POPUP CONTAINER FOR VALID POPUP AND INVALID AND ERROR AND BUILD THEM FROM SCAN
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/event_tag.dart';
@@ -27,8 +27,8 @@ class ErrorMessage extends StatelessWidget {
                   const EdgeInsets.only(right: 100.0, left: 100.0, top: 50),
               child: Image.asset('assets/images/error.png'),
             ),
-            const Text(
-              'ERROR',
+             Text(
+              AppLocalizations.of(context)!.error,
               style: TextStyle(color: Colors.black, fontSize: 40),
             ),
             Column(
@@ -39,7 +39,7 @@ class ErrorMessage extends StatelessWidget {
                   width: 80,
                 ),
                 Text(
-                  'Bilhete',
+                  AppLocalizations.of(context)!.ticket,
                   style: TextStyle(fontSize: 17, color: Colors.black54),
                 )
               ],
@@ -66,7 +66,10 @@ class ValidationMessage extends StatelessWidget {
     final availability =
         _checkTagValidity(eventTag.startDate, eventTag.endDate);
     final durationDays = eventTag.endDate.day - eventTag.startDate.day + 1;
-    final validationText = availability ? 'VÁLIDO' : 'INVÁLIDO';
+    //TODO Localize validationText
+    final validationText = availability
+        ? AppLocalizations.of(context)!.valid
+        : AppLocalizations.of(context)!.invalid;
     String durationText;
 
     if (eventTag.endDate.difference(eventTag.startDate).inDays > 0) {
@@ -125,7 +128,7 @@ class ValidationMessage extends StatelessWidget {
                       width: 80,
                     ),
                     Text(
-                      'Bilhete',
+                      AppLocalizations.of(context)!.ticket,
                       style: TextStyle(fontSize: 17, color: Colors.black54),
                     )
                   ],
@@ -138,7 +141,7 @@ class ValidationMessage extends StatelessWidget {
                       width: 80,
                     ),
                     Text(
-                      'Bilhete',
+                      AppLocalizations.of(context)!.bracelet,
                       style: TextStyle(fontSize: 17, color: Colors.black54),
                     )
                   ],

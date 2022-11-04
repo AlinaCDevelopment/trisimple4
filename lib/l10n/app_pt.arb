@@ -15,5 +15,12 @@
 
     "approachNfc": "Pode aproximar.",
     "search": "Procurar.",
-    "unavailableNfc": "NFC INDISPONÍVEL"
+    "unavailableNfc": "NFC INDISPONÍVEL",
+    
+    "valid": "VÁLIDO",
+    "invalid": "INVÁLIDO",
+    "ticket": "Bilhete",
+    "bracelet": "Pulseira",
+    
+    "error": "Erro"
 }

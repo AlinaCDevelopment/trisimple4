@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:app_4/services/database_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app_4/screens/container_screen.dart';
 import 'package:app_4/providers/auth_service.dart';
@@ -34,6 +35,9 @@ class MyApp extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final connectivityResult = await (Connectivity().checkConnectivity());
       isConnectedToWifi = connectivityResult == ConnectivityResult.wifi;
+
+      await DatabaseService.instance.readEquips();
+      await DatabaseService.instance.readEventos();
     });
     final locale = ref.watch(localeProvider);
 
@@ -68,36 +72,7 @@ class MyApp extends ConsumerWidget {
                         : UpgradeDialogStyle.material),
                 child: _buildHome(ref),
               )
-            : _buildHome(ref)
-
-        /*    
-           FutureBuilder<bool>(
-              future: isAuthenticated,
-              builder: (context, snapshot) {
-                return FutureBuilder<ConnectivityResult>(
-                    future: Connectivity().checkConnectivity(),
-                    builder: (context, snapshot) {
-                      final screen = isAuthenticated
-                          ? const ContainerScreen()
-                          : const AuthScreen();
-                      if (snapshot.data != null) {
-                        if (snapshot.data == ConnectivityResult.wifi ||
-                            snapshot.data == ConnectivityResult.mobile) {
-                          return UpgradeAlert(
-                              upgrader: Upgrader(
-                                  // durationUntilAlertAgain: const Duration(hours: 8),
-                                  dialogStyle: Platform.isIOS
-                                      ? UpgradeDialogStyle.cupertino
-                                      : UpgradeDialogStyle.material),
-                              child: screen);
-                        } else {
-                          return screen;
-                        }
-                      }
-                      return Container();
-                    });
-              }), */
-        );
+            : _buildHome(ref));
   }
 
   FutureBuilder<bool> _buildHome(WidgetRef ref) {
@@ -107,13 +82,10 @@ class MyApp extends ConsumerWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             if (snapshot.data!) {
-              return const ContainerScreen();
+              return ContainerScreen(title: auth.evento!.nome);
             } else {
               return const AuthScreen();
             }
-            /*  return (snapshot.data == true)
-                ? const ContainerScreen()
-                : const AuthScreen(); */
           }
           return const CircularProgressIndicator();
         });
