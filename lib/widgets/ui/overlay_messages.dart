@@ -1,3 +1,4 @@
+import 'package:app_4/constants/assets_routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -49,7 +50,7 @@ class ValidationMessage extends StatelessWidget {
         'até ${eventTag.startDate.hour}h do dia ' +
         '${eventTag.endDate.day}-${eventTag.endDate.month}-${eventTag.endDate.year}';
     return OverlayMessage(
-      assetPngImgName: availability ? 'valid' : 'invalid',
+      assetPngImgName: availability ? validImgRoute : invalidImgRoute,
       context: parentContext,
       title: validationText,
       content: Column(children: [
@@ -57,11 +58,11 @@ class ValidationMessage extends StatelessWidget {
           children: [
             Text(
               durationText,
-              style: TextStyle(color: Colors.grey, fontSize: 23),
+              style: const TextStyle(color: Colors.grey, fontSize: 23),
             ),
             Text(
               datesInfoText,
-              style: TextStyle(color: Colors.grey, fontSize: 13),
+              style: const TextStyle(color: Colors.grey, fontSize: 13),
             ),
           ],
         ),
@@ -81,20 +82,20 @@ class ValidationMessage extends StatelessWidget {
                 ),
                 Text(
                   AppLocalizations.of(context)!.ticket,
-                  style: TextStyle(fontSize: 17, color: Colors.black54),
+                  style: const TextStyle(fontSize: 17, color: Colors.black54),
                 )
               ],
             ),
             Column(
               children: [
                 Container(
-                  decoration: BoxDecoration(color: Colors.grey),
+                  decoration: const BoxDecoration(color: Colors.grey),
                   height: 80,
                   width: 80,
                 ),
                 Text(
                   AppLocalizations.of(context)!.bracelet,
-                  style: TextStyle(fontSize: 17, color: Colors.black54),
+                  style: const TextStyle(fontSize: 17, color: Colors.black54),
                 )
               ],
             )
@@ -178,7 +179,7 @@ class OverlayMessage extends StatelessWidget {
                   ),
                   Text(
                     title,
-                    style: TextStyle(color: Colors.black, fontSize: 40),
+                    style: const TextStyle(color: Colors.black, fontSize: 40),
                   ),
                   content ?? Container()
                 ])));

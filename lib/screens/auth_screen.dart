@@ -1,9 +1,9 @@
-import '../constants/assets_routes.dart';
-import '../models/database/equipamento.dart';
-import '../models/database/evento.dart';
-import '../screens/container_screen.dart';
-import '../providers/auth_provider.dart';
-import '../services/database_service.dart';
+import 'package:app_4/constants/assets_routes.dart';
+import 'package:app_4/models/database/equipamento.dart';
+import 'package:app_4/models/database/evento.dart';
+import 'package:app_4/screens/container_screen.dart';
+import 'package:app_4/providers/auth_provider.dart';
+import 'package:app_4/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
