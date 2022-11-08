@@ -13,7 +13,7 @@ import '../helpers/size_helper.dart';
 import '../widgets/utility/empty_scroll_behaviour.dart';
 
 const _inputPadding = EdgeInsets.symmetric(horizontal: 30);
-const _inputFontSize = 16.0;
+const _inputFontSize = 15.0;
 const _bottomFontSize = 13.0;
 
 final _inputRadius = BorderRadius.circular(50);
@@ -38,7 +38,9 @@ class AuthView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(gradient: backGradient),
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(backgroundImgRoute), fit: BoxFit.fill)),
       child: SizedBox(
         height: SizeConfig.screenHeight,
         width: SizeConfig.screenWidth,
@@ -49,137 +51,211 @@ class AuthView extends StatelessWidget {
             SliverFillRemaining(
               hasScrollBody: false,
               fillOverscroll: false,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.only(
-                            right: 40,
-                            left: 40,
-                            top: SizeConfig.screenHeight * 0.13),
-                        //   right: 40, left: 40, top: 100, bottom: 20),
-                        child: Image.asset(logoImageRoute)),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: SizeConfig.screenHeight * 0.11,
+                    bottom: SizeConfig.screenHeight * 0.07),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.screenWidth * 0.07),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.screenWidth * 0.07),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const Icon(
-                            Icons.lock_outline,
-                            size: 30,
+                          Image.asset(logoImageRoute),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: SizeConfig.screenHeight * 0.04),
+                            child: Column(
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.reservedArea,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Text(
+                                  AppLocalizations.of(context)!.controlAccess,
+                                  style: const TextStyle(
+                                      color: secondColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 50),
+                                  textAlign: TextAlign.center,
+                                ),
+                                /*  SizedBox(
+                                  height: SizeConfig.screenHeight * 0.02,
+                                ), */
+                              ],
+                            ),
                           ),
-                          Text(
-                            AppLocalizations.of(context)!.reservedArea,
-                            style: const TextStyle(
-                                color: backMaterialColor,
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 90, right: 90, bottom: 45),
-                      child: Text(
-                        AppLocalizations.of(context)!.authorizedPeople,
-                        style: const TextStyle(
-                          fontSize: 13,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).backgroundColor,
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20))),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 48, vertical: 30),
-                          child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
-                                children: [
-                                  const Text(
-                                    'APP 4',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 29),
-                                    textAlign: TextAlign.center,
+                          (itemsEquipamentos != null && itemsEventos != null)
+                              ? AuthForm(
+                                  eventos: itemsEventos ?? [],
+                                  equipamentos: itemsEquipamentos ?? [])
+                              : FutureBuilder<Map<String, dynamic>>(
+                                  future: _getDatabaseData(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData &&
+                                        snapshot.data != null) {
+                                      List<Evento>? eventos =
+                                          snapshot.data!['eventos'];
+                                      List<Equipamento>? equipamentos =
+                                          snapshot.data!['equipamentos'];
+
+                                      if (eventos != null) {
+                                        itemsEventos = eventos
+                                            .map((evento) => _buildDropItem(
+                                                evento.nome, evento))
+                                            .toList();
+                                      }
+
+                                      if (equipamentos != null) {
+                                        itemsEquipamentos = equipamentos
+                                            .map((equip) => _buildDropItem(
+                                                equip.numeroEquipamento, equip))
+                                            .toList();
+                                      }
+
+                                      return AuthForm(
+                                          eventos: itemsEventos ?? [],
+                                          equipamentos:
+                                              itemsEquipamentos ?? []);
+                                    } else {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                  }),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.screenWidth * 0.07),
+                            child: Column(
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.emailLabel,
+                                  style: TextStyle(
+                                    fontSize: 11,
                                   ),
-                                  Text(
-                                    AppLocalizations.of(context)!.controlAccess,
-                                    style: const TextStyle(
-                                        color: secondColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.screenHeight * 0.02,
-                                  ),
-                                  const Text(
-                                    '(1.0.0)',
-                                    style: TextStyle(
-                                      fontSize: 19,
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  'info@trisimple.pt',
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.screenHeight * 0.01,
+                                ),
+                                //TODO LOCALIZE TEXT
+                                Text(
+                                  'versão: 1.0.0',
+                                  style: TextStyle(
+                                      fontSize: 11, color: thirdColor),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                          /* 
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).backgroundColor,
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20))),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 48, vertical: 30),
+                                child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        const Text(
+                                          'APP 4',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 29),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Text(
+                                          AppLocalizations.of(context)!.controlAccess,
+                                          style: const TextStyle(
+                                              color: secondColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 24),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(
+                                          height: SizeConfig.screenHeight * 0.02,
+                                        ),
+                                        const Text(
+                                          '(1.0.0)',
+                                          style: TextStyle(
+                                            fontSize: 19,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
+                                    (itemsEquipamentos != null &&
+                                            itemsEventos != null)
+                                        ? AuthForm(
+                                            eventos: itemsEventos ?? [],
+                                            equipamentos: itemsEquipamentos ?? [])
+                                        : FutureBuilder<Map<String, dynamic>>(
+                                            future: _getDatabaseData(),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.hasData &&
+                                                  snapshot.data != null) {
+                                                List<Evento>? eventos =
+                                                    snapshot.data!['eventos'];
+                                                List<Equipamento>? equipamentos =
+                                                    snapshot.data!['equipamentos'];
+
+                                                if (eventos != null) {
+                                                  itemsEventos = eventos
+                                                      .map((evento) => _buildDropItem(
+                                                          evento.nome, evento))
+                                                      .toList();
+                                                }
+
+                                                if (equipamentos != null) {
+                                                  itemsEquipamentos = equipamentos
+                                                      .map((equip) => _buildDropItem(
+                                                          equip.numeroEquipamento,
+                                                          equip))
+                                                      .toList();
+                                                }
+
+                                                return AuthForm(
+                                                    eventos: itemsEventos ?? [],
+                                                    equipamentos:
+                                                        itemsEquipamentos ?? []);
+                                              } else {
+                                                return const Center(
+                                                  child: CircularProgressIndicator(),
+                                                );
+                                              }
+                                            })
+                                  ],
+                                ),
                               ),
-                              (itemsEquipamentos != null &&
-                                      itemsEventos != null)
-                                  ? AuthForm(
-                                      eventos: itemsEventos ?? [],
-                                      equipamentos: itemsEquipamentos ?? [])
-                                  : FutureBuilder<Map<String, dynamic>>(
-                                      future: _getDatabaseData(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData &&
-                                            snapshot.data != null) {
-                                          List<Evento>? eventos =
-                                              snapshot.data!['eventos'];
-                                          List<Equipamento>? equipamentos =
-                                              snapshot.data!['equipamentos'];
-
-                                          if (eventos != null) {
-                                            itemsEventos = eventos
-                                                .map((evento) => _buildDropItem(
-                                                    evento.nome, evento))
-                                                .toList();
-                                          }
-
-                                          if (equipamentos != null) {
-                                            itemsEquipamentos = equipamentos
-                                                .map((equip) => _buildDropItem(
-                                                    equip.numeroEquipamento,
-                                                    equip))
-                                                .toList();
-                                          }
-
-                                          return AuthForm(
-                                              eventos: itemsEventos ?? [],
-                                              equipamentos:
-                                                  itemsEquipamentos ?? []);
-                                        } else {
-                                          return const Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
-                                      })
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  ]),
+                            ),
+                          )
+                         */
+                        ]),
+                  ),
+                ),
+              ),
             )
           ],
         ),
@@ -215,14 +291,21 @@ class AuthForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
+    return Builder(builder: (context) {
+      return Padding(
         padding: EdgeInsets.only(bottom: SizeConfig.screenHeight * 0.02),
         child: Form(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Text(
+                AppLocalizations.of(context)!.authorizedPeople,
+                style: TextStyle(
+                  fontSize: 10,
+                ),
+                textAlign: TextAlign.center,
+              ),
               AuthDropdown(
                 eventos,
                 onChanged: (value) {
@@ -242,22 +325,23 @@ class AuthForm extends StatelessWidget {
               const PasswordInput(),
               inputSpacement,
               _buildSubmitButton(),
+
               /* Column(children: [
-                Text(
-                  AppLocalizations.of(context)!.emailLabel,
-                  style: const TextStyle(fontSize: _bottomFontSize),
-                ),
-                const Text(
-                  'info@trisimple.pt',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: _bottomFontSize),
-                ),
-              ]), */
+                  Text(
+                    AppLocalizations.of(context)!.emailLabel,
+                    style: const TextStyle(fontSize: _bottomFontSize),
+                  ),
+                  const Text(
+                    'info@trisimple.pt',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: _bottomFontSize),
+                  ),
+                ]), */
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   _buildSubmitButton() {
@@ -311,11 +395,7 @@ class AuthForm extends StatelessWidget {
           child: Container(
               height: 48,
               decoration: BoxDecoration(
-                  borderRadius: _inputRadius,
-                  gradient: const LinearGradient(
-                      colors: gradientColors,
-                      end: Alignment.bottomLeft,
-                      begin: Alignment.topRight)),
+                  borderRadius: _inputRadius, gradient: buttonGradient),
               child: Center(
                 child: Text(
                   AppLocalizations.of(context)!.signIn,
@@ -411,6 +491,7 @@ class _AuthDropdownState extends State<AuthDropdown> {
           child: ButtonTheme(
             alignedDropdown: true,
             child: DropdownButton(
+              itemHeight: 50,
               value: selectedValue,
               isExpanded: true,
               hint: DropdownText(widget.hintText),

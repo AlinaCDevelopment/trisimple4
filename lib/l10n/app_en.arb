@@ -9,7 +9,8 @@
     "signIn": "Sign In",
     "controlAccess": "ACCESSES CONTROL",
     "reservedArea": "Reserved Area",
-    "authorizedPeople": "Solely people authorized\nby Trisimple are allowed in",
+    "authorizedPeople": "Solely people authorized by Trisimple are allowed in",
+    "emailLabel": "For more information, email:",
     
     "approachNfc": "May approach.",
     "search": "Search.",

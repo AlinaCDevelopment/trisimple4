@@ -43,7 +43,17 @@ const gradientColors = <Color>[
   Color(0xFFD772FB),
 ];
 
-const secondColor = Color.fromRGBO(150, 114, 251, 1);
+const secondColor = Color.fromRGBO(215, 114, 251, 1);
+const thirdColor = Color.fromRGBO(6, 163, 195, 1);
 
 const hintColor = Color(0xFF8780BA);
 const canvasColor = Colors.white;
+
+const appBarTextColor = Color.fromRGBO(218, 124, 250, 1);
+const appBarColor = Colors.white;
+
+
+const buttonGradient = LinearGradient(
+                      colors: gradientColors,
+                      end: Alignment.bottomLeft,
+                      begin: Alignment.topRight);

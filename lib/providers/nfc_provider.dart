@@ -85,6 +85,16 @@ class NfcNotifier extends StateNotifier<NfcState> {
   Future<int> _readEventId() async {
     return 0;
   }
+
+  void setDumbPositive() {
+    state = NfcState(
+        tag: EventTag(
+      0,
+      0,
+      endDate: DateTime.now(),
+      startDate: DateTime.now(),
+    ));
+  }
 }
 
 final nfcProvider = StateNotifierProvider<NfcNotifier, NfcState?>((ref) {

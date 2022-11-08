@@ -43,6 +43,7 @@ flutter:
 
   assets:
     - assets/images/logo.png
+    - assets/images/background.png
     - assets/images/menu.png
     - assets/images/valid.png
     - assets/images/invalid.png

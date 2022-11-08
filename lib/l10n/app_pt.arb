@@ -11,7 +11,7 @@
     "controlAccess": "CONTROLO DE ACESSOS",
     "reservedArea": "Área Reservada",
     "authorizedPeople": "Só é permitida a entrada a pessoas autorizadas pela Trisimple",
-
+    "emailLabel": "Para mais informações envie email para:",
     "approachNfc": "Pode aproximar.",
     "search": "Procurar.",
     "unavailableNfc": "NFC INDISPONÍVEL",

@@ -37,15 +37,22 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final isConnected = connectivity == ConnectivityResult.wifi;
         //If wifi is available get the latest version of the event and equipment from the database
         //Else use the ones stored inside the preferences
-        if (isConnected) {
-          final equipamento =
-              await DatabaseService.instance.readEquipById(equipamentoLocal.id);
-          final evento =
-              await DatabaseService.instance.readEventoById(eventoLocal.id);
-          authState = AuthState(equipamento: equipamento, evento: evento);
-        } else {
+        try {
+          if (isConnected) {
+            final equipamento = await DatabaseService.instance
+                .readEquipById(equipamentoLocal.id);
+            final evento =
+                await DatabaseService.instance.readEventoById(eventoLocal.id);
+            authState = AuthState(equipamento: equipamento, evento: evento);
+          } else {
+            authState =
+                AuthState(equipamento: equipamentoLocal, evento: eventoLocal);
+          }
+        } catch (e) {
+          //TODO Fix thisauthState
           authState =
               AuthState(equipamento: equipamentoLocal, evento: eventoLocal);
+          print(e);
         }
       } else {
         authState = AuthState();

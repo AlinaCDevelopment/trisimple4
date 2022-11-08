@@ -44,12 +44,15 @@ class _ContainerScreenState extends State<ContainerScreen> {
                 children: [
                   const Text(
                     'APP 4',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: appBarTextColor),
                   ),
                   Text(
                     AppLocalizations.of(context)!.controlAccess,
-                    style: const TextStyle(
-                        fontSize: 12, color: Color.fromRGBO(150, 115, 250, 1)),
+                    style:
+                        const TextStyle(fontSize: 12, color: appBarTextColor),
                   ),
                 ],
               ),

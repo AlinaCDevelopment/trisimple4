@@ -39,10 +39,6 @@ class MyApp extends ConsumerWidget {
 
     //ref.read(localeProvider.notifier).getLocaleFromPrefs();
     final locale = ref.watch(localeProvider);
-    if (locale == null) {
-      _prefsRead = true;
-      ref.read(localeProvider.notifier).getLocaleFromPrefs();
-    }
 
     return MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -56,9 +52,9 @@ class MyApp extends ConsumerWidget {
             primarySwatch: brightMaterialColor,
             scaffoldBackgroundColor: backMaterialColor,
             appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.transparent,
+              backgroundColor: appBarColor,
+              titleTextStyle: TextStyle(color: appBarTextColor),
               shadowColor: Colors.transparent,
-              shape: Border(bottom: BorderSide(color: secondColor, width: 1)),
             ),
             backgroundColor: backMaterialColor,
             canvasColor: Colors.white,

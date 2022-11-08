@@ -8,3 +8,4 @@ const scanImgRoute = 'assets/images/scan.png';
 const enImgRoute = 'assets/images/en.png';
 const ptImgRoute = 'assets/images/pt.png';
 const overlayCirlcedImgRoute = 'assets/images/overlayCircles.png';
+const backgroundImgRoute = 'assets/images/background.png';

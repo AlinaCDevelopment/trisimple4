@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import '../helpers/size_helper.dart';
 import '../providers/auth_provider.dart';
 import '../providers/nfc_provider.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants/assets_routes.dart';
 import '../constants/colors.dart';
-import '../widgets/ui/overlay_messages.dart';
+import '../widgets/ui/dialog_messages.dart';
 
 //TODO Resize icon to not take as much space
+//TODO Ask for EN ENGLISH ICON
 
 class ScanView extends ConsumerWidget {
   const ScanView(this.parentContext, {super.key});
@@ -18,19 +22,41 @@ class ScanView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final equipamento = ref.read(authProvider).equipamento;
     final evento = ref.read(authProvider).evento;
+
+    ref.listen(nfcProvider, (previous, next) {
+      if (next != null && next.error != null ||
+          next != null && next.tag != null) {
+        Widget dialog;
+        if (next.error != null && next.error!.isNotEmpty) {
+          dialog = ErrorMessage(parentContext);
+        } else {
+          dialog = ValidationMessage(parentContext, eventTag: next.tag!);
+        }
+        showDialog(
+          context: context,
+          barrierColor: Colors.transparent,
+          builder: (BuildContext context) {
+            return BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: dialog);
+          },
+        );
+      }
+    });
+
     return ScanContainer(
       ref: ref,
       nfcUserChild: ScanBody(
-        ref: ref,
         parentContext: parentContext,
         title: evento?.nome ?? '',
         deviceModel:
-            '${equipamento?.tipoEquipamento}#${equipamento?.numeroEquipamento}',
+            '${equipamento?.tipoEquipamento} #${equipamento?.numeroEquipamento}',
       ),
     );
   }
 }
 
+//TODO remove ref as an argument and wrap the scanbody in a future builder instead
 class ScanContainer extends StatelessWidget {
   const ScanContainer(
       {super.key, required this.ref, required this.nfcUserChild});
@@ -45,8 +71,15 @@ class ScanContainer extends StatelessWidget {
       builder: (context, snapshot) {
         Widget? bodyPresented;
         if (snapshot.hasData && snapshot.data != null) {
-          if ((snapshot.data!)) {
-            bodyPresented = nfcUserChild;
+          //TODO Deactivate this
+          //  if ((snapshot.data!)) {
+          // bodyPresented = nfcUserChild;
+          if ((true)) {
+            bodyPresented = GestureDetector(
+                onTap: () {
+                  ref.read(nfcProvider.notifier).setDumbPositive();
+                },
+                child: nfcUserChild);
           } else {
             bodyPresented = Center(
                 child: Padding(
@@ -65,7 +98,9 @@ class ScanContainer extends StatelessWidget {
           }
         }
         return Container(
-          decoration: const BoxDecoration(gradient: backGradient),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(backgroundImgRoute), fit: BoxFit.fill)),
           child: bodyPresented,
           //May need to be deleted TODO test with Nfc device
           constraints: const BoxConstraints.expand(),
@@ -88,10 +123,10 @@ class SearchButton extends StatelessWidget {
           height: 48,
           decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(50)),
-              color: backMaterialColor),
+              gradient: buttonGradient),
           child: Center(
             child: Text(
-              AppLocalizations.of(context)!.search,
+              AppLocalizations.of(context).search,
               style: const TextStyle(fontSize: 20, color: Colors.white),
             ),
           )),
@@ -103,24 +138,19 @@ class ScanBody extends StatelessWidget {
   const ScanBody({
     Key? key,
     required this.parentContext,
-    required this.ref,
     required this.title,
     required this.deviceModel,
   }) : super(key: key);
 
   final BuildContext parentContext;
-  final WidgetRef ref;
   final String title;
   final String deviceModel;
 
   @override
   Widget build(BuildContext context) {
-    ref.read(nfcProvider.notifier).readTag().catchError((e) {
-      print(e.toString());
-    });
-    final nfcNotifier = ref.watch(nfcProvider);
-    final eventTag = nfcNotifier?.tag;
-    final nfcError = nfcNotifier?.error;
+    //  ref.read(nfcProvider.notifier).readTag().catchError((e) {
+    //    print(e.toString());
+    //  });
 
     return Stack(
       children: [
@@ -141,7 +171,7 @@ class ScanBody extends StatelessWidget {
                   Text(
                     deviceModel,
                     style: const TextStyle(
-                        color: backMaterialColor,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 25),
                     textAlign: TextAlign.center,
@@ -152,33 +182,47 @@ class ScanBody extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 50.0, vertical: 30.0),
-                child: Stack(children: [
-                  Center(child: Image.asset(overlayCirlcedImgRoute)),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(49.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Image.asset(scanImgRoute),
-                          Text(
-                            AppLocalizations.of(context)!.approachNfc,
-                            style: const TextStyle(
-                                fontSize: 22, color: backMaterialColor),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
+                    horizontal: 10.0, vertical: 30.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ScranImage(),
+                    const Padding(
+                      padding:
+                          EdgeInsets.only(right: 60.0, left: 60.0, bottom: 10),
+                      child: SearchButton(),
                     ),
-                  ),
-                ]),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 70.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.contactsLabel,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 13),
+                            ),
+                            const Text(
+                              '+351 962 260 499',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )),
+                    Center(
+                      child: Text(
+                        'versão: 1.0.0',
+                        style: TextStyle(fontSize: 11, color: thirdColor),
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
+            ), /* 
             Column(
               children: [
                 const Padding(
@@ -192,8 +236,8 @@ class ScanBody extends StatelessWidget {
                       Text(
                         AppLocalizations.of(context)!.contactsLabel,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            color: backMaterialColor, fontSize: 13),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 13),
                       ),
                       const Text(
                         '+351 962 260 499',
@@ -208,12 +252,16 @@ class ScanBody extends StatelessWidget {
                 )
               ],
             ),
-            const SizedBox(
-              height: 150,
-            )
+             Center(
+              child: Text(
+                'versão: 1.0.0',
+                style: TextStyle(fontSize: 11, color: thirdColor),
+                textAlign: TextAlign.center,
+              ),
+            )*/
           ],
         ),
-        if (eventTag != null)
+        /* if (eventTag != null)
           GestureDetector(
             onTap: (() {
               ref.read(nfcProvider.notifier).reset();
@@ -221,13 +269,62 @@ class ScanBody extends StatelessWidget {
             child: ValidationMessage(parentContext, eventTag: eventTag!),
           ),
         if (nfcError != null)
-          GestureDetector(
-            onTap: (() {
-              ref.read(nfcProvider.notifier).reset();
-            }),
-            child: ErrorMessage(parentContext),
+
+          /**
+         * BackdropFilter(
+          filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          child: new Container(
+            decoration: new BoxDecoration(color: Colors.white.withOpacity(0.0)),
           ),
+        ),
+         */
+          SizedBox(
+            height: SizeConfig.screenHeight,
+            width: SizeConfig.screenWidth,
+            child: BackdropFilter(
+              filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+              child: GestureDetector(
+                onTap: (() {
+                  ref.read(nfcProvider.notifier).reset();
+                }),
+                child: ErrorMessage(parentContext),
+              ),
+            ),
+          ), */
       ],
     );
+  }
+}
+
+class ScranImage extends StatelessWidget {
+  const ScranImage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(alignment: Alignment.center, children: [
+      Center(child: Image.asset(overlayCirlcedImgRoute)),
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.all(49.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Image.asset(scanImgRoute),
+              Text(
+                AppLocalizations.of(context).approachNfc,
+                style: const TextStyle(fontSize: 22, color: backMaterialColor),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    ]);
   }
 }

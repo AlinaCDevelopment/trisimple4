@@ -11,7 +11,7 @@ class ErrorMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OverlayMessage(
+    return DialogMessage(
         context: parentContext,
         title: AppLocalizations.of(context)!.error,
         assetPngImgName: 'error');
@@ -49,7 +49,7 @@ class ValidationMessage extends StatelessWidget {
         '${eventTag.startDate.day}-${eventTag.startDate.month}-${eventTag.startDate.year}, ' +
         'até ${eventTag.startDate.hour}h do dia ' +
         '${eventTag.endDate.day}-${eventTag.endDate.month}-${eventTag.endDate.year}';
-    return OverlayMessage(
+    return DialogMessage(
       assetPngImgName: availability ? validImgRoute : invalidImgRoute,
       context: parentContext,
       title: validationText,
@@ -146,8 +146,8 @@ String _getMonth(int month) {
   }
 }
 
-class OverlayMessage extends StatelessWidget {
-  const OverlayMessage(
+class DialogMessage extends StatelessWidget {
+  const DialogMessage(
       {super.key,
       required this.context,
       required this.title,
@@ -168,20 +168,40 @@ class OverlayMessage extends StatelessWidget {
                 MediaQuery.of(context).size.width / 8,
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        right: 100.0, left: 100.0, top: 50),
-                    child: Image.asset(assetPngImgName),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    //TODO Use Icon
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        'X',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    onTap: () => Navigator.of(context).pop(),
                   ),
-                  Text(
-                    title,
-                    style: const TextStyle(color: Colors.black, fontSize: 40),
-                  ),
-                  content ?? Container()
-                ])));
+                ),
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            right: 100.0, left: 100.0, top: 50),
+                        child: Image.asset(assetPngImgName),
+                      ),
+                      Text(
+                        title,
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 40),
+                      ),
+                      content ?? Container()
+                    ]),
+              ],
+            )));
   }
 }

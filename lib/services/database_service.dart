@@ -21,11 +21,15 @@ class DatabaseService {
       List<Equipamento> equipamentos = List.empty(growable: true);
 
       final result = await http.get(Uri.parse('$_baseAPI/equipamentos'));
+
+      print(result.body);
+
       final List<dynamic> resultJson = json.decode(result.body);
       for (var equipJson in resultJson) {
         final estadoEquip =
-            await _getEstadoEquip(equipJson['id_estado'] as int);
-        final tipoEquip = await _getTipoEquip(equipJson['id_tipo']);
+            await _getEstadoEquip(equipJson['id_estado'] as int? ?? 1);
+        final tipoEquip =
+            await _getTipoEquip(equipJson['id_tipo'] as int? ?? 1);
 
         equipamentos.add(Equipamento(
             id: equipJson['id'],
@@ -44,6 +48,7 @@ class DatabaseService {
       List<Evento> eventos = List.empty(growable: true);
 
       final result = await http.get(Uri.parse('$_baseAPI/eventos'));
+      print(result.body);
       final List<dynamic> resultJson = json.decode(result.body);
 
       for (var equipJson in resultJson) {
@@ -64,12 +69,20 @@ class DatabaseService {
   }
 
   Future<String> _getEstadoEquip(int idEstado) async {
-    final result = await http.get(Uri.parse('$_baseAPI/estado_equipamento'));
-    //TODO Pass where paramter instead of using where in the list
-    List<dynamic> estados = json.decode(result.body);
-    final estadoJson =
-        estados.singleWhere((element) => element['id'] == idEstado);
-    return estadoJson['estado_equipamento'];
+    try {
+      final result = await http.get(Uri.parse('$_baseAPI/estado_equipamento'));
+      print(result.body);
+      //TODO Pass where paramter instead of using where in the list
+      List<dynamic> estados = json.decode(result.body);
+      final estadoJson = estados.singleWhere((element) {
+        final int idFound = element['id'] as int? ?? 0;
+        return (idFound) == idEstado;
+      });
+      return estadoJson['estado_equipamento'];
+    } catch (e) {
+      print("ERRRRRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOO: $e");
+    }
+    return '';
   }
 
   Future<String> _getTipoEquip(int idTipo) async {
