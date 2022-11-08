@@ -1,7 +1,7 @@
-import 'package:app_4/models/innerView.dart';
-import 'package:app_4/providers/auth_provider.dart';
-import 'package:app_4/providers/locale_provider.dart';
-import 'package:app_4/views/scan_view.dart';
+import '../models/innerView.dart';
+import '../providers/auth_provider.dart';
+import '../providers/locale_provider.dart';
+import '../views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';

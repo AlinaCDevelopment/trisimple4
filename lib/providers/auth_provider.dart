@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:app_4/models/database/equipamento.dart';
-import 'package:app_4/services/database_service.dart';
+import '../models/database/equipamento.dart';
+import '../services/database_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
