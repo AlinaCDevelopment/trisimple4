@@ -1,10 +1,11 @@
 import 'dart:io';
+import 'package:app_4/helpers/size_helper.dart';
 import 'package:app_4/screens/splash_screen.dart';
 import 'package:app_4/services/database_service.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app_4/screens/container_screen.dart';
-import 'package:app_4/providers/auth_service.dart';
+import 'package:app_4/providers/auth_provider.dart';
 import 'package:app_4/views/scan_view.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,6 @@ class MyApp extends ConsumerWidget {
       _prefsRead = true;
       ref.read(localeProvider.notifier).getLocaleFromPrefs();
     }
-    //print('wifi connect: $isConnectedToWifi');
 
     return MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -68,6 +68,8 @@ class MyApp extends ConsumerWidget {
         home: FutureBuilder<ConnectivityResult>(
             future: Connectivity().checkConnectivity(),
             builder: (context, snapshot) {
+              print('built');
+              SizeConfig.init(context);
               if (snapshot.hasData && snapshot.data != null) {
                 final isConnectedToWifi =
                     snapshot.data == ConnectivityResult.wifi;

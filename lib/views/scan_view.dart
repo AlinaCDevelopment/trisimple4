@@ -1,11 +1,14 @@
-import 'package:app_4/providers/auth_service.dart';
-import 'package:app_4/providers/nfc_service.dart';
+import 'package:app_4/providers/auth_provider.dart';
+import 'package:app_4/providers/nfc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../constants/assets_routes.dart';
 import '../constants/colors.dart';
 import '../widgets/ui/overlay_messages.dart';
+
+//TODO Resize icon to not take as much space
 
 class ScanView extends ConsumerWidget {
   const ScanView(this.parentContext, {super.key});
@@ -151,8 +154,7 @@ class ScanBody extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 50.0, vertical: 30.0),
                 child: Stack(children: [
-                  Center(
-                      child: Image.asset('assets/images/overlayCircles.png')),
+                  Center(child: Image.asset(overlayCirlcedImgRoute)),
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.all(49.0),
@@ -163,7 +165,7 @@ class ScanBody extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          Image.asset('assets/images/scan.png'),
+                          Image.asset(scanImgRoute),
                           Text(
                             AppLocalizations.of(context)!.approachNfc,
                             style: const TextStyle(

@@ -1,4 +1,3 @@
-//TODO and POPUP CONTAINER FOR VALID POPUP AND INVALID AND ERROR AND BUILD THEM FROM SCAN
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -11,44 +10,10 @@ class ErrorMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        height: MediaQuery.of(parentContext).size.height -
-            MediaQuery.of(parentContext).size.height / 3,
-        width: MediaQuery.of(parentContext).size.width -
-            MediaQuery.of(parentContext).size.width / 8,
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.only(right: 100.0, left: 100.0, top: 50),
-              child: Image.asset('assets/images/error.png'),
-            ),
-            Text(
-              AppLocalizations.of(context)!.error,
-              style: TextStyle(color: Colors.black, fontSize: 40),
-            ),
-            Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(color: Colors.grey),
-                  height: 80,
-                  width: 80,
-                ),
-                Text(
-                  AppLocalizations.of(context)!.ticket,
-                  style: TextStyle(fontSize: 17, color: Colors.black54),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    return OverlayMessage(
+        context: parentContext,
+        title: AppLocalizations.of(context)!.error,
+        assetPngImgName: 'error');
   }
 }
 
@@ -83,122 +48,139 @@ class ValidationMessage extends StatelessWidget {
         '${eventTag.startDate.day}-${eventTag.startDate.month}-${eventTag.startDate.year}, ' +
         'até ${eventTag.startDate.hour}h do dia ' +
         '${eventTag.endDate.day}-${eventTag.endDate.month}-${eventTag.endDate.year}';
-    return Center(
-      child: Container(
-        height: MediaQuery.of(parentContext).size.height -
-            MediaQuery.of(parentContext).size.height / 3,
-        width: MediaQuery.of(parentContext).size.width -
-            MediaQuery.of(parentContext).size.width / 8,
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
+    return OverlayMessage(
+      assetPngImgName: availability ? 'valid' : 'invalid',
+      context: parentContext,
+      title: validationText,
+      content: Column(children: [
+        Column(
           children: [
-            Padding(
-              padding:
-                  const EdgeInsets.only(right: 100.0, left: 100.0, top: 50),
-              child: availability
-                  ? Image.asset('assets/images/valid.png')
-                  : Image.asset('assets/images/invalid.png'),
+            Text(
+              durationText,
+              style: TextStyle(color: Colors.grey, fontSize: 23),
             ),
             Text(
-              validationText,
-              style: TextStyle(color: Colors.black, fontSize: 40),
+              datesInfoText,
+              style: TextStyle(color: Colors.grey, fontSize: 13),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Column(
+              children: [
+                SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: QrImage(
+                    data: "1234567890",
+                    version: QrVersions.auto,
+                    //size: 200.0,
+                  ),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.ticket,
+                  style: TextStyle(fontSize: 17, color: Colors.black54),
+                )
+              ],
             ),
             Column(
               children: [
-                Text(
-                  durationText,
-                  style: TextStyle(color: Colors.grey, fontSize: 23),
+                Container(
+                  decoration: BoxDecoration(color: Colors.grey),
+                  height: 80,
+                  width: 80,
                 ),
                 Text(
-                  datesInfoText,
-                  style: TextStyle(color: Colors.grey, fontSize: 13),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: QrImage(
-                        data: "1234567890",
-                        version: QrVersions.auto,
-                        //size: 200.0,
-                      ),
-                    ),
-                    /* Container(
-                      decoration: BoxDecoration(color: Colors.grey),
-                      height: 80,
-                      width: 80,
-                    ), */
-                    Text(
-                      AppLocalizations.of(context)!.ticket,
-                      style: TextStyle(fontSize: 17, color: Colors.black54),
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(color: Colors.grey),
-                      height: 80,
-                      width: 80,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.bracelet,
-                      style: TextStyle(fontSize: 17, color: Colors.black54),
-                    )
-                  ],
+                  AppLocalizations.of(context)!.bracelet,
+                  style: TextStyle(fontSize: 17, color: Colors.black54),
                 )
               ],
             )
           ],
-        ),
-      ),
+        )
+      ]),
     );
-  }
-
-  String _getMonth(int month) {
-    switch (month) {
-      case 1:
-        return 'Janeiro';
-      case 2:
-        return 'Fevereiro';
-      case 3:
-        return 'Março';
-      case 4:
-        return 'Abril';
-      case 5:
-        return 'Maio';
-      case 6:
-        return 'Junho';
-      case 7:
-        return 'Julho';
-      case 8:
-        return 'Agosto';
-      case 9:
-        return 'Setembro';
-      case 10:
-        return 'Outubro';
-      case 11:
-        return 'Novembro';
-      default:
-        return 'Dezembro';
-    }
   }
 }
 
 bool _checkTagValidity(DateTime startDate, DateTime lastDate) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
+  //TODO INCLUDE HOUR AND MINUTES
   return startDate.isBefore(today) && lastDate.isAfter(today) ||
       startDate.isBefore(today) && lastDate.isAtSameMomentAs(today) ||
       startDate.isAtSameMomentAs(today) && lastDate.isAfter(today) ||
       startDate.isAtSameMomentAs(today) && lastDate.isAtSameMomentAs(today);
+}
+
+//TODO REMOVE THIS WHEN DB IS READY
+String _getMonth(int month) {
+  switch (month) {
+    case 1:
+      return 'Janeiro';
+    case 2:
+      return 'Fevereiro';
+    case 3:
+      return 'Março';
+    case 4:
+      return 'Abril';
+    case 5:
+      return 'Maio';
+    case 6:
+      return 'Junho';
+    case 7:
+      return 'Julho';
+    case 8:
+      return 'Agosto';
+    case 9:
+      return 'Setembro';
+    case 10:
+      return 'Outubro';
+    case 11:
+      return 'Novembro';
+    default:
+      return 'Dezembro';
+  }
+}
+
+class OverlayMessage extends StatelessWidget {
+  const OverlayMessage(
+      {super.key,
+      required this.context,
+      required this.title,
+      this.content,
+      required this.assetPngImgName});
+  final BuildContext context;
+  final String title;
+  final Widget? content;
+  final String assetPngImgName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Container(
+            height: MediaQuery.of(context).size.height -
+                MediaQuery.of(context).size.height / 3,
+            width: MediaQuery.of(context).size.width -
+                MediaQuery.of(context).size.width / 8,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: 100.0, left: 100.0, top: 50),
+                    child: Image.asset(assetPngImgName),
+                  ),
+                  Text(
+                    title,
+                    style: TextStyle(color: Colors.black, fontSize: 40),
+                  ),
+                  content ?? Container()
+                ])));
+  }
 }

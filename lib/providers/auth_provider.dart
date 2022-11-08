@@ -28,8 +28,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final prefs = await SharedPreferences.getInstance();
       final equipJsonString = prefs.getString('equipamento');
       final eventoJsonString = prefs.getString('evento');
-      print('equipamento: $equipJsonString');
-      print('evento: $eventoJsonString');
       AuthState authState;
       if (equipJsonString != null && eventoJsonString != null) {
         final equipamentoLocal = Equipamento.fromJson(equipJsonString);
@@ -82,7 +80,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<bool> _setDeviceAuth(Equipamento equipamento, Evento evento) async {
-    //TODO Replace ID with storing JSON again to have this working offline
     final prefs = await SharedPreferences.getInstance();
     final equipSet =
         await prefs.setString('equipamento', equipamento.toJson().toString());

@@ -1,5 +1,5 @@
 import 'package:app_4/models/innerView.dart';
-import 'package:app_4/providers/auth_service.dart';
+import 'package:app_4/providers/auth_provider.dart';
 import 'package:app_4/providers/locale_provider.dart';
 import 'package:app_4/views/scan_view.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../constants/assets_routes.dart';
 import '../constants/colors.dart';
 import 'auth_screen.dart';
 
@@ -62,8 +63,7 @@ class _ContainerScreenState extends State<ContainerScreen> {
                 icon: Padding(
                   padding: const EdgeInsets.only(
                       left: 3.0, right: 5, top: 1, bottom: 1),
-                  child: Image.asset(
-                      isPt ? 'assets/images/pt.png' : 'assets/images/en.png'),
+                  child: Image.asset(isPt ? ptImgRoute : enImgRoute),
                 ),
                 onPressed: () {
                   print('pop');
@@ -78,7 +78,7 @@ class _ContainerScreenState extends State<ContainerScreen> {
             return IconButton(
               icon: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/menu.png'),
+                child: Image.asset(menuImgRoute),
               ),
               onPressed: () => Scaffold.of(context).openDrawer(),
             );
@@ -102,7 +102,7 @@ class _ContainerScreenState extends State<ContainerScreen> {
                       child: Row(
                         children: [
                           Image.asset(
-                            'assets/images/logo.png',
+                            logoImageRoute,
                             width: 200,
                             height: 100,
                           ),

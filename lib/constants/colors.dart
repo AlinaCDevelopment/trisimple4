@@ -43,7 +43,7 @@ const gradientColors = <Color>[
   Color(0xFFD772FB),
 ];
 
-const secondColor = Color(0xFF8780BA);
+const secondColor = Color.fromRGBO(150, 114, 251, 1);
 
-const hintColor = secondColor;
+const hintColor = Color(0xFF8780BA);
 const canvasColor = Colors.white;
