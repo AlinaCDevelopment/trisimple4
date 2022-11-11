@@ -1,3 +1,6 @@
+import 'package:app_4/views/pending_view.dart';
+import 'package:app_4/views/search_view.dart';
+
 import '../models/innerView.dart';
 import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
@@ -11,23 +14,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants/assets_routes.dart';
 import '../constants/colors.dart';
+import '../widgets/ui/views_container.dart';
 import 'auth_screen.dart';
 
-class ContainerScreen extends StatefulWidget {
-  const ContainerScreen({super.key, required this.title});
-  final String title;
+class ContainerScreen extends ConsumerStatefulWidget {
+  const ContainerScreen({super.key});
 
   @override
-  State<ContainerScreen> createState() => _ContainerScreenState();
+  ConsumerState<ContainerScreen> createState() => _ContainerScreenState();
 }
 
-class _ContainerScreenState extends State<ContainerScreen> {
-  var _selectedRouteName = 'scan';
+class _ContainerScreenState extends ConsumerState<ContainerScreen> {
+  var _selectedRouteName = ScanView.name;
+  bool isFail = true;
 
   @override
   Widget build(BuildContext context) {
     final screens = {
-      'scan': ScanView(context),
+      ScanView.name: ScanView(context),
+      SearchView.name: const SearchView(),
+      PendingView.name: const PendingView(),
     };
 
     return WillPopScope(
@@ -50,7 +56,9 @@ class _ContainerScreenState extends State<ContainerScreen> {
                         color: appBarTextColor),
                   ),
                   Text(
-                    AppLocalizations.of(context)!.controlAccess,
+                    AppLocalizations.of(context)
+                        .controlAccess
+                        .replaceAll('\n', ' '),
                     style:
                         const TextStyle(fontSize: 12, color: appBarTextColor),
                   ),
@@ -98,64 +106,109 @@ class _ContainerScreenState extends State<ContainerScreen> {
                   SizedBox(
                     height: 100,
                     child: DrawerHeader(
-                      decoration:
-                          BoxDecoration(color: Colors.black.withOpacity(0.8)),
+                      decoration: const BoxDecoration(color: Colors.black),
                       padding: const EdgeInsets.only(left: 10),
                       margin: null,
-                      child: Row(
-                        children: [
-                          Image.asset(
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(bottom: 8.0, right: 15),
+                          child: Image.asset(
                             logoImageRoute,
-                            width: 200,
-                            height: 100,
+                            height: 50,
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 20.0),
-                    child: Row(
-                      children: [
-                        /*  Container(
-                          height: 100,
-                          width: 70,
-                          color: Colors.grey,
-                        ), */
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'APP4\n${AppLocalizations.of(context)!.controlAccess}',
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0, left: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            isFail
+                                ? Row(
+                                    children: [
+                                      Container(
+                                        decoration: const ShapeDecoration(
+                                            shape: CircleBorder(),
+                                            color: Colors.red),
+                                        height: 10,
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        ' FALHA',
+                                        style: TextStyle(color: Colors.red),
+                                      )
+                                    ],
+                                  )
+                                : Row(
+                                    children: [
+                                      Container(
+                                        decoration: const ShapeDecoration(
+                                            shape: CircleBorder(),
+                                            color: Colors.green),
+                                        height: 10,
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        ' CORRETO',
+                                        style: TextStyle(color: Colors.green),
+                                      )
+                                    ],
+                                  ),
+                            Text(
+                                '4 - ${AppLocalizations.of(context).controlAccess.replaceAll('\n', ' ')}',
                                 style: const TextStyle(
-                                    color: backMaterialColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15),
-                              ),
-                              Text(
-                                widget.title,
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 15),
-                              ),
-                            ],
-                          ),
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
+                            Text(ref.read(authProvider).evento!.nome,
+                                style: const TextStyle(color: Colors.grey))
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Text(
+                          ref.read(authProvider).equipamento!.numeroEquipamento,
+                          style: const TextStyle(
+                              fontSize: 92,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold))
+                    ],
                   ),
+
+                  //============================================================================================
+                  //SCAN
                   DrawerTile(
-                    onTap: () {
-                      setState(() {
-                        _selectedRouteName = 'scan';
-                      });
-                    },
-                    isSelected: 'scan' == _selectedRouteName,
-                    title: AppLocalizations.of(context)!.scan,
+                    onTap: () => _routeTileTapped(ScanView.name),
+                    isSelected: ScanView.name == _selectedRouteName,
+                    title: AppLocalizations.of(context).scan.toUpperCase(),
                   ),
+
+                  //============================================================================================
+                  //SEARCH
+                  DrawerTile(
+                    onTap: () => _routeTileTapped(SearchView.name),
+                    isSelected: 'search' == _selectedRouteName,
+                    title: AppLocalizations.of(context).search.toUpperCase(),
+                  ),
+                  //============================================================================================
+                  //PENDING REQUESTS
+                  DrawerTile(
+                    onTap: () => _routeTileTapped(PendingView.name),
+                    isSelected: 'pending' == _selectedRouteName,
+                    title: AppLocalizations.of(context)
+                        .pendingRecords
+                        .toUpperCase(),
+                  ),
+
+                  //============================================================================================
+                  //EXIT
                   Consumer(
                     builder: (context, ref, child) {
                       return DrawerTile(
@@ -170,7 +223,7 @@ class _ContainerScreenState extends State<ContainerScreen> {
                               .invokeMethod('SystemNavigator.pop');
                         },
                         isSelected: false,
-                        title: AppLocalizations.of(context)!.exit,
+                        title: AppLocalizations.of(context).exit.toUpperCase(),
                       );
                     },
                   ),
@@ -185,7 +238,7 @@ class _ContainerScreenState extends State<ContainerScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.contactsLabel,
+                      AppLocalizations.of(context).contactsLabel,
                       style: const TextStyle(color: Colors.grey, fontSize: 13),
                     ),
                     const Text(
@@ -211,9 +264,18 @@ class _ContainerScreenState extends State<ContainerScreen> {
             ],
           ),
         ),
-        body: screens[_selectedRouteName],
+        body: ViewContainer(
+          child: screens[_selectedRouteName]!,
+        ),
       ),
     );
+  }
+
+  void _routeTileTapped(String name) {
+    Navigator.pop(context);
+    setState(() {
+      _selectedRouteName = name;
+    });
   }
 }
 

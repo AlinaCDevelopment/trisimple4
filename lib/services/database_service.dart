@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import '../models/database/equipamento.dart';
 import '../models/database/evento.dart';
 
+//TODO Fix get estado euipamento
+
 //AS SERVICE
 
 class DatabaseService {
@@ -80,7 +82,7 @@ class DatabaseService {
       });
       return estadoJson['estado_equipamento'];
     } catch (e) {
-      print("ERRRRRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOO: $e");
+      print("_getEstadoEquip-Erro: $e");
     }
     return '';
   }
@@ -136,8 +138,10 @@ class DatabaseNotifier extends StateNotifier<DatabaseState> {
       final result = await http.get(Uri.parse('$_baseAPI/equipamentos'));
       final resultJson = json.decode(result.body);
       resultJson.forEach((equipJson) async {
-        final estadoEquip = await _getEstadoEquip(equipJson['id_estado']);
-        final tipoEquip = await _getTipoEquip(equipJson['id_tipo']);
+        final estadoEquip =
+            await _getEstadoEquip(equipJson['id_estado'] as int? ?? 1);
+        final tipoEquip =
+            await _getTipoEquip(equipJson['id_tipo'] as int? ?? 1);
 
         equipamentos.add(Equipamento(
             id: equipJson['id'],
@@ -146,7 +150,7 @@ class DatabaseNotifier extends StateNotifier<DatabaseState> {
             estadoEquipamento: estadoEquip));
       });
     } catch (e) {
-      print(e);
+      print('ERRRRRRRO: $e');
     }
     state = state.copyWith(equipamentos: equipamentos);
     return equipamentos;
@@ -169,18 +173,26 @@ class DatabaseNotifier extends StateNotifier<DatabaseState> {
   }
 
   Future<String> _getEstadoEquip(int idEstado) async {
-    final result = await http.get(Uri.parse('$_baseAPI/estado_equipamento'));
-    //TODO Pass where paramter instead of using where in the list
-    final estados = json.decode(result.body);
-    final estadoJson =
-        estados.singleWhere((element) => element['id'] == idEstado);
-    return estadoJson['estado_equipamento'];
+    try {
+      final result = await http.get(Uri.parse('$_baseAPI/estado_equipamento'));
+      print(result.body);
+      //TODO Pass where paramter instead of using where in the list
+      List<dynamic> estados = json.decode(result.body);
+      final estadoJson = estados.singleWhere((element) {
+        final int idFound = element['id'] as int? ?? 0;
+        return (idFound) == idEstado;
+      });
+      return estadoJson['estado_equipamento'];
+    } catch (e) {
+      print(e);
+    }
+    return 'unavailable';
   }
 
   Future<String> _getTipoEquip(int idTipo) async {
     final result = await http.get(Uri.parse('$_baseAPI/tipo_equipamento'));
     //TODO Pass where paramter instead of using where in the list
-    final estados = json.decode(result.body);
+    List<dynamic> estados = json.decode(result.body);
     final estadoJson =
         estados.singleWhere((element) => element['id'] == idTipo);
     return estadoJson['tipo_equipamento'];

@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:app_4/models/database/equipamento.dart';
+import 'package:app_4/models/database/evento.dart';
+
 import '../helpers/size_helper.dart';
 import '../screens/splash_screen.dart';
 import '../services/database_service.dart';
@@ -17,6 +20,7 @@ import 'package:upgrader/upgrader.dart';
 
 import 'constants/colors.dart';
 import 'providers/locale_provider.dart';
+import 'screens/auth_screen.dart';
 import 'screens/auth_screen.dart';
 
 //TODO Set at start the screen size instead of using media queries everywhere
@@ -39,6 +43,7 @@ class MyApp extends ConsumerWidget {
 
     //ref.read(localeProvider.notifier).getLocaleFromPrefs();
     final locale = ref.watch(localeProvider);
+    bool _initialized = false;
 
     return MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -69,6 +74,7 @@ class MyApp extends ConsumerWidget {
               if (snapshot.hasData && snapshot.data != null) {
                 final isConnectedToWifi =
                     snapshot.data == ConnectivityResult.wifi;
+                //  return const SplashScreen();
                 return isConnectedToWifi
                     ? UpgradeAlert(
                         upgrader: Upgrader(
@@ -90,16 +96,35 @@ class MyApp extends ConsumerWidget {
             }));
   }
 
-  FutureBuilder<bool> _buildHome(WidgetRef ref) {
+  Widget _buildHome(WidgetRef ref) {
     final auth = ref.read(authProvider);
+
     return FutureBuilder<bool>(
         future: ref.read(authProvider.notifier).authenticateFromPreviousLogs(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             if (snapshot.data!) {
-              return ContainerScreen(title: auth.evento!.nome);
+              return ContainerScreen();
             } else {
-              return const AuthScreen();
+              return FutureBuilder(
+                  future: Future.wait([
+                    DatabaseService.instance.readEquips(),
+                    DatabaseService.instance.readEventos(),
+                    ref.read(databaseProvider.notifier).readEquips(),
+                    ref.read(databaseProvider.notifier).readEventos(),
+                  ]),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.data?[0] != null &&
+                        snapshot.data?[1] != null) {
+                      return AuthScreen(
+                        equipamentos: snapshot.data![0] as List<Equipamento>,
+                        eventos: snapshot.data![1] as List<Evento>,
+                      );
+                    } else {
+                      return const SplashScreen();
+                    }
+                  });
             }
           }
           return const SplashScreen();

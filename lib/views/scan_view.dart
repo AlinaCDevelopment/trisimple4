@@ -1,5 +1,8 @@
 import 'dart:ui';
 
+import 'package:app_4/widgets/themed_button.dart';
+import 'package:app_4/widgets/ui/views_container.dart';
+
 import '../helpers/size_helper.dart';
 import '../providers/auth_provider.dart';
 import '../providers/nfc_provider.dart';
@@ -12,11 +15,13 @@ import '../constants/colors.dart';
 import '../widgets/ui/dialog_messages.dart';
 
 //TODO Resize icon to not take as much space
-//TODO Ask for EN ENGLISH ICON
+//TODO Fix authentication preferences save
 
 class ScanView extends ConsumerWidget {
   const ScanView(this.parentContext, {super.key});
   final BuildContext parentContext;
+
+  static const name = 'scan';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -71,15 +76,16 @@ class ScanContainer extends StatelessWidget {
       builder: (context, snapshot) {
         Widget? bodyPresented;
         if (snapshot.hasData && snapshot.data != null) {
-          //TODO Deactivate this
-          //  if ((snapshot.data!)) {
-          // bodyPresented = nfcUserChild;
-          if ((true)) {
-            bodyPresented = GestureDetector(
-                onTap: () {
-                  ref.read(nfcProvider.notifier).setDumbPositive();
-                },
-                child: nfcUserChild);
+          //REAL VERSION
+          if ((snapshot.data!)) {
+            bodyPresented = nfcUserChild;
+            //TEST VERSION
+            // if ((true)) {
+            //   bodyPresented = GestureDetector(
+            //       onTap: () {
+            //         ref.read(nfcProvider.notifier).setDumbPositive();
+            //       },
+            //       child: nfcUserChild);
           } else {
             bodyPresented = Center(
                 child: Padding(
@@ -97,14 +103,7 @@ class ScanContainer extends StatelessWidget {
             ));
           }
         }
-        return Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(backgroundImgRoute), fit: BoxFit.fill)),
-          child: bodyPresented,
-          //May need to be deleted TODO test with Nfc device
-          constraints: const BoxConstraints.expand(),
-        );
+        return bodyPresented ?? Container();
       },
     );
   }
@@ -117,20 +116,8 @@ class SearchButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-          height: 48,
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(50)),
-              gradient: buttonGradient),
-          child: Center(
-            child: Text(
-              AppLocalizations.of(context).search,
-              style: const TextStyle(fontSize: 20, color: Colors.white),
-            ),
-          )),
-    );
+    return ThemedButton(
+        onTap: () {}, text: AppLocalizations.of(context).search);
   }
 }
 
@@ -151,146 +138,85 @@ class ScanBody extends StatelessWidget {
     //  ref.read(nfcProvider.notifier).readTag().catchError((e) {
     //    print(e.toString());
     //  });
-
-    return Stack(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0),
-              child: Column(
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        fontWeight: FontWeight.normal),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    deviceModel,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+        ScranImage(),
+        const Padding(
+          padding: EdgeInsets.only(right: 60.0, left: 60.0, bottom: 10),
+          child: SearchButton(),
+        ),
+      ],
+    );
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: Column(
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.normal),
+                textAlign: TextAlign.center,
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0, vertical: 30.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ScranImage(),
-                    const Padding(
-                      padding:
-                          EdgeInsets.only(right: 60.0, left: 60.0, bottom: 10),
-                      child: SearchButton(),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.contactsLabel,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 13),
-                            ),
-                            const Text(
-                              '+351 962 260 499',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )),
-                    Center(
-                      child: Text(
-                        'versão: 1.0.0',
-                        style: TextStyle(fontSize: 11, color: thirdColor),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  ],
-                ),
+              Text(
+                deviceModel,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25),
+                textAlign: TextAlign.center,
               ),
-            ), /* 
-            Column(
+            ],
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 30.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                ScranImage(),
                 const Padding(
                   padding: EdgeInsets.only(right: 60.0, left: 60.0, bottom: 10),
                   child: SearchButton(),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.contactsLabel,
-                        textAlign: TextAlign.center,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 13),
-                      ),
-                      const Text(
-                        '+351 962 260 499',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                    padding: const EdgeInsets.symmetric(horizontal: 70.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.contactsLabel,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 13),
+                        ),
+                        const Text(
+                          '+351 962 260 499',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    )),
+                Center(
+                  child: Text(
+                    '${AppLocalizations.of(context).version}: 1.0.0',
+                    style: TextStyle(fontSize: 11, color: thirdColor),
+                    textAlign: TextAlign.center,
                   ),
                 )
               ],
             ),
-             Center(
-              child: Text(
-                'versão: 1.0.0',
-                style: TextStyle(fontSize: 11, color: thirdColor),
-                textAlign: TextAlign.center,
-              ),
-            )*/
-          ],
-        ),
-        /* if (eventTag != null)
-          GestureDetector(
-            onTap: (() {
-              ref.read(nfcProvider.notifier).reset();
-            }),
-            child: ValidationMessage(parentContext, eventTag: eventTag!),
-          ),
-        if (nfcError != null)
-
-          /**
-         * BackdropFilter(
-          filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-          child: new Container(
-            decoration: new BoxDecoration(color: Colors.white.withOpacity(0.0)),
           ),
         ),
-         */
-          SizedBox(
-            height: SizeConfig.screenHeight,
-            width: SizeConfig.screenWidth,
-            child: BackdropFilter(
-              filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-              child: GestureDetector(
-                onTap: (() {
-                  ref.read(nfcProvider.notifier).reset();
-                }),
-                child: ErrorMessage(parentContext),
-              ),
-            ),
-          ), */
       ],
     );
   }

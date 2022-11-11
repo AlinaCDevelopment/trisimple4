@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../helpers/size_helper.dart';
 import '../../models/event_tag.dart';
 
 class ErrorMessage extends StatelessWidget {
@@ -13,7 +14,7 @@ class ErrorMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DialogMessage(
         context: parentContext,
-        title: AppLocalizations.of(context)!.error,
+        title: AppLocalizations.of(context).error,
         assetPngImgName: 'error');
   }
 }
@@ -35,8 +36,8 @@ class ValidationMessage extends StatelessWidget {
     final durationDays = eventTag.endDate.day - eventTag.startDate.day + 1;
     //TODO Localize validationText
     final validationText = availability
-        ? AppLocalizations.of(context)!.valid
-        : AppLocalizations.of(context)!.invalid;
+        ? AppLocalizations.of(context).valid
+        : AppLocalizations.of(context).invalid;
     String durationText;
 
     if (eventTag.endDate.difference(eventTag.startDate).inDays > 0) {
@@ -54,17 +55,24 @@ class ValidationMessage extends StatelessWidget {
       context: parentContext,
       title: validationText,
       content: Column(children: [
-        Column(
-          children: [
-            Text(
-              durationText,
-              style: const TextStyle(color: Colors.grey, fontSize: 23),
-            ),
-            Text(
-              datesInfoText,
-              style: const TextStyle(color: Colors.grey, fontSize: 13),
-            ),
-          ],
+        FittedBox(
+          child: Column(
+            children: [
+              Text(
+                textAlign: TextAlign.center,
+                durationText,
+                style: const TextStyle(color: Colors.grey, fontSize: 23),
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                datesInfoText,
+                style: const TextStyle(color: Colors.grey, fontSize: 13),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.screenHeight * 0.01,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -81,24 +89,28 @@ class ValidationMessage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  AppLocalizations.of(context)!.ticket,
+                  AppLocalizations.of(context).ticket,
                   style: const TextStyle(fontSize: 17, color: Colors.black54),
                 )
               ],
             ),
             Column(
               children: [
-                Container(
-                  decoration: const BoxDecoration(color: Colors.grey),
+                SizedBox(
                   height: 80,
                   width: 80,
+                  child: QrImage(
+                    data: "1234567890",
+                    version: QrVersions.auto,
+                    //size: 200.0,
+                  ),
                 ),
                 Text(
-                  AppLocalizations.of(context)!.bracelet,
+                  AppLocalizations.of(context).bracelet,
                   style: const TextStyle(fontSize: 17, color: Colors.black54),
                 )
               ],
-            )
+            ),
           ],
         )
       ]),
@@ -162,10 +174,8 @@ class DialogMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Container(
-            height: MediaQuery.of(context).size.height -
-                MediaQuery.of(context).size.height / 3,
-            width: MediaQuery.of(context).size.width -
-                MediaQuery.of(context).size.width / 8,
+            height: SizeConfig.screenHeight * 0.66,
+            width: SizeConfig.screenWidth * 0.85,
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
             child: Stack(
@@ -177,9 +187,9 @@ class DialogMessage extends StatelessWidget {
                     //TODO Use Icon
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: Text(
-                        'X',
-                        style: TextStyle(color: Colors.black),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.grey,
                       ),
                     ),
                     onTap: () => Navigator.of(context).pop(),
@@ -190,8 +200,10 @@ class DialogMessage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(
-                            right: 100.0, left: 100.0, top: 50),
+                        padding: EdgeInsets.only(
+                            right: SizeConfig.screenWidth * 0.2,
+                            left: SizeConfig.screenWidth * 0.2,
+                            top: 50),
                         child: Image.asset(assetPngImgName),
                       ),
                       Text(

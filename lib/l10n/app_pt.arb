@@ -1,6 +1,13 @@
 {
+    "search": "Procurar",
+    "version": "versão",
+
     "exit": "SAIR",
     "scan": "SCAN",
+    "pendingRecords": "Registos Pendentes",
+    "badConnection": "Ligação falhou",
+    "rightConnection": "Ligado",
+
     "contactsLabel": "Contato responsável técnico\ndo evento para pedido de suporte:",
 
 
@@ -8,13 +15,15 @@
     "equipSelectHint": "Seleciona o equipamento",
     "passwordHint": "Insere a palavra-passe",
     "signIn": "Registar",
-    "controlAccess": "CONTROLO DE ACESSOS",
+    "controlAccess": "CONTROLO\nDE ACESSOS",
     "reservedArea": "Área Reservada",
     "authorizedPeople": "Só é permitida a entrada a pessoas autorizadas pela Trisimple",
     "emailLabel": "Para mais informações envie email para:",
     "approachNfc": "Pode aproximar.",
-    "search": "Procurar.",
     "unavailableNfc": "NFC INDISPONÍVEL",
+    
+    "codeInsertLabel": "Inserir CÓDIGO gravado no Chip da pulseira",
+    "condeInsertHint": "Insere o código",
     
     "valid": "VÁLIDO",
     "invalid": "INVÁLIDO",
