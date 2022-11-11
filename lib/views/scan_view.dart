@@ -77,15 +77,15 @@ class ScanContainer extends StatelessWidget {
         Widget? bodyPresented;
         if (snapshot.hasData && snapshot.data != null) {
           //REAL VERSION
-          //  if ((snapshot.data!)) {
-          //    bodyPresented = nfcUserChild;
+            if ((snapshot.data!)) {
+              bodyPresented = nfcUserChild;
           //TEST VERSION
-          if ((true)) {
-            bodyPresented = GestureDetector(
-                onTap: () {
-                  ref.read(nfcProvider.notifier).setDumbPositive();
-                },
-                child: nfcUserChild);
+          //if ((true)) {
+          //  bodyPresented = GestureDetector(
+          //      onTap: () {
+          //        ref.read(nfcProvider.notifier).setDumbPositive();
+          //      },
+          //      child: nfcUserChild);
           } else {
             bodyPresented = Center(
                 child: Padding(
