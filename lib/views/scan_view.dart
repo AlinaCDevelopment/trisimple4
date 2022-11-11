@@ -77,15 +77,15 @@ class ScanContainer extends StatelessWidget {
         Widget? bodyPresented;
         if (snapshot.hasData && snapshot.data != null) {
           //REAL VERSION
-          if ((snapshot.data!)) {
-            bodyPresented = nfcUserChild;
-            //TEST VERSION
-            // if ((true)) {
-            //   bodyPresented = GestureDetector(
-            //       onTap: () {
-            //         ref.read(nfcProvider.notifier).setDumbPositive();
-            //       },
-            //       child: nfcUserChild);
+          //  if ((snapshot.data!)) {
+          //    bodyPresented = nfcUserChild;
+          //TEST VERSION
+          if ((true)) {
+            bodyPresented = GestureDetector(
+                onTap: () {
+                  ref.read(nfcProvider.notifier).setDumbPositive();
+                },
+                child: nfcUserChild);
           } else {
             bodyPresented = Center(
                 child: Padding(
@@ -145,77 +145,6 @@ class ScanBody extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.only(right: 60.0, left: 60.0, bottom: 10),
           child: SearchButton(),
-        ),
-      ],
-    );
-
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: Column(
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.normal),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                deviceModel,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 30.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ScranImage(),
-                const Padding(
-                  padding: EdgeInsets.only(right: 60.0, left: 60.0, bottom: 10),
-                  child: SearchButton(),
-                ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.contactsLabel,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 13),
-                        ),
-                        const Text(
-                          '+351 962 260 499',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )),
-                Center(
-                  child: Text(
-                    '${AppLocalizations.of(context).version}: 1.0.0',
-                    style: TextStyle(fontSize: 11, color: thirdColor),
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              ],
-            ),
-          ),
         ),
       ],
     );
