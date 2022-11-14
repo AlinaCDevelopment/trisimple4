@@ -49,28 +49,6 @@ class ScanView extends ConsumerWidget {
       }
     });
 
-    return ScanContainer(
-      ref: ref,
-      nfcUserChild: ScanBody(
-        parentContext: parentContext,
-        title: evento?.nome ?? '',
-        deviceModel:
-            '${equipamento?.tipoEquipamento} #${equipamento?.numeroEquipamento}',
-      ),
-    );
-  }
-}
-
-//TODO remove ref as an argument and wrap the scanbody in a future builder instead
-class ScanContainer extends StatelessWidget {
-  const ScanContainer(
-      {super.key, required this.ref, required this.nfcUserChild});
-
-  final WidgetRef ref;
-  final Widget nfcUserChild;
-
-  @override
-  Widget build(BuildContext context) {
     return FutureBuilder(
       future: ref.read(nfcProvider.notifier).isNfcAvailable(),
       builder: (context, snapshot) {
@@ -78,7 +56,17 @@ class ScanContainer extends StatelessWidget {
         if (snapshot.hasData && snapshot.data != null) {
           //REAL VERSION
             if ((snapshot.data!)) {
-              bodyPresented = nfcUserChild;
+              bodyPresented = Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        const ScranImage(),
+         Padding(
+          padding: const EdgeInsets.only(right: 60.0, left: 60.0, bottom: 10),
+          child: ThemedButton(
+        onTap: () {}, text: AppLocalizations.of(context).search)
+        ),
+      ],
+    );
           //TEST VERSION
           //if ((true)) {
           //  bodyPresented = GestureDetector(
@@ -105,48 +93,6 @@ class ScanContainer extends StatelessWidget {
         }
         return bodyPresented ?? Container();
       },
-    );
-  }
-}
-
-class SearchButton extends StatelessWidget {
-  const SearchButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ThemedButton(
-        onTap: () {}, text: AppLocalizations.of(context).search);
-  }
-}
-
-class ScanBody extends StatelessWidget {
-  const ScanBody({
-    Key? key,
-    required this.parentContext,
-    required this.title,
-    required this.deviceModel,
-  }) : super(key: key);
-
-  final BuildContext parentContext;
-  final String title;
-  final String deviceModel;
-
-  @override
-  Widget build(BuildContext context) {
-    //  ref.read(nfcProvider.notifier).readTag().catchError((e) {
-    //    print(e.toString());
-    //  });
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        ScranImage(),
-        const Padding(
-          padding: EdgeInsets.only(right: 60.0, left: 60.0, bottom: 10),
-          child: SearchButton(),
-        ),
-      ],
     );
   }
 }
