@@ -6,14 +6,15 @@ class Evento {
   Evento({required this.id, required this.nome});
 
   Evento.fromJson(String jsonString) {
-    final jsonMap = json.decode(jsonString);
-    id = jsonMap['id'];
-    nome = jsonMap['nome'];
+    final json = jsonDecode(jsonString);
+    id = json['id'];
+    nome = json['nome'];
   }
-  Map<String, dynamic> toJson() {
-    return {
+  String toJson() {
+    final map = {
       'id': id,
       'nome': nome,
     };
+    return jsonEncode(map);
   }
 }

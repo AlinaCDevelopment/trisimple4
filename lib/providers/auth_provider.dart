@@ -49,7 +49,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
                 AuthState(equipamento: equipamentoLocal, evento: eventoLocal);
           }
         } catch (e) {
-          //TODO Fix thisauthState
           authState =
               AuthState(equipamento: equipamentoLocal, evento: eventoLocal);
           print(e);
@@ -58,7 +57,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         authState = AuthState();
       }
 
-      this.state = authState;
+      state = authState;
       return authState.equipamento != null && authState.evento != null;
     } catch (e) {
       resetAuth();
@@ -84,14 +83,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('equipamento');
     await prefs.remove('evento');
+    state = AuthState();
   }
 
   Future<bool> _setDeviceAuth(Equipamento equipamento, Evento evento) async {
     final prefs = await SharedPreferences.getInstance();
-    final equipSet =
-        await prefs.setString('equipamento', equipamento.toJson().toString());
-    final eventoSet =
-        await prefs.setString('evento', evento.toJson().toString());
+    final equipSet = await prefs.setString('equipamento', equipamento.toJson());
+    final eventoSet = await prefs.setString('evento', evento.toJson());
     if (eventoSet && equipSet) {
       await authenticateFromPreviousLogs();
       return true;

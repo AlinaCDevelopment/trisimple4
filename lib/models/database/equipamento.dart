@@ -13,18 +13,19 @@ class Equipamento {
       required this.estadoEquipamento});
 
   Equipamento.fromJson(String jsonString) {
-    final jsonMap = json.decode(jsonString);
-    id = jsonMap['id'];
-    numeroEquipamento = jsonMap['numero_equipamento'];
-    tipoEquipamento = jsonMap['tipo_equipamento'];
-    estadoEquipamento = jsonMap['estado_equipamento'];
+    final json = jsonDecode(jsonString);
+    id = json['id'];
+    numeroEquipamento = json['numero_equipamento'];
+    tipoEquipamento = json['tipo_equipamento'];
+    estadoEquipamento = json['estado_equipamento'];
   }
-  Map<String, dynamic> toJson() {
-    return {
+  String toJson() {
+    final map = {
       'id': id,
       'numero_equipamento': numeroEquipamento,
       'tipo_equipamento': tipoEquipamento,
       'estado_equipamento': estadoEquipamento,
     };
+    return jsonEncode(map);
   }
 }

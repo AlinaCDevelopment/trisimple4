@@ -55,7 +55,7 @@ class AuthScreen extends StatelessWidget {
                         (element) => element.id == _eventoSelected),
                     password: _password);
                 if (valid) {
-                  Navigator.pushReplacement(
+                  await Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const ContainerScreen()),

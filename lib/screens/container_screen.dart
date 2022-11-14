@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:app_4/views/pending_view.dart';
 import 'package:app_4/views/search_view.dart';
 
 import '../models/innerView.dart';
 import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
+import '../services/database_service.dart';
 import '../views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +20,19 @@ import '../constants/colors.dart';
 import '../widgets/ui/views_container.dart';
 import 'auth_screen.dart';
 
+@immutable
+class ViewNotifier extends StateNotifier<String> {
+  ViewNotifier() : super(ScanView.name);
+
+  void setView(String routeName) async {
+    state = routeName;
+  }
+}
+
+final viewProvider = StateNotifierProvider<ViewNotifier, String>((ref) {
+  return ViewNotifier();
+});
+
 class ContainerScreen extends ConsumerStatefulWidget {
   const ContainerScreen({super.key});
 
@@ -25,16 +41,16 @@ class ContainerScreen extends ConsumerStatefulWidget {
 }
 
 class _ContainerScreenState extends ConsumerState<ContainerScreen> {
-  var _selectedRouteName = ScanView.name;
   bool isFail = true;
+  final screens = {
+    ScanView.name: ScanView(),
+    SearchView.name: const SearchView(),
+    PendingView.name: const PendingView(),
+  };
 
   @override
   Widget build(BuildContext context) {
-    final screens = {
-      ScanView.name: ScanView(context),
-      SearchView.name: const SearchView(),
-      PendingView.name: const PendingView(),
-    };
+    final _selectedRouteName = ref.watch(viewProvider);
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -214,13 +230,25 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                       return DrawerTile(
                         onTap: () async {
                           ref.read(authProvider.notifier).resetAuth();
-                          /*   Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AuthScreen()),
-                          ); */
-                          SystemChannels.platform
-                              .invokeMethod('SystemNavigator.pop');
+
+                          //In Android¡'s case we exit the app
+                          if (Platform.isAndroid) {
+                            SystemChannels.platform
+                                .invokeMethod('SystemNavigator.pop');
+                            //iOS doesn't allow apps to exit themselves so we go to AuthScreen
+                          } else {
+                            final equips =
+                                await DatabaseService.instance.readEquips();
+                            final eventos =
+                                await DatabaseService.instance.readEventos();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AuthScreen(
+                                      equipamentos: equips ?? [],
+                                      eventos: eventos ?? [])),
+                            );
+                          }
                         },
                         isSelected: false,
                         title: AppLocalizations.of(context).exit.toUpperCase(),
@@ -273,9 +301,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
 
   void _routeTileTapped(String name) {
     Navigator.pop(context);
-    setState(() {
-      _selectedRouteName = name;
-    });
+    ref.read(viewProvider.notifier).setView(name);
   }
 }
 

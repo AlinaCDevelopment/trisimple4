@@ -110,8 +110,6 @@ class MyApp extends ConsumerWidget {
                   future: Future.wait([
                     DatabaseService.instance.readEquips(),
                     DatabaseService.instance.readEventos(),
-                    ref.read(databaseProvider.notifier).readEquips(),
-                    ref.read(databaseProvider.notifier).readEventos(),
                   ]),
                   builder: (context, snapshot) {
                     if (snapshot.hasData &&
