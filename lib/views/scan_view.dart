@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:app_4/screens/container_screen.dart';
+import 'package:app_4/services/internal_storage_service.dart';
 import 'package:app_4/views/search_view.dart';
 import 'package:app_4/widgets/themed_button.dart';
 import 'package:app_4/widgets/ui/views_container.dart';
@@ -16,9 +17,6 @@ import '../constants/assets_routes.dart';
 import '../constants/colors.dart';
 import '../widgets/ui/dialog_messages.dart';
 
-//TODO Resize icon to not take as much space
-//TODO Fix authentication preferences save
-
 class ScanView extends ConsumerWidget {
   static const name = 'scan';
 
@@ -32,19 +30,12 @@ class ScanView extends ConsumerWidget {
           next != null && next.tag != null) {
         Widget dialog;
         if (next.error != null && next.error!.isNotEmpty) {
-          dialog = ErrorMessage(context);
+          dialog = ScanErrorMessage();
         } else {
-          dialog = ValidationMessage(context, eventTag: next.tag!);
+          dialog = ScanValidationMessage(context, eventTag: next.tag!);
+          ref.read(internalDataProvider.notifier).storeData(1);
         }
-        showDialog(
-          context: context,
-          barrierColor: Colors.transparent,
-          builder: (BuildContext context) {
-            return BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: dialog);
-          },
-        );
+        showMessageDialog(context, dialog);
       }
     });
 
@@ -54,6 +45,7 @@ class ScanView extends ConsumerWidget {
         Widget? bodyPresented;
         if (snapshot.hasData && snapshot.data != null) {
           //REAL VERSION
+          /*
           if ((snapshot.data!)) {
             bodyPresented = Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -63,23 +55,41 @@ class ScanView extends ConsumerWidget {
                     padding: const EdgeInsets.only(
                         right: 60.0, left: 60.0, bottom: 10),
                     child: ThemedButton(
-                        onTap: () => ref.read(viewProvider.notifier).setView(SearchView.name),
+                        onTap: () => ref
+                            .read(viewProvider.notifier)
+                            .setView(SearchView.name),
                         text: AppLocalizations.of(context).search)),
               ],
             );
-            //TEST VERSION
-            //if ((true)) {
-            //  bodyPresented = GestureDetector(
-            //      onTap: () {
-            //        ref.read(nfcProvider.notifier).setDumbPositive();
-            //      },
-            //      child: nfcUserChild);
+            */
+          //TEST VERSION
+          //   /*
+          if ((true)) {
+            bodyPresented = GestureDetector(
+                onTap: () {
+                  ref.read(nfcProvider.notifier).setDumbPositive();
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(child: const ScranImage()),
+                    Padding(
+                        padding: const EdgeInsets.only(
+                            right: 60.0, left: 60.0, bottom: 10, top: 10),
+                        child: ThemedButton(
+                            onTap: () => ref
+                                .read(viewProvider.notifier)
+                                .setView(SearchView.name),
+                            text: AppLocalizations.of(context).search)),
+                  ],
+                ));
+            //  */
           } else {
             bodyPresented = Center(
                 child: Padding(
               padding: const EdgeInsets.only(bottom: 100.0),
               child: Text(
-                AppLocalizations.of(context)!.unavailableNfc,
+                AppLocalizations.of(context).unavailableNfc,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 25,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_4/services/internal_storage_service.dart';
 import 'package:app_4/views/pending_view.dart';
 import 'package:app_4/views/search_view.dart';
 
@@ -51,6 +52,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
   @override
   Widget build(BuildContext context) {
     final _selectedRouteName = ref.watch(viewProvider);
+    final _pendingRecordsCount = ref.watch(internalDataProvider).count;
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -105,7 +107,9 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
             return IconButton(
               icon: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset(menuImgRoute),
+                child: Image.asset(_pendingRecordsCount == 0
+                    ? menuImgRoute
+                    : warningMenuImgRoute),
               ),
               onPressed: () => Scaffold.of(context).openDrawer(),
             );
@@ -145,40 +149,9 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0, left: 10),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            isFail
-                                ? Row(
-                                    children: [
-                                      Container(
-                                        decoration: const ShapeDecoration(
-                                            shape: CircleBorder(),
-                                            color: Colors.red),
-                                        height: 10,
-                                        width: 10,
-                                      ),
-                                      const Text(
-                                        ' FALHA',
-                                        style: TextStyle(color: Colors.red),
-                                      )
-                                    ],
-                                  )
-                                : Row(
-                                    children: [
-                                      Container(
-                                        decoration: const ShapeDecoration(
-                                            shape: CircleBorder(),
-                                            color: Colors.green),
-                                        height: 10,
-                                        width: 10,
-                                      ),
-                                      const Text(
-                                        ' CORRETO',
-                                        style: TextStyle(color: Colors.green),
-                                      )
-                                    ],
-                                  ),
                             Text(
                                 '4 - ${AppLocalizations.of(context).controlAccess.replaceAll('\n', ' ')}',
                                 style: const TextStyle(
@@ -203,7 +176,8 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   DrawerTile(
                     onTap: () => _routeTileTapped(ScanView.name),
                     isSelected: ScanView.name == _selectedRouteName,
-                    title: AppLocalizations.of(context).scan.toUpperCase(),
+                    title:
+                        Text(AppLocalizations.of(context).scan.toUpperCase()),
                   ),
 
                   //============================================================================================
@@ -211,16 +185,38 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   DrawerTile(
                     onTap: () => _routeTileTapped(SearchView.name),
                     isSelected: 'search' == _selectedRouteName,
-                    title: AppLocalizations.of(context).search.toUpperCase(),
+                    title:
+                        Text(AppLocalizations.of(context).search.toUpperCase()),
                   ),
                   //============================================================================================
                   //PENDING REQUESTS
                   DrawerTile(
                     onTap: () => _routeTileTapped(PendingView.name),
                     isSelected: 'pending' == _selectedRouteName,
-                    title: AppLocalizations.of(context)
-                        .pendingRecords
-                        .toUpperCase(),
+                    title: Row(
+                      children: [
+                        Text(AppLocalizations.of(context)
+                            .pendingRecords
+                            .toUpperCase()),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        if (_pendingRecordsCount > 0)
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.red),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 9.0, vertical: 5.0),
+                              child: Text(
+                                _pendingRecordsCount.toString(),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )
+                      ],
+                    ),
                   ),
 
                   //============================================================================================
@@ -251,7 +247,8 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                           }
                         },
                         isSelected: false,
-                        title: AppLocalizations.of(context).exit.toUpperCase(),
+                        title: Text(
+                            AppLocalizations.of(context).exit.toUpperCase()),
                       );
                     },
                   ),
@@ -314,7 +311,7 @@ class DrawerTile extends StatelessWidget {
   }) : super(key: key);
 
   final bool isSelected;
-  final String title;
+  final Widget title;
   final VoidCallback onTap;
 
   @override
@@ -322,7 +319,7 @@ class DrawerTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
       child: ListTile(
-        title: Text(title),
+        title: title,
         selectedColor: Colors.white,
         tileColor: Colors.grey.shade200,
         textColor: backMaterialColor,

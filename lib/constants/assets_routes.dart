@@ -1,5 +1,6 @@
 const logoImageRoute = 'assets/images/logo.png';
 const menuImgRoute = 'assets/images/menu.png';
+const warningMenuImgRoute = 'assets/images/warning_menu.png';
 const invalidImgRoute = 'assets/images/invalid.png';
 const validImgRoute = 'assets/images/valid.png';
 const dropdownImgRoute = 'assets/images/dropdown.png';

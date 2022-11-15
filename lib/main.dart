@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:app_4/models/database/equipamento.dart';
 import 'package:app_4/models/database/evento.dart';
+import 'package:http/http.dart';
 
 import '../helpers/size_helper.dart';
 import '../screens/splash_screen.dart';
@@ -23,14 +24,17 @@ import 'providers/locale_provider.dart';
 import 'screens/auth_screen.dart';
 import 'screens/auth_screen.dart';
 
-//TODO Set at start the screen size instead of using media queries everywhere
 //TODO Fix localizations with iOS: https://www.codeandweb.com/babeledit/tutorials/how-to-translate-your-flutter-apps
+
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
       overlays: []);
   runApp(ProviderScope(child: MyApp()));
 }
+
 
 class MyApp extends ConsumerWidget {
   MyApp({super.key});
