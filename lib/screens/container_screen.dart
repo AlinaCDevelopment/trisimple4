@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_4/helpers/size_helper.dart';
 import 'package:app_4/services/internal_storage_service.dart';
 import 'package:app_4/views/pending_view.dart';
 import 'package:app_4/views/search_view.dart';
@@ -124,7 +125,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                 shrinkWrap: true,
                 children: [
                   SizedBox(
-                    height: 100,
+                    height: SizeConfig.screenHeight * 0.12,
                     child: DrawerHeader(
                       decoration: const BoxDecoration(color: Colors.black),
                       padding: const EdgeInsets.only(left: 10),
@@ -132,11 +133,12 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: 8.0, right: 15),
+                          padding: EdgeInsets.only(
+                              bottom: 8.0,
+                              right: SizeConfig.screenWidth * 0.05),
                           child: Image.asset(
                             logoImageRoute,
-                            height: 50,
+                            height: SizeConfig.screenHeight * 0.12,
                           ),
                         ),
                       ),
@@ -170,6 +172,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                                   .read(authProvider)
                                   .equipamento!
                                   .numeroEquipamento,
+                              textAlign: TextAlign.end,
                               style: TextStyle(
                                   fontSize: 92,
                                   color: Color.fromRGBO(234, 234, 234, 1),
@@ -213,10 +216,10 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                           Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
-                                color: Colors.red),
+                                color: Color.fromRGBO(179, 39, 39, 1)),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 9.0, vertical: 5.0),
+                                  horizontal: 6.0, vertical: 2.0),
                               child: Text(
                                 _pendingRecordsCount.toString(),
                                 style: TextStyle(color: Colors.white),
@@ -265,7 +268,8 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 10.0, bottom: 100),
+                padding: EdgeInsets.only(
+                    left: 10.0, bottom: SizeConfig.screenHeight * 0.12),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
