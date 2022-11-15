@@ -12,7 +12,8 @@ class NfcState {
   EventTag? tag;
   String? error;
 
-  NfcState({this.tag, this.error});
+  NfcState(this.tag);
+  NfcState.error(this.error);
 }
 
 @immutable
@@ -21,7 +22,7 @@ class NfcNotifier extends StateNotifier<NfcState> {
   final _endDateOffsets = [20, 21, 22];
   final _idOffsets = [20, 21, 22];
 
-  NfcNotifier() : super(NfcState());
+  NfcNotifier() : super(NfcState(null));
 
   Future<void> readTag() async {
     await NfcManager.instance.startSession(
@@ -35,22 +36,20 @@ class NfcNotifier extends StateNotifier<NfcState> {
             final eventId = await _readEventId();
 
             state = NfcState(
-                tag: EventTag(id, eventId,
-                    startDate: startDate, endDate: endDate));
+                EventTag(id, eventId, startDate: startDate, endDate: endDate));
           } else {
-            state = NfcState(error: "A sua tag não é suportada!");
+            state = NfcState.error("A sua tag não é suportada!");
           }
         } on PlatformException catch (platformException) {
           print(platformException.message);
           if (platformException.message == 'Tag was lost.') {
-            state = NfcState(
-                error:
-                    "A tag foi perdida. \nMantenha a tag próxima até obter resultados.");
+            state = NfcState.error(
+                "A tag foi perdida. \nMantenha a tag próxima até obter resultados.");
           } else {
-            state = NfcState(error: "Ocorreu um erro de plataforma.");
+            state = NfcState.error("Ocorreu um erro de plataforma.");
           }
         } catch (e) {
-          state = NfcState(error: "Ocorreu um erro durante a leitura.");
+          state = NfcState.error("Ocorreu um erro durante a leitura.");
         }
       },
     );
@@ -61,7 +60,7 @@ class NfcNotifier extends StateNotifier<NfcState> {
   }
 
   void reset() {
-    state = NfcState();
+    state = NfcState(null);
   }
 
   Future<DateTime> _readDateTime(
@@ -87,8 +86,7 @@ class NfcNotifier extends StateNotifier<NfcState> {
   }
 
   void setDumbPositive() {
-    state = NfcState(
-        tag: EventTag(
+    state = NfcState(EventTag(
       0,
       0,
       endDate: DateTime.now(),

@@ -144,13 +144,13 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0, left: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                                 '4 - ${AppLocalizations.of(context).controlAccess.replaceAll('\n', ' ')}',
@@ -162,12 +162,20 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                           ],
                         ),
                       ),
-                      Text(
-                          ref.read(authProvider).equipamento!.numeroEquipamento,
-                          style: const TextStyle(
-                              fontSize: 92,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold))
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                              ref
+                                  .read(authProvider)
+                                  .equipamento!
+                                  .numeroEquipamento,
+                              style: TextStyle(
+                                  fontSize: 92,
+                                  color: Color.fromRGBO(234, 234, 234, 1),
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      )
                     ],
                   ),
 
