@@ -51,7 +51,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
         } catch (e) {
           authState =
               AuthState(equipamento: equipamentoLocal, evento: eventoLocal);
-          print(e);
         }
       } else {
         authState = AuthState();

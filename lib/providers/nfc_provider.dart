@@ -41,7 +41,6 @@ class NfcNotifier extends StateNotifier<NfcState> {
             state = NfcState.error("A sua tag não é suportada!");
           }
         } on PlatformException catch (platformException) {
-          print(platformException.message);
           if (platformException.message == 'Tag was lost.') {
             state = NfcState.error(
                 "A tag foi perdida. \nMantenha a tag próxima até obter resultados.");

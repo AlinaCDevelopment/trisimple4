@@ -26,15 +26,12 @@ import 'screens/auth_screen.dart';
 
 //TODO Fix localizations with iOS: https://www.codeandweb.com/babeledit/tutorials/how-to-translate-your-flutter-apps
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
       overlays: []);
   runApp(ProviderScope(child: MyApp()));
 }
-
 
 class MyApp extends ConsumerWidget {
   MyApp({super.key});
@@ -73,7 +70,6 @@ class MyApp extends ConsumerWidget {
         home: FutureBuilder<ConnectivityResult>(
             future: Connectivity().checkConnectivity(),
             builder: (context, snapshot) {
-              print('built');
               SizeConfig.init(context);
               if (snapshot.hasData && snapshot.data != null) {
                 final isConnectedToWifi =

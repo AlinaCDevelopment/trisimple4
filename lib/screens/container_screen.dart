@@ -96,7 +96,6 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   child: Image.asset(isPt ? ptImgRoute : enImgRoute),
                 ),
                 onPressed: () {
-                  print('pop');
                   ref
                       .read(localeProvider.notifier)
                       .setLocale(isPt ? 'en' : 'pt');

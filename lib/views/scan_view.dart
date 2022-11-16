@@ -50,16 +50,16 @@ class ScanView extends ConsumerWidget {
             bodyPresented = Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const ScranImage(),
-                Padding(
-                    padding: const EdgeInsets.only(
-                        right: 60.0, left: 60.0, bottom: 10),
-                    child: ThemedButton(
-                        onTap: () => ref
-                            .read(viewProvider.notifier)
-                            .setView(SearchView.name),
-                        text: AppLocalizations.of(context).search)),
-              ],
+                    Expanded(child: const ScranImage()),
+                    Padding(
+                        padding: const EdgeInsets.only(
+                            right: 60.0, left: 60.0, bottom: 10, top: 10),
+                        child: ThemedButton(
+                            onTap: () => ref
+                                .read(viewProvider.notifier)
+                                .setView(SearchView.name),
+                            text: AppLocalizations.of(context).search)),
+                  ],
             );
             */
           //TEST VERSION
@@ -74,8 +74,8 @@ class ScanView extends ConsumerWidget {
                   children: [
                     Expanded(child: const ScranImage()),
                     Padding(
-                        padding: const EdgeInsets.only(
-                            right: 60.0, left: 60.0, bottom: 10, top: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 60.0, vertical: 10),
                         child: ThemedButton(
                             onTap: () => ref
                                 .read(viewProvider.notifier)
