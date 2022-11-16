@@ -58,6 +58,8 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        //DEV
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -127,18 +129,16 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                     height: SizeConfig.screenHeight * 0.12,
                     child: DrawerHeader(
                       decoration: const BoxDecoration(color: Colors.black),
-                      padding: const EdgeInsets.only(left: 10),
+                      padding: EdgeInsets.only(
+                          left: 10,
+                          right: SizeConfig.screenWidth * 0.05,
+                          bottom: 8.0),
                       margin: null,
                       child: Align(
                         alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              bottom: 8.0,
-                              right: SizeConfig.screenWidth * 0.05),
-                          child: Image.asset(
-                            logoImageRoute,
-                            height: SizeConfig.screenHeight * 0.12,
-                          ),
+                        child: Image.asset(
+                          logoImageRoute,
+                          width: SizeConfig.screenWidth * 0.45,
                         ),
                       ),
                     ),

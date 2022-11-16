@@ -82,176 +82,167 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(//DEV
         resizeToAvoidBottomInset: true,
-        body: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width,
-            minHeight: MediaQuery.of(context).size.height,
-          ),
-          child: IntrinsicHeight(
-            child: Container(
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(backgroundImgRoute), fit: BoxFit.fill)),
-              child: SizedBox(
-                height: SizeConfig.screenHeight,
-                width: SizeConfig.screenWidth,
-                child: CustomScrollView(
-                  scrollBehavior: EmptyScrollBehaviour(),
-                  physics: const ClampingScrollPhysics(),
-                  slivers: [
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      fillOverscroll: false,
+        body: SizedBox(
+          height: SizeConfig.screenHeight + SizeConfig.viewInsets.bottom,
+          width: SizeConfig.screenWidth,
+          //847.0588393689854
+          child: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(backgroundImgRoute), fit: BoxFit.fill)),
+            child: SizedBox(
+              height: SizeConfig.screenHeight,
+              width: SizeConfig.screenWidth,
+              child: CustomScrollView(
+                scrollBehavior: EmptyScrollBehaviour(),
+                physics: const ClampingScrollPhysics(),
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    fillOverscroll: false,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: SizeConfig.screenHeight * 0.11,
+                          bottom: SizeConfig.screenHeight * 0.07),
                       child: Padding(
-                        padding: EdgeInsets.only(
-                            top: SizeConfig.screenHeight * 0.11,
-                            bottom: SizeConfig.screenHeight * 0.07),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.screenWidth * 0.07),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: SizeConfig.screenWidth * 0.07),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.screenWidth * 0.07),
-                            child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Image.asset(logoImageRoute),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            SizeConfig.screenHeight * 0.04),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)
-                                              .reservedArea,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            AppLocalizations.of(context)
-                                                .controlAccess,
-                                            style: const TextStyle(
-                                                color: secondColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 50),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Builder(builder: (context) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                          bottom:
-                                              SizeConfig.screenHeight * 0.02),
-                                      child: Form(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            FittedBox(
-                                              fit: BoxFit.scaleDown,
-                                              child: Text(
-                                                AppLocalizations.of(context)
-                                                    .authorizedPeople,
-                                                style: const TextStyle(
-                                                  fontSize: 11,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                            AuthDropdown(
-                                              eventos
-                                                  .map((evento) =>
-                                                      _buildDropItem(
-                                                          evento.nome,
-                                                          evento.id))
-                                                  .toList(),
-                                              onChanged: (value) {
-                                                if (value != null)
-                                                  _eventoSelected = value;
-                                              },
-                                              hintText:
-                                                  AppLocalizations.of(context)
-                                                      .eventSelectHint,
-                                            ),
-                                            inputSpacement,
-                                            AuthDropdown(
-                                              equipamentos
-                                                  .map((equip) => _buildDropItem(
-                                                      equip.numeroEquipamento,
-                                                      equip.id))
-                                                  .toList(),
-                                              onChanged: (value) {
-                                                if (value != null)
-                                                  _equipSelected = value;
-                                              },
-                                              hintText:
-                                                  AppLocalizations.of(context)
-                                                      .equipSelectHint,
-                                            ),
-                                            inputSpacement,
-                                            const PasswordInput(),
-                                            inputSpacement,
-                                            _buildSubmitButton(),
-                                          ],
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Image.asset(logoImageRoute),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: SizeConfig.screenHeight * 0.04),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)
+                                            .reservedArea,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
                                         ),
                                       ),
-                                    );
-                                  }),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal:
-                                            SizeConfig.screenWidth * 0.07),
-                                    child: Column(
-                                      children: [
-                                        Text(
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
                                           AppLocalizations.of(context)
-                                              .emailLabel,
+                                              .controlAccess,
                                           style: const TextStyle(
-                                            fontSize: 11,
-                                          ),
+                                              color: secondColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 50),
                                           textAlign: TextAlign.center,
                                         ),
-                                        const Text(
-                                          'info@trisimple.pt',
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        SizedBox(
-                                          height:
-                                              SizeConfig.screenHeight * 0.01,
-                                        ),
-                                        Text(
-                                          '${AppLocalizations.of(context).version}: 1.0.0',
-                                          style: TextStyle(
-                                              fontSize: 11, color: thirdColor),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ]),
-                          ),
+                                ),
+                                Builder(builder: (context) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: SizeConfig.screenHeight * 0.02),
+                                    child: Form(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              AppLocalizations.of(context)
+                                                  .authorizedPeople,
+                                              style: const TextStyle(
+                                                //DEV
+                                                fontSize: 12,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          AuthDropdown(
+                                            eventos
+                                                .map((evento) => _buildDropItem(
+                                                    evento.nome, evento.id))
+                                                .toList(),
+                                            onChanged: (value) {
+                                              if (value != null)
+                                                _eventoSelected = value;
+                                            },
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                    .eventSelectHint,
+                                          ),
+                                          inputSpacement,
+                                          AuthDropdown(
+                                            equipamentos
+                                                .map((equip) => _buildDropItem(
+                                                    equip.numeroEquipamento,
+                                                    equip.id))
+                                                .toList(),
+                                            onChanged: (value) {
+                                              if (value != null)
+                                                _equipSelected = value;
+                                            },
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                    .equipSelectHint,
+                                          ),
+                                          inputSpacement,
+                                          const PasswordInput(),
+                                          inputSpacement,
+                                          _buildSubmitButton(),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          SizeConfig.screenWidth * 0.07),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context).emailLabel,
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const Text(
+                                        'info@trisimple.pt',
+                                        style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(
+                                        height: SizeConfig.screenHeight * 0.01,
+                                      ),
+                                      Text(
+                                        '${AppLocalizations.of(context).version}: 1.0.0',
+                                        style: TextStyle(
+                                            fontSize: 11, color: thirdColor),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ]),
                         ),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),

@@ -30,6 +30,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
       overlays: []);
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(ProviderScope(child: MyApp()));
 }
 
@@ -37,12 +41,8 @@ class MyApp extends ConsumerWidget {
   MyApp({super.key});
   var _prefsRead = false;
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //  var isConnectedToWifi = false;
-
-    //ref.read(localeProvider.notifier).getLocaleFromPrefs();
     final locale = ref.watch(localeProvider);
     bool _initialized = false;
 
@@ -66,7 +66,6 @@ class MyApp extends ConsumerWidget {
             canvasColor: Colors.white,
             hintColor: hintColor,
             iconTheme: const IconThemeData(color: backMaterialColor)),
-        //themeMode: ThemeMode.dark,
         home: FutureBuilder<ConnectivityResult>(
             future: Connectivity().checkConnectivity(),
             builder: (context, snapshot) {
@@ -74,13 +73,9 @@ class MyApp extends ConsumerWidget {
               if (snapshot.hasData && snapshot.data != null) {
                 final isConnectedToWifi =
                     snapshot.data == ConnectivityResult.wifi;
-                //  return const SplashScreen();
                 return isConnectedToWifi
                     ? UpgradeAlert(
                         upgrader: Upgrader(
-                            durationUntilAlertAgain: Duration(seconds: 0),
-                            // durationUntilAlertAgain: const Duration(hours: 8),
-                            // canDismissDialog: false,
                             canDismissDialog: false,
                             showIgnore: false,
                             showLater: false,

@@ -10,9 +10,12 @@ class SizeConfig {
   static late double _safeAreaVertical;
   static late double safeBlockHorizontal;
   static late double safeBlockVertical;
+  static late EdgeInsets viewInsets;
 
   static void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
+    //DEV
+    viewInsets = _mediaQueryData.viewInsets;
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;
     blockSizeHorizontal = screenWidth / 100;
