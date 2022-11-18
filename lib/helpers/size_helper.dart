@@ -14,7 +14,6 @@ class SizeConfig {
 
   static void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
-    //DEV
     viewInsets = _mediaQueryData.viewInsets;
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;

@@ -45,25 +45,25 @@ class ScanView extends ConsumerWidget {
         Widget? bodyPresented;
         if (snapshot.hasData && snapshot.data != null) {
           //REAL VERSION
-          /*
+          ///*
           if ((snapshot.data!)) {
             bodyPresented = Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                    Expanded(child: const ScranImage()),
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            right: 60.0, left: 60.0, bottom: 10, top: 10),
-                        child: ThemedButton(
-                            onTap: () => ref
-                                .read(viewProvider.notifier)
-                                .setView(SearchView.name),
-                            text: AppLocalizations.of(context).search)),
-                  ],
+                Expanded(child: const ScranImage()),
+                Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 60.0, vertical: 10),
+                    child: ThemedButton(
+                        onTap: () => ref
+                            .read(viewProvider.notifier)
+                            .setView(SearchView.name),
+                        text: AppLocalizations.of(context).search)),
+              ],
             );
-            */
-          //TEST VERSION
-          //   /*
+            //   */
+            //TEST VERSION
+            /*
           if ((true)) {
             bodyPresented = GestureDetector(
                 onTap: () {
@@ -83,7 +83,7 @@ class ScanView extends ConsumerWidget {
                             text: AppLocalizations.of(context).search)),
                   ],
                 ));
-            //  */
+              */
           } else {
             bodyPresented = Center(
                 child: Padding(

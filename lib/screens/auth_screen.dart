@@ -82,12 +82,11 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(//DEV
+    return Scaffold(
         resizeToAvoidBottomInset: true,
         body: SizedBox(
           height: SizeConfig.screenHeight + SizeConfig.viewInsets.bottom,
           width: SizeConfig.screenWidth,
-          //847.0588393689854
           child: Container(
             decoration: const BoxDecoration(
                 image: DecorationImage(
@@ -162,7 +161,6 @@ class AuthScreen extends StatelessWidget {
                                               AppLocalizations.of(context)
                                                   .authorizedPeople,
                                               style: const TextStyle(
-                                                //DEV
                                                 fontSize: 12,
                                               ),
                                               textAlign: TextAlign.center,
