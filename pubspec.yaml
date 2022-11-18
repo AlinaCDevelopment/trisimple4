@@ -53,7 +53,6 @@ flutter:
     - assets/images/scan.png
     - assets/images/en.png
     - assets/images/pt.png
-    - assets/images/spinner.gif
     - assets/images/overlayCircles.png
 
   fonts:
