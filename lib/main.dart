@@ -24,8 +24,6 @@ import 'providers/locale_provider.dart';
 import 'screens/auth_screen.dart';
 import 'screens/auth_screen.dart';
 
-//TODO Fix localizations with iOS: https://www.codeandweb.com/babeledit/tutorials/how-to-translate-your-flutter-apps
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
@@ -101,6 +99,7 @@ class MyApp extends ConsumerWidget {
             if (snapshot.data!) {
               return ContainerScreen();
             } else {
+              // TODO Detect here internet on ALL APPS
               return FutureBuilder(
                   future: Future.wait([
                     DatabaseService.instance.readEquips(),

@@ -32,7 +32,6 @@ class ScanValidationMessage extends StatelessWidget {
     final availability =
         _checkTagValidity(eventTag.startDate, eventTag.endDate);
     final durationDays = eventTag.endDate.day - eventTag.startDate.day + 1;
-    //TODO Localize validationText
     final validationText = availability
         ? AppLocalizations.of(context).valid
         : AppLocalizations.of(context).invalid;
@@ -118,7 +117,6 @@ class ScanValidationMessage extends StatelessWidget {
 bool _checkTagValidity(DateTime startDate, DateTime lastDate) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day, now.hour, now.minute);
-  //TODO INCLUDE HOUR AND MINUTES
   return startDate.isBefore(today) && lastDate.isAfter(today) ||
       startDate.isBefore(today) && lastDate.isAtSameMomentAs(today) ||
       startDate.isAtSameMomentAs(today) && lastDate.isAfter(today) ||
@@ -155,7 +153,7 @@ String _getMonth(int month) {
   }
 }
 
-class ScanDialogMessage extends StatelessWidget {
+class ScanDialogMessage extends StatefulWidget {
   const ScanDialogMessage(
       {super.key,
       required this.title,
@@ -166,11 +164,37 @@ class ScanDialogMessage extends StatelessWidget {
   final String assetPngImgName;
 
   @override
+  State<ScanDialogMessage> createState() => _ScanDialogMessageState();
+}
+
+class _ScanDialogMessageState extends State<ScanDialogMessage> {
+  double _height = 0;
+  double _width = 0;
+  double _opacity = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          _height = SizeConfig.screenHeight * 0.66;
+          _width = SizeConfig.screenWidth * 0.85;
+          _opacity = 1;
+        }));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Center(
+        child: AnimatedOpacity(
+      curve: Curves.easeIn,
+      duration: const Duration(milliseconds: 250),
+      opacity: _opacity,
+      child: AnimatedSize(
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 250),
         child: Container(
-            height: SizeConfig.screenHeight * 0.66,
-            width: SizeConfig.screenWidth * 0.85,
+            height: _height,
+            width: _width,
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
             child: Stack(
@@ -198,17 +222,19 @@ class ScanDialogMessage extends StatelessWidget {
                             right: SizeConfig.screenWidth * 0.2,
                             left: SizeConfig.screenWidth * 0.2,
                             top: 50),
-                        child: Image.asset(assetPngImgName),
+                        child: Image.asset(widget.assetPngImgName),
                       ),
                       Text(
-                        title,
+                        widget.title,
                         style:
                             const TextStyle(color: Colors.black, fontSize: 40),
                       ),
-                      content ?? Container()
+                      widget.content ?? Container()
                     ]),
               ],
-            )));
+            )),
+      ),
+    ));
   }
 }
 

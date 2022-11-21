@@ -5,6 +5,7 @@ import 'package:app_4/services/internal_storage_service.dart';
 import 'package:app_4/views/search_view.dart';
 import 'package:app_4/widgets/themed_button.dart';
 import 'package:app_4/widgets/ui/views_container.dart';
+import 'package:flutter_beep/flutter_beep.dart';
 
 import '../helpers/size_helper.dart';
 import '../providers/auth_provider.dart';
@@ -25,17 +26,21 @@ class ScanView extends ConsumerWidget {
     final equipamento = ref.read(authProvider).equipamento;
     final evento = ref.read(authProvider).evento;
 
-    ref.listen(nfcProvider, (previous, next) {
+    ref.listen(nfcProvider, (previous, next) async {
       if (next != null && next.error != null ||
           next != null && next.tag != null) {
         Widget dialog;
+        bool success;
         if (next.error != null && next.error!.isNotEmpty) {
           dialog = ScanErrorMessage();
+          success = false;
         } else {
           dialog = ScanValidationMessage(context, eventTag: next.tag!);
           ref.read(internalDataProvider.notifier).storeData(1);
+          success = true;
         }
-        showMessageDialog(context, dialog);
+        FlutterBeep.beep(success);
+        await showMessageDialog(context, dialog);
       }
     });
 
@@ -45,7 +50,7 @@ class ScanView extends ConsumerWidget {
         Widget? bodyPresented;
         if (snapshot.hasData && snapshot.data != null) {
           //REAL VERSION
-          ///*
+          /*
           if ((snapshot.data!)) {
             bodyPresented = Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -61,9 +66,9 @@ class ScanView extends ConsumerWidget {
                         text: AppLocalizations.of(context).search)),
               ],
             );
-            //   */
-            //TEST VERSION
-            /*
+              */
+          //TEST VERSION
+          // /*
           if ((true)) {
             bodyPresented = GestureDetector(
                 onTap: () {
@@ -83,7 +88,7 @@ class ScanView extends ConsumerWidget {
                             text: AppLocalizations.of(context).search)),
                   ],
                 ));
-              */
+            // */
           } else {
             bodyPresented = Center(
                 child: Padding(

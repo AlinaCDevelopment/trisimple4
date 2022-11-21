@@ -183,7 +183,7 @@ class AuthScreen extends StatelessWidget {
                                           AuthDropdown(
                                             equipamentos
                                                 .map((equip) => _buildDropItem(
-                                                    equip.numeroEquipamento,
+                                                    '${equip.tipoEquipamento} #${equip.numeroEquipamento}',
                                                     equip.id))
                                                 .toList(),
                                             onChanged: (value) {
