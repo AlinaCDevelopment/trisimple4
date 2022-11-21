@@ -1,3 +1,4 @@
+import 'package:app_4/helpers/wifi_verification.dart';
 import 'package:app_4/widgets/ui/dialog_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -45,34 +46,48 @@ class AuthScreen extends StatelessWidget {
       builder: (context, ref, container) {
         return ThemedButton(
             onTap: () async {
-              if (_equipSelected != null &&
-                  _eventoSelected != null &&
-                  _password.isNotEmpty) {
-                bool valid = await ref.read(authProvider.notifier).authenticate(
-                    equipamento: equipamentos
-                        .singleWhere((element) => element.id == _equipSelected),
-                    evento: eventos.singleWhere(
-                        (element) => element.id == _eventoSelected),
-                    password: _password);
-                if (valid) {
-                  await Navigator.pushReplacement(
+              final wifiCpnnected = await checkWifi();
+              if (!wifiCpnnected) {
+                await showMessageDialog(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const ContainerScreen()),
-                  );
+                    DialogMessage(
+                      hideExit: true,
+                      content: AppLocalizations.of(context).connectionError,
+                      title: AppLocalizations.of(context).tryAgain,
+                    ));
+              } else {
+                if (_equipSelected != null &&
+                    _eventoSelected != null &&
+                    _password.isNotEmpty) {
+                  bool valid = await ref
+                      .read(authProvider.notifier)
+                      .authenticate(
+                          equipamento: equipamentos.singleWhere(
+                              (element) => element.id == _equipSelected),
+                          evento: eventos.singleWhere(
+                              (element) => element.id == _eventoSelected),
+                          password: _password);
+                  if (valid) {
+                    await Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ContainerScreen()),
+                    );
+                  } else {
+                    await showMessageDialog(
+                        context,
+                        DialogMessage(
+                            title: 'Upsss!',
+                            content:
+                                AppLocalizations.of(context).wrongPassword));
+                  }
                 } else {
                   await showMessageDialog(
                       context,
                       DialogMessage(
                           title: 'Upsss!',
-                          content: AppLocalizations.of(context).wrongPassword));
+                          content: AppLocalizations.of(context).fillAllFields));
                 }
-              } else {
-                await showMessageDialog(
-                    context,
-                    DialogMessage(
-                        title: 'Upsss!',
-                        content: AppLocalizations.of(context).fillAllFields));
               }
             },
             text: AppLocalizations.of(context).signIn);

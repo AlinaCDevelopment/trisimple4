@@ -2,6 +2,9 @@
     "search": "Procurar",
     "version": "versão",
 
+    "tryAgain": "Tente Novamente.",
+    "connectionError": "Erro de Ligação!",
+
     "exit": "SAIR",
     "scan": "SCAN",
     "pendingRecords": "Registos Pendentes",

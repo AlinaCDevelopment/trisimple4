@@ -2,6 +2,9 @@
     "search": "Search",
     "version": "version",
 
+    "tryAgain": "Try Again.",
+    "connectionError": "Connection Error!",
+
     "exit": "Exit",
     "scan": "Scan",
     "pendingRecords": "Pending Records",

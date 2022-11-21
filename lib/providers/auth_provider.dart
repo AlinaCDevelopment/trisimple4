@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:app_4/helpers/wifi_verification.dart';
+
 import '../models/database/equipamento.dart';
 import '../services/database_service.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,8 +34,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final equipamentoLocal = Equipamento.fromJson(equipJsonString);
         final eventoLocal = Evento.fromJson(eventoJsonString);
 
-        final connectivity = await Connectivity().checkConnectivity();
-        final isConnected = connectivity == ConnectivityResult.wifi;
+        final isConnected = await checkWifi();
         //If wifi is available get the latest version of the event and equipment from the database
         //Else use the ones stored inside the preferences
         try {

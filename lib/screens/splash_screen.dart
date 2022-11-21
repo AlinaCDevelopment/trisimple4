@@ -23,61 +23,39 @@ class _SplashScreenState extends State<SplashScreen> {
   int _step = 1;
   int _totalSteps = 12;
 
-  /*  @override
-  void initState() {
-    super.initState();
-
-    // sets first value
-    _now = DateTime.now().second.toString();
-
-    // defines a timer
-    _everySecond = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
-      setState(() {
-        _now = DateTime.now().second.toString();
-        if (_step < _totalSteps) {
-          _step++;
-        } else {
-          _step = 0;
-        }
-      });
-    });
-  } */
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Material(
-      child: Container(
-        decoration: backgroundDecoration,
-        child: Center(
-            child: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  ThemedSpinCircle(
-                    color: Colors.white,
-                    size: SizeConfig.screenWidth * 0.25,
-                    childPadding: SizeConfig.screenWidth * 0.25 * 0.36,
-                    child: const Text(
-                      '4',
-                    ),
+        body: Container(
+      decoration: backgroundDecoration,
+      child: Center(
+          child: Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                ThemedSpinCircle(
+                  color: Colors.white,
+                  size: SizeConfig.screenWidth * 0.25,
+                  childPadding: SizeConfig.screenWidth * 0.25 * 0.36,
+                  child: const Text(
+                    '4',
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Image.asset(logoImageRoute)
-            ],
-          ),
-        )),
-      ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Image.asset(logoImageRoute)
+          ],
+        ),
+      )),
     ));
   }
 }

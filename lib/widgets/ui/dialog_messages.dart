@@ -239,9 +239,14 @@ class _ScanDialogMessageState extends State<ScanDialogMessage> {
 }
 
 class DialogMessage extends StatelessWidget {
-  const DialogMessage({super.key, required this.title, required this.content});
+  const DialogMessage(
+      {super.key,
+      required this.title,
+      required this.content,
+      this.hideExit = false});
   final String title;
   final String content;
+  final bool hideExit;
 
   @override
   Widget build(BuildContext context) {
@@ -254,19 +259,20 @@ class DialogMessage extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.grey,
+                if (!hideExit)
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.grey,
+                        ),
                       ),
+                      onTap: () => Navigator.of(context).pop(),
                     ),
-                    onTap: () => Navigator.of(context).pop(),
                   ),
-                ),
                 Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
