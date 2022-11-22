@@ -88,8 +88,8 @@ class NfcNotifier extends StateNotifier<NfcState> {
     state = NfcState(EventTag(
       0,
       0,
-      endDate: DateTime.now(),
-      startDate: DateTime.now(),
+      endDate: DateTime.now().add(Duration(days: 3)),
+      startDate: DateTime.now().subtract(Duration(days: 3)),
     ));
   }
 }

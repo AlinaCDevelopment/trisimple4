@@ -21,16 +21,16 @@ class ScanValidationMessage extends StatelessWidget {
   const ScanValidationMessage(
     this.parentContext, {
     Key? key,
+    required this.availability,
     required this.eventTag,
   }) : super(key: key);
 
   final EventTag eventTag;
+  final bool availability;
   final BuildContext parentContext;
 
   @override
   Widget build(BuildContext context) {
-    final availability =
-        _checkTagValidity(eventTag.startDate, eventTag.endDate);
     final durationDays = eventTag.endDate.day - eventTag.startDate.day + 1;
     final validationText = availability
         ? AppLocalizations.of(context).valid
@@ -114,7 +114,7 @@ class ScanValidationMessage extends StatelessWidget {
   }
 }
 
-bool _checkTagValidity(DateTime startDate, DateTime lastDate) {
+bool checkTagValidity(DateTime startDate, DateTime lastDate) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day, now.hour, now.minute);
   return startDate.isBefore(today) && lastDate.isAfter(today) ||
@@ -203,8 +203,8 @@ class _ScanDialogMessageState extends State<ScanDialogMessage> {
                 Align(
                   alignment: Alignment.topRight,
                   child: GestureDetector(
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(15.0),
                       child: Icon(
                         Icons.close,
                         color: Colors.grey,

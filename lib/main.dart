@@ -80,27 +80,20 @@ class _MyAppState extends ConsumerState<MyApp> {
             builder: (context, snapshot) {
               SizeConfig.init(context);
               if (snapshot.hasData && snapshot.data != null) {
-                print(snapshot.data);
                 _hasWifi = snapshot.data!;
-                //_hasWifi = snapshot.data == ConnectivityResult.wifi;
-                if (_hasWifi) {
-                  _hasWifi = true;
-                  print('connected');
-                  return _hasWifi
-                      ? UpgradeAlert(
-                          upgrader: Upgrader(
-                              canDismissDialog: false,
-                              showIgnore: false,
-                              showLater: false,
-                              languageCode: locale.languageCode,
-                              dialogStyle: Platform.isIOS
-                                  ? UpgradeDialogStyle.cupertino
-                                  : UpgradeDialogStyle.material),
-                          child: _buildHome(ref),
-                        )
-                      : _buildHome(ref);
-                }
-                return _buildWifiErrorScreen();
+                return _hasWifi
+                    ? UpgradeAlert(
+                        upgrader: Upgrader(
+                            canDismissDialog: false,
+                            showIgnore: false,
+                            showLater: false,
+                            languageCode: locale.languageCode,
+                            dialogStyle: Platform.isIOS
+                                ? UpgradeDialogStyle.cupertino
+                                : UpgradeDialogStyle.material),
+                        child: _buildHome(ref),
+                      )
+                    : _buildHome(ref);
               }
               return SplashScreen();
             }));
@@ -119,7 +112,6 @@ class _MyAppState extends ConsumerState<MyApp> {
               if (_hasWifi == false) {
                 return _buildWifiErrorScreen();
               }
-              // TODO Detect here internet on ALL APPS
               if (_hasWifi) {
                 return FutureBuilder(
                     future: Future.wait([

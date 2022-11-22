@@ -35,9 +35,13 @@ class ScanView extends ConsumerWidget {
           dialog = ScanErrorMessage();
           success = false;
         } else {
-          dialog = ScanValidationMessage(context, eventTag: next.tag!);
+          success = checkTagValidity(next.tag!.startDate, next.tag!.endDate);
+          dialog = ScanValidationMessage(
+            context,
+            eventTag: next.tag!,
+            availability: success,
+          );
           ref.read(internalDataProvider.notifier).storeData(1);
-          success = true;
         }
         FlutterBeep.beep(success);
         await showMessageDialog(context, dialog);
