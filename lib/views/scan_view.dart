@@ -1,19 +1,12 @@
-import 'dart:ui';
-
 import '../screens/container_screen.dart';
 import '../services/internal_storage_service.dart';
 import '../views/search_view.dart';
 import '../widgets/themed_button.dart';
-import '../widgets/ui/views_container.dart';
 import 'package:flutter_beep/flutter_beep.dart';
-
-import '../helpers/size_helper.dart';
-import '../providers/auth_provider.dart';
 import '../providers/nfc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';
 import '../widgets/ui/dialog_messages.dart';
@@ -21,11 +14,10 @@ import '../widgets/ui/dialog_messages.dart';
 class ScanView extends ConsumerWidget {
   static const name = 'scan';
 
+  const ScanView({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final equipamento = ref.read(authProvider).equipamento;
-    final evento = ref.read(authProvider).evento;
-
     ref.listen(nfcProvider, (previous, next) async {
       if (next != null && next.error != null ||
           next != null && next.tag != null) {
@@ -60,7 +52,7 @@ class ScanView extends ConsumerWidget {
             bodyPresented = Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Expanded(child: const ScranImage()),
+                const Expanded(child: ScranImage()),
                 Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 60.0, vertical: 10),
