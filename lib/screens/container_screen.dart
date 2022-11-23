@@ -1,39 +1,23 @@
 import 'dart:io';
-
-import 'package:app_4/helpers/size_helper.dart';
-import 'package:app_4/services/internal_storage_service.dart';
-import 'package:app_4/views/pending_view.dart';
-import 'package:app_4/views/search_view.dart';
-
-import '../models/innerView.dart';
+import '../helpers/size_helper.dart';
+import '../services/internal_storage_service.dart';
+import '../views/pending_view.dart';
+import '../views/search_view.dart';
 import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
-import '../services/database_service.dart';
 import '../views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../constants/assets_routes.dart';
+import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';
 import '../widgets/ui/views_container.dart';
 import 'auth_screen.dart';
 
-@immutable
-class ViewNotifier extends StateNotifier<String> {
-  ViewNotifier() : super(ScanView.name);
-
-  void setView(String routeName) async {
-    state = routeName;
-  }
-}
-
-final viewProvider = StateNotifierProvider<ViewNotifier, String>((ref) {
-  return ViewNotifier();
-});
+final viewProvider = StateProvider<String>(
+  (ref) => ScanView.name,
+);
 
 class ContainerScreen extends ConsumerStatefulWidget {
   const ContainerScreen({super.key});
@@ -52,8 +36,8 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _selectedRouteName = ref.watch(viewProvider);
-    final _pendingRecordsCount = ref.watch(internalDataProvider).count;
+    final selectedRouteName = ref.watch(viewProvider);
+    final pendingRecordsCount = ref.watch(internalDataProvider).count;
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -108,7 +92,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
             return IconButton(
               icon: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset(_pendingRecordsCount == 0
+                child: Image.asset(pendingRecordsCount == 0
                     ? menuImgRoute
                     : warningMenuImgRoute),
               ),
@@ -142,27 +126,31 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                       ),
                     ),
                   ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0, left: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                '4 - ${AppLocalizations.of(context).controlAccess.replaceAll('\n', ' ')}',
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold)),
-                            Text(ref.read(authProvider).evento!.nome,
-                                style: const TextStyle(color: Colors.grey))
-                          ],
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0, left: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  '4 - ${AppLocalizations.of(context).controlAccess.replaceAll('\n', ' ')}',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold)),
+                              Text(ref.read(authProvider).evento!.nome,
+                                  style: const TextStyle(color: Colors.grey))
+                            ],
+                          ),
                         ),
                       ),
-                      Expanded(
+                      SizedBox(
+                        width: SizeConfig.screenWidth * 0.3,
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
@@ -171,12 +159,13 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                                   .equipamento!
                                   .numeroEquipamento,
                               textAlign: TextAlign.end,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 92,
                                   color: Color.fromRGBO(234, 234, 234, 1),
                                   fontWeight: FontWeight.bold)),
                         ),
-                      )
+                      ),
+                      // )
                     ],
                   ),
 
@@ -184,7 +173,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   //SCAN
                   DrawerTile(
                     onTap: () => _routeTileTapped(ScanView.name),
-                    isSelected: ScanView.name == _selectedRouteName,
+                    isSelected: ScanView.name == selectedRouteName,
                     title:
                         Text(AppLocalizations.of(context).scan.toUpperCase()),
                   ),
@@ -193,7 +182,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   //SEARCH
                   DrawerTile(
                     onTap: () => _routeTileTapped(SearchView.name),
-                    isSelected: 'search' == _selectedRouteName,
+                    isSelected: 'search' == selectedRouteName,
                     title:
                         Text(AppLocalizations.of(context).search.toUpperCase()),
                   ),
@@ -201,26 +190,26 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   //PENDING REQUESTS
                   DrawerTile(
                     onTap: () => _routeTileTapped(PendingView.name),
-                    isSelected: 'pending' == _selectedRouteName,
+                    isSelected: 'pending' == selectedRouteName,
                     title: Row(
                       children: [
                         Text(AppLocalizations.of(context)
                             .pendingRecords
                             .toUpperCase()),
-                        SizedBox(
+                        const SizedBox(
                           width: 4,
                         ),
-                        if (_pendingRecordsCount > 0)
+                        if (pendingRecordsCount > 0)
                           Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
-                                color: Color.fromRGBO(179, 39, 39, 1)),
+                                color: const Color.fromRGBO(179, 39, 39, 1)),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 6.0, vertical: 2.0),
                               child: Text(
-                                _pendingRecordsCount.toString(),
-                                style: TextStyle(color: Colors.white),
+                                pendingRecordsCount.toString(),
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
                           )
@@ -242,17 +231,10 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                                 .invokeMethod('SystemNavigator.pop');
                             //iOS doesn't allow apps to exit themselves so we go to AuthScreen
                           } else {
-                            final equips =
-                                await DatabaseService.instance.readEquips();
-                            final eventos =
-                                await DatabaseService.instance.readEventos();
                             Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AuthScreen(
-                                      equipamentos: equips ?? [],
-                                      eventos: eventos ?? [])),
-                            );
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AuthScreen()));
                           }
                         },
                         isSelected: false,
@@ -261,8 +243,6 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                       );
                     },
                   ),
-                  /* DrawerTile(
-                      onTap: () {}, isSelected: false, title: 'HISTÓRICO'), */
                 ],
               ),
               Padding(
@@ -300,7 +280,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
           ),
         ),
         body: ViewContainer(
-          child: screens[_selectedRouteName]!,
+          child: screens[selectedRouteName]!,
         ),
       ),
     );
@@ -308,7 +288,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
 
   void _routeTileTapped(String name) {
     Navigator.pop(context);
-    ref.read(viewProvider.notifier).setView(name);
+    ref.read(viewProvider.notifier).state = name;
   }
 }
 

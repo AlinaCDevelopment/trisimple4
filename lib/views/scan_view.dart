@@ -1,10 +1,10 @@
 import 'dart:ui';
 
-import 'package:app_4/screens/container_screen.dart';
-import 'package:app_4/services/internal_storage_service.dart';
-import 'package:app_4/views/search_view.dart';
-import 'package:app_4/widgets/themed_button.dart';
-import 'package:app_4/widgets/ui/views_container.dart';
+import '../screens/container_screen.dart';
+import '../services/internal_storage_service.dart';
+import '../views/search_view.dart';
+import '../widgets/themed_button.dart';
+import '../widgets/ui/views_container.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 
 import '../helpers/size_helper.dart';
@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants/assets_routes.dart';
+import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';
 import '../widgets/ui/dialog_messages.dart';
 
@@ -54,7 +54,8 @@ class ScanView extends ConsumerWidget {
         Widget? bodyPresented;
         if (snapshot.hasData && snapshot.data != null) {
           //REAL VERSION
-          /*
+          // /*
+          ref.read(nfcProvider.notifier).readTag();
           if ((snapshot.data!)) {
             bodyPresented = Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -64,15 +65,14 @@ class ScanView extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 60.0, vertical: 10),
                     child: ThemedButton(
-                        onTap: () => ref
-                            .read(viewProvider.notifier)
-                            .setView(SearchView.name),
+                        onTap: () => ref.read(viewProvider.notifier).state =
+                            SearchView.name,
                         text: AppLocalizations.of(context).search)),
               ],
             );
-              */
-          //TEST VERSION
-          // /*
+            //    */
+            //TEST VERSION
+            /*
           if ((true)) {
             bodyPresented = GestureDetector(
                 onTap: () {
@@ -86,13 +86,12 @@ class ScanView extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 60.0, vertical: 10),
                         child: ThemedButton(
-                            onTap: () => ref
-                                .read(viewProvider.notifier)
-                                .setView(SearchView.name),
+                            onTap: () => ref.read(viewProvider.notifier).state =
+                                SearchView.name,
                             text: AppLocalizations.of(context).search)),
                   ],
                 ));
-            // */
+             */
           } else {
             bodyPresented = Center(
                 child: Padding(

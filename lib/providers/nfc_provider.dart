@@ -50,8 +50,14 @@ class NfcNotifier extends StateNotifier<NfcState> {
         } catch (e) {
           state = NfcState.error("Ocorreu um erro durante a leitura.");
         }
+        await _startReadingTimeOut();
       },
     );
+  }
+
+  Future<void> _startReadingTimeOut() async {
+    await NfcManager.instance.stopSession();
+    Future.delayed(Duration(seconds: 1), readTag);
   }
 
   Future<bool> isNfcAvailable() async {

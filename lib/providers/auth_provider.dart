@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:app_4/helpers/wifi_verification.dart';
+import '../helpers/wifi_verification.dart';
 
 import '../models/database/equipamento.dart';
 import '../services/database_service.dart';

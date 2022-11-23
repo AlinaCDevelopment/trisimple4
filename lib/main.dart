@@ -1,29 +1,18 @@
 import 'dart:io';
-import 'package:app_4/models/database/equipamento.dart';
-import 'package:app_4/models/database/evento.dart';
-import 'package:app_4/widgets/ui/dialog_messages.dart';
-import 'package:http/http.dart';
-
+import '../widgets/ui/dialog_messages.dart';
 import '../helpers/size_helper.dart';
 import '../screens/splash_screen.dart';
-import '../services/database_service.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../screens/container_screen.dart';
 import '../providers/auth_provider.dart';
-import '../views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:upgrader/upgrader.dart';
-
 import 'constants/colors.dart';
 import 'constants/decorations.dart';
 import 'helpers/wifi_verification.dart';
 import 'providers/locale_provider.dart';
-import 'screens/auth_screen.dart';
 import 'screens/auth_screen.dart';
 
 void main() async {
@@ -45,15 +34,10 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  var _prefsRead = false;
-
-  bool _hasWifi = false;
-
   @override
   Widget build(BuildContext context) {
     final locale = ref.watch(localeProvider);
-    bool _initialized = false;
-    print('built');
+    bool hasWifi = false;
 
     return MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -80,8 +64,8 @@ class _MyAppState extends ConsumerState<MyApp> {
             builder: (context, snapshot) {
               SizeConfig.init(context);
               if (snapshot.hasData && snapshot.data != null) {
-                _hasWifi = snapshot.data!;
-                return _hasWifi
+                hasWifi = snapshot.data!;
+                return hasWifi
                     ? UpgradeAlert(
                         upgrader: Upgrader(
                             canDismissDialog: false,
@@ -91,47 +75,27 @@ class _MyAppState extends ConsumerState<MyApp> {
                             dialogStyle: Platform.isIOS
                                 ? UpgradeDialogStyle.cupertino
                                 : UpgradeDialogStyle.material),
-                        child: _buildHome(ref),
+                        child: _buildHome(ref, hasWifi),
                       )
-                    : _buildHome(ref);
+                    : _buildHome(ref, hasWifi);
               }
-              return SplashScreen();
+              return const SplashScreen();
             }));
   }
 
-  Widget _buildHome(WidgetRef ref) {
-    final auth = ref.read(authProvider);
-
+  Widget _buildHome(WidgetRef ref, bool hasWifi) {
     return FutureBuilder<bool>(
         future: ref.read(authProvider.notifier).authenticateFromPreviousLogs(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             if (snapshot.data!) {
-              return ContainerScreen();
+              return const ContainerScreen();
             } else {
-              if (_hasWifi == false) {
+              if (hasWifi) {
+                return const AuthScreen();
+              } else {
                 return _buildWifiErrorScreen();
               }
-              if (_hasWifi) {
-                return FutureBuilder(
-                    future: Future.wait([
-                      DatabaseService.instance.readEquips(),
-                      DatabaseService.instance.readEventos(),
-                    ]),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData &&
-                          snapshot.data?[0] != null &&
-                          snapshot.data?[1] != null) {
-                        return AuthScreen(
-                          equipamentos: snapshot.data![0] as List<Equipamento>,
-                          eventos: snapshot.data![1] as List<Evento>,
-                        );
-                      } else {
-                        return const SplashScreen();
-                      }
-                    });
-              }
-              return _buildWifiErrorScreen();
             }
           }
           return const SplashScreen();
