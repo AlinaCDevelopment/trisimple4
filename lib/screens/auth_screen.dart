@@ -1,10 +1,8 @@
 import '../services/database_service.dart';
-
 import '../widgets/ui/dialog_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';
 import '../helpers/size_helper.dart';
