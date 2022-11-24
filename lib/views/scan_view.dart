@@ -47,7 +47,7 @@ class ScanView extends ConsumerWidget {
         if (snapshot.hasData && snapshot.data != null) {
           //REAL VERSION
           // /*
-          ref.read(nfcProvider.notifier).readTag();
+          ref.read(nfcProvider.notifier).readTagInSession();
           if ((snapshot.data!)) {
             bodyPresented = Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
