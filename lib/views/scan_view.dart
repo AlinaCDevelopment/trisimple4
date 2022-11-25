@@ -5,7 +5,8 @@ import '../widgets/themed_button.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import '../providers/nfc_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../services/translation_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';
@@ -47,8 +48,8 @@ class ScanView extends ConsumerWidget {
         if (snapshot.hasData && snapshot.data != null) {
           //REAL VERSION
           // /*
-          ref.read(nfcProvider.notifier).readTagInSession();
           if ((snapshot.data!)) {
+            ref.read(nfcProvider.notifier).readTagInSession();
             bodyPresented = Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -59,7 +60,7 @@ class ScanView extends ConsumerWidget {
                     child: ThemedButton(
                         onTap: () => ref.read(viewProvider.notifier).state =
                             SearchView.name,
-                        text: AppLocalizations.of(context).search)),
+                        text: MultiLang.texts.search)),
               ],
             );
             //    */
@@ -80,7 +81,7 @@ class ScanView extends ConsumerWidget {
                         child: ThemedButton(
                             onTap: () => ref.read(viewProvider.notifier).state =
                                 SearchView.name,
-                            text: AppLocalizations.of(context).search)),
+                            text: MultiLang.texts.search)),
                   ],
                 ));
              */
@@ -89,7 +90,7 @@ class ScanView extends ConsumerWidget {
                 child: Padding(
               padding: const EdgeInsets.only(bottom: 100.0),
               child: Text(
-                AppLocalizations.of(context).unavailableNfc,
+                MultiLang.texts.unavailableNfc,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 25,
@@ -128,7 +129,7 @@ class ScranImage extends StatelessWidget {
               ),
               Image.asset(scanImgRoute),
               Text(
-                AppLocalizations.of(context).approachNfc,
+                MultiLang.texts.approachNfc,
                 style: const TextStyle(fontSize: 22, color: backMaterialColor),
                 textAlign: TextAlign.center,
               ),

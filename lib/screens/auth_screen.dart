@@ -1,7 +1,8 @@
 import '../services/database_service.dart';
 import '../widgets/ui/dialog_messages.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../services/translation_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';
@@ -87,7 +88,7 @@ class AuthScreen extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            AppLocalizations.of(context).reservedArea,
+            MultiLang.texts.reservedArea,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -96,7 +97,7 @@ class AuthScreen extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              AppLocalizations.of(context).controlAccess,
+              MultiLang.texts.controlAccess,
               style: const TextStyle(
                   color: secondColor,
                   fontWeight: FontWeight.bold,
@@ -113,7 +114,7 @@ class AuthScreen extends StatelessWidget {
     return Column(
       children: [
         Text(
-          AppLocalizations.of(context).emailLabel,
+          MultiLang.texts.emailLabel,
           style: const TextStyle(
             fontSize: 11,
           ),
@@ -128,7 +129,7 @@ class AuthScreen extends StatelessWidget {
           height: SizeConfig.screenHeight * 0.01,
         ),
         Text(
-          '${AppLocalizations.of(context).version}: 1.0.0',
+          '${MultiLang.texts.version}: 1.0.0',
           style: TextStyle(fontSize: 11, color: thirdColor),
           textAlign: TextAlign.center,
         ),
@@ -182,17 +183,17 @@ class _AuthFormState extends State<AuthForm> {
                       context,
                       DialogMessage(
                           title: 'Upsss!',
-                          content: AppLocalizations.of(context).wrongPassword));
+                          content: MultiLang.texts.wrongPassword));
                 }
               } else {
                 await showMessageDialog(
                     context,
                     DialogMessage(
                         title: 'Upsss!',
-                        content: AppLocalizations.of(context).fillAllFields));
+                        content: MultiLang.texts.fillAllFields));
               }
             },
-            text: AppLocalizations.of(context).signIn);
+            text: MultiLang.texts.signIn);
       },
     );
   }
@@ -207,7 +208,7 @@ class _AuthFormState extends State<AuthForm> {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              AppLocalizations.of(context).authorizedPeople,
+              MultiLang.texts.authorizedPeople,
               style: const TextStyle(
                 fontSize: 12,
               ),
@@ -237,7 +238,7 @@ class _AuthFormState extends State<AuthForm> {
                 });
               }
             },
-            hintText: AppLocalizations.of(context).eventSelectHint,
+            hintText: MultiLang.texts.eventSelectHint,
           ),
           inputSpacement,
           AuthDropdown(
@@ -249,7 +250,7 @@ class _AuthFormState extends State<AuthForm> {
             onChanged: (value) {
               _equipSelected = value;
             },
-            hintText: AppLocalizations.of(context).equipSelectHint,
+            hintText: MultiLang.texts.equipSelectHint,
           ),
           inputSpacement,
           PasswordInput(
@@ -284,7 +285,7 @@ class _PasswordInputState extends State<PasswordInput> {
     return ThemedInput(
       onChanged: widget.onChanged,
       obscureText: _isPasswordHidden,
-      hintText: AppLocalizations.of(context).passwordHint,
+      hintText: MultiLang.texts.passwordHint,
       suffixIcon: IconButton(
         icon: Icon(
           _isPasswordHidden

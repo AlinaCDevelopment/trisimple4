@@ -8,7 +8,8 @@ import '../providers/locale_provider.dart';
 import '../views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../services/translation_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';
@@ -60,9 +61,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                         color: appBarTextColor),
                   ),
                   Text(
-                    AppLocalizations.of(context)
-                        .controlAccess
-                        .replaceAll('\n', ' '),
+                    MultiLang.texts.controlAccess.replaceAll('\n', ' '),
                     style:
                         const TextStyle(fontSize: 12, color: appBarTextColor),
                   ),
@@ -139,7 +138,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '4 - ${AppLocalizations.of(context).controlAccess.replaceAll('\n', ' ')}',
+                                  '4 - ${MultiLang.texts.controlAccess.replaceAll('\n', ' ')}',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold)),
@@ -174,8 +173,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   DrawerTile(
                     onTap: () => _routeTileTapped(ScanView.name),
                     isSelected: ScanView.name == selectedRouteName,
-                    title:
-                        Text(AppLocalizations.of(context).scan.toUpperCase()),
+                    title: Text(MultiLang.texts.scan.toUpperCase()),
                   ),
 
                   //============================================================================================
@@ -183,8 +181,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   DrawerTile(
                     onTap: () => _routeTileTapped(SearchView.name),
                     isSelected: 'search' == selectedRouteName,
-                    title:
-                        Text(AppLocalizations.of(context).search.toUpperCase()),
+                    title: Text(MultiLang.texts.search.toUpperCase()),
                   ),
                   //============================================================================================
                   //PENDING REQUESTS
@@ -193,9 +190,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                     isSelected: 'pending' == selectedRouteName,
                     title: Row(
                       children: [
-                        Text(AppLocalizations.of(context)
-                            .pendingRecords
-                            .toUpperCase()),
+                        Text(MultiLang.texts.pendingRecords.toUpperCase()),
                         const SizedBox(
                           width: 4,
                         ),
@@ -238,8 +233,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                           }
                         },
                         isSelected: false,
-                        title: Text(
-                            AppLocalizations.of(context).exit.toUpperCase()),
+                        title: Text(MultiLang.texts.exit.toUpperCase()),
                       );
                     },
                   ),
@@ -253,7 +247,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppLocalizations.of(context).contactsLabel,
+                      MultiLang.texts.contactsLabel,
                       style: const TextStyle(color: Colors.grey, fontSize: 13),
                     ),
                     const Text(

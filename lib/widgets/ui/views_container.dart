@@ -3,11 +3,11 @@ import '../../providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../constants/assets_routes.dart';
 import '../../constants/colors.dart';
 import '../../constants/decorations.dart';
+import '../../services/translation_service.dart';
 
 class ViewContainer extends ConsumerWidget {
   const ViewContainer({super.key, required this.child});
@@ -64,7 +64,7 @@ class ViewContainer extends ConsumerWidget {
                         child: Column(
                           children: [
                             Text(
-                              AppLocalizations.of(context)!.contactsLabel,
+                              MultiLang.texts!.contactsLabel,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 13),
@@ -84,7 +84,7 @@ class ViewContainer extends ConsumerWidget {
                     ),
                     Center(
                       child: Text(
-                        '${AppLocalizations.of(context).version}: 1.0.0',
+                        '${MultiLang.texts.version}: 1.0.0',
                         style: TextStyle(fontSize: 11, color: thirdColor),
                         textAlign: TextAlign.center,
                       ),

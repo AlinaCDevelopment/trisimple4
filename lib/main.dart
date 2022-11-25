@@ -2,7 +2,8 @@ import 'dart:io';
 import '../widgets/ui/dialog_messages.dart';
 import '../helpers/size_helper.dart';
 import '../screens/splash_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../services/translation_service.dart';
 import '../screens/container_screen.dart';
 import '../providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,9 @@ import 'constants/decorations.dart';
 import 'helpers/wifi_verification.dart';
 import 'providers/locale_provider.dart';
 import 'screens/auth_screen.dart';
+import 'services/translation_service.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,12 +63,14 @@ class _MyAppState extends ConsumerState<MyApp> {
             canvasColor: Colors.white,
             hintColor: hintColor,
             iconTheme: const IconThemeData(color: backMaterialColor)),
-        home: FutureBuilder<bool>(
-            future: checkWifi(),
+        home: FutureBuilder<List<dynamic>>(
+            future: Future.wait([MultiLang.init(locale), checkWifi()]),
             builder: (context, snapshot) {
               SizeConfig.init(context);
-              if (snapshot.hasData && snapshot.data != null) {
-                hasWifi = snapshot.data!;
+              if (snapshot.hasData &&
+                  snapshot.data != null &&
+                  snapshot.data![1] != null) {
+                hasWifi = snapshot.data![1]!;
                 return hasWifi
                     ? UpgradeAlert(
                         upgrader: Upgrader(
@@ -116,8 +122,8 @@ class _MyAppState extends ConsumerState<MyApp> {
                 },
                 child: DialogMessage(
                   hideExit: true,
-                  content: AppLocalizations.of(context).connectionError,
-                  title: AppLocalizations.of(context).tryAgain,
+                  content: MultiLang.texts.connectionError,
+                  title: MultiLang.texts.tryAgain,
                 ),
               ))),
     ));

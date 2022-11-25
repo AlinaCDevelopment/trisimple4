@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart' as l;
   static late l.AppLocalizations localizations;
 
   static void init(BuildContext context) {
-    localizations= l.AppLocalizations.of(context);
+    localizations= l.MultiLang.texts;
     l.AppLocalizations
   }
 }

@@ -1,7 +1,8 @@
 import 'dart:ui';
 
 import '../../constants/assets_routes.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../services/translation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -12,8 +13,7 @@ class ScanErrorMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScanDialogMessage(
-        title: AppLocalizations.of(context).error,
-        assetPngImgName: errorImgRoute);
+        title: MultiLang.texts.error, assetPngImgName: errorImgRoute);
   }
 }
 
@@ -32,9 +32,8 @@ class ScanValidationMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final durationDays = eventTag.endDate.day - eventTag.startDate.day + 1;
-    final validationText = availability
-        ? AppLocalizations.of(context).valid
-        : AppLocalizations.of(context).invalid;
+    final validationText =
+        availability ? MultiLang.texts.valid : MultiLang.texts.invalid;
     String durationText;
 
     if (eventTag.endDate.difference(eventTag.startDate).inDays > 0) {
@@ -85,7 +84,7 @@ class ScanValidationMessage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  AppLocalizations.of(context).ticket,
+                  MultiLang.texts.ticket,
                   style: const TextStyle(fontSize: 17, color: Colors.black54),
                 )
               ],
@@ -102,7 +101,7 @@ class ScanValidationMessage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  AppLocalizations.of(context).bracelet,
+                  MultiLang.texts.bracelet,
                   style: const TextStyle(fontSize: 17, color: Colors.black54),
                 )
               ],
