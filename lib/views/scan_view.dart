@@ -1,3 +1,6 @@
+import 'package:app_4/helpers/wifi_verification.dart';
+import 'package:app_4/providers/auth_provider.dart';
+
 import '../screens/container_screen.dart';
 import '../services/internal_storage_service.dart';
 import '../views/search_view.dart';
@@ -23,18 +26,38 @@ class ScanView extends ConsumerWidget {
       if (next != null && next.error != null ||
           next != null && next.tag != null) {
         Widget dialog;
-        bool success;
+        bool success = true;
         if (next.error != null && next.error!.isNotEmpty) {
           dialog = ScanErrorMessage();
           success = false;
         } else {
-          success = checkTagValidity(next.tag!.startDate, next.tag!.endDate);
+          String validationMessage;
+          if (next.tag!.eventID != ref.read(authProvider).evento!.id) {
+            validationMessage = 'O bilhete não pertence ao evento';
+            success = false;
+          } else {
+            success = validateTagDates(next.tag!.startDate, next.tag!.endDate);
+            validationMessage = 'Das ${next.tag!.startDate.hour}h do dia ' +
+                '${next.tag!.startDate.day}-${next.tag!.startDate.month}-${next.tag!.startDate.year}, ' +
+                'até ${next.tag!.startDate.hour}h do dia ' +
+                '${next.tag!.endDate.day}-${next.tag!.endDate.month}-${next.tag!.endDate.year}';
+          }
+
           dialog = ScanValidationMessage(
             context,
             eventTag: next.tag!,
             availability: success,
+            message: validationMessage,
           );
-          ref.read(internalDataProvider.notifier).storeData(1);
+          if (success) {
+            final internet = await checkWifi();
+            print("INTERNEEEEEEEET $internet");
+            if (internet) {
+              //TODO Send to database that this was used
+            } else {
+              ref.read(internalDataProvider.notifier).storeData(1);
+            }
+          }
         }
         FlutterBeep.beep(success);
         await showMessageDialog(context, dialog);

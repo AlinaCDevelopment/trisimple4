@@ -19,6 +19,7 @@ class NfcState {
 //TODO When validating check if the Event of the ticket is the same as selected event in the app
 @immutable
 class NfcNotifier extends StateNotifier<NfcState> {
+  final _eventIdBlock = 5;
   final _ticketIdBlock = 6;
   final _startDateBlock = 7;
   final _lastDateBlock = 8;
@@ -60,8 +61,8 @@ class NfcNotifier extends StateNotifier<NfcState> {
   }) async {
     final startDate = await _readDateTime(mifareTag, _startDateBlock);
     final endDate = await _readDateTime(mifareTag, _lastDateBlock);
-    final id = await _readId();
-    final eventId = await _readEventId();
+    final id = await _readId(nfcTag);
+    final eventId = await _readBlock(block: _eventIdBlock, tag: mifareTag);
 
     state =
         NfcState(EventTag(id, eventId, startDate: startDate, endDate: endDate));
@@ -128,12 +129,8 @@ class NfcNotifier extends StateNotifier<NfcState> {
     return date;
   }
 
-  Future<int> _readId() async {
-    return 0;
-  }
-
-  Future<int> _readEventId() async {
-    return 0;
+  Future<String> _readId(NfcTag tag) async {
+    return tag.data['mifareultralight']['identifier'].toString();
   }
 
   Future<String> _readBlock(

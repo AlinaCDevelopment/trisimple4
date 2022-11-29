@@ -6,9 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/translation_service.dart';
 
+//TODO GO BACK TO APPLOCALIZATIONS.OF CONTEXT
+//TODO CREATE TABLE PULSEIRA WITH PULSEIRA ID AND PHYSIC ID
 class SearchView extends ConsumerWidget {
-  const SearchView({super.key});
+  SearchView({super.key});
   static const name = 'search';
+  String text = '';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,10 +24,14 @@ class SearchView extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: ThemedInput(
-                onChanged: (value) {},
+                onChanged: (value) => text = value,
                 hintText: MultiLang.texts.codeInsertLabel),
           ),
-          ThemedButton(onTap: () {}, text: MultiLang.texts.search)
+          ThemedButton(
+              onTap: () {
+                //TODO LATER CHECK HOW APP 3 DOES THIS AND ASK WHAT TO DO WITH DEBUG SEARCH OPTION, WHAT INFORMATION TO SHOW?
+              },
+              text: MultiLang.texts.search)
         ],
       ),
     );

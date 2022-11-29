@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:app_4/models/database/evento.dart';
+
 import '../../constants/assets_routes.dart';
 
 import '../../services/translation_service.dart';
@@ -10,24 +12,30 @@ import '../../helpers/size_helper.dart';
 import '../../models/event_tag.dart';
 
 class ScanErrorMessage extends StatelessWidget {
+  const ScanErrorMessage({this.message});
+  final String? message;
+
   @override
   Widget build(BuildContext context) {
     return ScanDialogMessage(
-        title: MultiLang.texts.error, assetPngImgName: errorImgRoute);
+        title: MultiLang.texts.error,
+        content: message != null ? Text(message!) : null,
+        assetPngImgName: errorImgRoute);
   }
 }
 
 class ScanValidationMessage extends StatelessWidget {
-  const ScanValidationMessage(
-    this.parentContext, {
-    Key? key,
-    required this.availability,
-    required this.eventTag,
-  }) : super(key: key);
+  const ScanValidationMessage(this.parentContext,
+      {Key? key,
+      required this.availability,
+      required this.eventTag,
+      required this.message})
+      : super(key: key);
 
   final EventTag eventTag;
   final bool availability;
   final BuildContext parentContext;
+  final String message;
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +50,7 @@ class ScanValidationMessage extends StatelessWidget {
       durationText =
           'Bilhete Diário ${eventTag.startDate.day} ${_getMonth(eventTag.startDate.month)} ${eventTag.startDate.year}';
     }
-    final datesInfoText = 'Das ${eventTag.startDate.hour}h do dia ' +
-        '${eventTag.startDate.day}-${eventTag.startDate.month}-${eventTag.startDate.year}, ' +
-        'até ${eventTag.startDate.hour}h do dia ' +
-        '${eventTag.endDate.day}-${eventTag.endDate.month}-${eventTag.endDate.year}';
+
     return ScanDialogMessage(
       assetPngImgName: availability ? validImgRoute : invalidImgRoute,
       title: validationText,
@@ -60,7 +65,7 @@ class ScanValidationMessage extends StatelessWidget {
               ),
               Text(
                 textAlign: TextAlign.center,
-                datesInfoText,
+                message,
                 style: const TextStyle(color: Colors.grey, fontSize: 13),
               ),
             ],
@@ -113,7 +118,7 @@ class ScanValidationMessage extends StatelessWidget {
   }
 }
 
-bool checkTagValidity(DateTime startDate, DateTime lastDate) {
+bool validateTagDates(DateTime startDate, DateTime lastDate) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day, now.hour, now.minute);
   return startDate.isBefore(today) && lastDate.isAfter(today) ||
@@ -306,6 +311,7 @@ class DialogMessage extends StatelessWidget {
 }
 
 Future<T?> showMessageDialog<T>(BuildContext context, Widget message) async {
+  if (Navigator.canPop(context)) Navigator.pop(context);
   return await showDialog<T>(
     context: context,
     barrierColor: Colors.transparent,

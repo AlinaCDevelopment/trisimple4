@@ -110,22 +110,22 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   Widget _buildWifiErrorScreen() {
     return Scaffold(
-        body: Container(
-      decoration: backgroundDecoration,
-      child: Center(
-          child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 0.10),
-              child: GestureDetector(
-                onTap: () async {
-                  setState(() {});
-                },
+        body: GestureDetector(
+      onTap: () async {
+        setState(() {});
+      },
+      child: Container(
+        decoration: backgroundDecoration,
+        child: Center(
+            child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 0.10),
                 child: DialogMessage(
                   hideExit: true,
                   content: MultiLang.texts.connectionError,
                   title: MultiLang.texts.tryAgain,
-                ),
-              ))),
+                ))),
+      ),
     ));
   }
 }

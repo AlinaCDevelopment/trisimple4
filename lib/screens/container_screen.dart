@@ -31,7 +31,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
   bool isFail = true;
   final screens = {
     ScanView.name: ScanView(),
-    SearchView.name: const SearchView(),
+    SearchView.name:  SearchView(),
     PendingView.name: const PendingView(),
   };
 
