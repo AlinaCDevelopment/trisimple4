@@ -29,7 +29,9 @@ class ScanView extends ConsumerWidget {
         Widget dialog;
         bool success = true;
         if (next.error != null && next.error!.isNotEmpty) {
-          dialog = ScanErrorMessage();
+          dialog = ScanErrorMessage(
+            message: next.error,
+          );
           success = false;
         } else {
           String validationMessage;
@@ -52,7 +54,6 @@ class ScanView extends ConsumerWidget {
           );
           if (success) {
             final internet = await checkWifi();
-            print("INTERNEEEEEEEET $internet");
             if (internet) {
               //TODO Send to database that this was used
             } else {

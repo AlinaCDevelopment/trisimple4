@@ -16,7 +16,6 @@ class NfcState {
   NfcState.error(this.error);
 }
 
-//TODO When validating check if the Event of the ticket is the same as selected event in the app
 @immutable
 class NfcNotifier extends StateNotifier<NfcState> {
   final _eventIdBlock = 5;
@@ -47,7 +46,8 @@ class NfcNotifier extends StateNotifier<NfcState> {
             state = NfcState.error("Ocorreu um erro de plataforma.");
           }
         } catch (e) {
-          state = NfcState.error("Ocorreu um erro durante a leitura.");
+          state =
+              NfcState.error("A tag não está configurada para nenhum bilhete.");
         }
       },
     );

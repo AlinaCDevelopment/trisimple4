@@ -20,7 +20,16 @@ class ScanErrorMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScanDialogMessage(
         title: AppLocalizations.of(context).error,
-        content: message != null ? Text(message!) : null,
+        content: message != null
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: Text(
+                  message!,
+                  style: TextStyle(color: Colors.black),
+                  textAlign: TextAlign.center,
+                ),
+              )
+            : null,
         assetPngImgName: errorImgRoute);
   }
 }
@@ -230,12 +239,16 @@ class _ScanDialogMessageState extends State<ScanDialogMessage> {
                             top: 50),
                         child: Image.asset(widget.assetPngImgName),
                       ),
-                      Text(
-                        widget.title,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 40),
+                      Column(
+                        children: [
+                          Text(
+                            widget.title,
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 40),
+                          ),
+                          widget.content ?? Container()
+                        ],
                       ),
-                      widget.content ?? Container()
                     ]),
               ],
             )),
