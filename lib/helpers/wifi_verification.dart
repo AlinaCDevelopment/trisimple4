@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../services/l10n/app_localizations.dart';
 import '../services/translation_service.dart';
 import '../widgets/ui/dialog_messages.dart';
 
@@ -21,8 +22,8 @@ Future<bool> checkWifiWithValidation(BuildContext context) async {
     await showMessageDialog(
       context,
       DialogMessage(
-        content: MultiLang.texts.connectionError,
-        title: MultiLang.texts.tryAgain,
+        content: AppLocalizations.of(context).connectionError,
+        title: AppLocalizations.of(context).tryAgain,
       ),
     );
   return isConnected;

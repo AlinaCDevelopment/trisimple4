@@ -3,6 +3,7 @@ import 'package:app_4/providers/auth_provider.dart';
 
 import '../screens/container_screen.dart';
 import '../services/internal_storage_service.dart';
+import '../services/l10n/app_localizations.dart';
 import '../views/search_view.dart';
 import '../widgets/themed_button.dart';
 import 'package:flutter_beep/flutter_beep.dart';
@@ -83,7 +84,7 @@ class ScanView extends ConsumerWidget {
                     child: ThemedButton(
                         onTap: () => ref.read(viewProvider.notifier).state =
                             SearchView.name,
-                        text: MultiLang.texts.search)),
+                        text: AppLocalizations.of(context).search)),
               ],
             );
             //    */
@@ -104,7 +105,7 @@ class ScanView extends ConsumerWidget {
                         child: ThemedButton(
                             onTap: () => ref.read(viewProvider.notifier).state =
                                 SearchView.name,
-                            text: MultiLang.texts.search)),
+                            text: AppLocalizations.of(context).search)),
                   ],
                 ));
              */
@@ -113,7 +114,7 @@ class ScanView extends ConsumerWidget {
                 child: Padding(
               padding: const EdgeInsets.only(bottom: 100.0),
               child: Text(
-                MultiLang.texts.unavailableNfc,
+                AppLocalizations.of(context).unavailableNfc,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 25,
@@ -152,7 +153,7 @@ class ScranImage extends StatelessWidget {
               ),
               Image.asset(scanImgRoute),
               Text(
-                MultiLang.texts.approachNfc,
+                AppLocalizations.of(context).approachNfc,
                 style: const TextStyle(fontSize: 22, color: backMaterialColor),
                 textAlign: TextAlign.center,
               ),

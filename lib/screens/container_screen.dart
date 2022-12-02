@@ -1,6 +1,7 @@
 import 'dart:io';
 import '../helpers/size_helper.dart';
 import '../services/internal_storage_service.dart';
+import '../services/l10n/app_localizations.dart';
 import '../views/pending_view.dart';
 import '../views/search_view.dart';
 import '../providers/auth_provider.dart';
@@ -31,7 +32,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
   bool isFail = true;
   final screens = {
     ScanView.name: ScanView(),
-    SearchView.name:  SearchView(),
+    SearchView.name: SearchView(),
     PendingView.name: const PendingView(),
   };
 
@@ -61,7 +62,9 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                         color: appBarTextColor),
                   ),
                   Text(
-                    MultiLang.texts.controlAccess.replaceAll('\n', ' '),
+                    AppLocalizations.of(context)
+                        .controlAccess
+                        .replaceAll('\n', ' '),
                     style:
                         const TextStyle(fontSize: 12, color: appBarTextColor),
                   ),
@@ -138,7 +141,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '4 - ${MultiLang.texts.controlAccess.replaceAll('\n', ' ')}',
+                                  '4 - ${AppLocalizations.of(context).controlAccess.replaceAll('\n', ' ')}',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold)),
@@ -173,7 +176,8 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   DrawerTile(
                     onTap: () => _routeTileTapped(ScanView.name),
                     isSelected: ScanView.name == selectedRouteName,
-                    title: Text(MultiLang.texts.scan.toUpperCase()),
+                    title:
+                        Text(AppLocalizations.of(context).scan.toUpperCase()),
                   ),
 
                   //============================================================================================
@@ -181,7 +185,8 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   DrawerTile(
                     onTap: () => _routeTileTapped(SearchView.name),
                     isSelected: 'search' == selectedRouteName,
-                    title: Text(MultiLang.texts.search.toUpperCase()),
+                    title:
+                        Text(AppLocalizations.of(context).search.toUpperCase()),
                   ),
                   //============================================================================================
                   //PENDING REQUESTS
@@ -190,7 +195,9 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                     isSelected: 'pending' == selectedRouteName,
                     title: Row(
                       children: [
-                        Text(MultiLang.texts.pendingRecords.toUpperCase()),
+                        Text(AppLocalizations.of(context)
+                            .pendingRecords
+                            .toUpperCase()),
                         const SizedBox(
                           width: 4,
                         ),
@@ -233,7 +240,8 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                           }
                         },
                         isSelected: false,
-                        title: Text(MultiLang.texts.exit.toUpperCase()),
+                        title: Text(
+                            AppLocalizations.of(context).exit.toUpperCase()),
                       );
                     },
                   ),
@@ -247,7 +255,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      MultiLang.texts.contactsLabel,
+                      AppLocalizations.of(context).contactsLabel,
                       style: const TextStyle(color: Colors.grey, fontSize: 13),
                     ),
                     const Text(

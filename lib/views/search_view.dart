@@ -1,4 +1,5 @@
 import '../helpers/size_helper.dart';
+import '../services/l10n/app_localizations.dart';
 import '../widgets/themed_button.dart';
 import '../widgets/themed_input.dart';
 import 'package:flutter/material.dart';
@@ -20,18 +21,18 @@ class SearchView extends ConsumerWidget {
           horizontal: 30.0, vertical: SizeConfig.screenHeight * 0.06),
       child: Column(
         children: [
-          Text(MultiLang.texts.codeInsertLabel),
+          Text(AppLocalizations.of(context).codeInsertLabel),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: ThemedInput(
                 onChanged: (value) => text = value,
-                hintText: MultiLang.texts.codeInsertLabel),
+                hintText: AppLocalizations.of(context).codeInsertLabel),
           ),
           ThemedButton(
               onTap: () {
                 //TODO LATER CHECK HOW APP 3 DOES THIS AND ASK WHAT TO DO WITH DEBUG SEARCH OPTION, WHAT INFORMATION TO SHOW?
               },
-              text: MultiLang.texts.search)
+              text: AppLocalizations.of(context).search)
         ],
       ),
     );

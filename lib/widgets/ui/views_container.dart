@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/assets_routes.dart';
 import '../../constants/colors.dart';
 import '../../constants/decorations.dart';
+import '../../services/l10n/app_localizations.dart';
 import '../../services/translation_service.dart';
 
 class ViewContainer extends ConsumerWidget {
@@ -63,7 +64,7 @@ class ViewContainer extends ConsumerWidget {
                         child: Column(
                           children: [
                             Text(
-                              MultiLang.texts!.contactsLabel,
+                              AppLocalizations.of(context)!.contactsLabel,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 13),
@@ -83,7 +84,7 @@ class ViewContainer extends ConsumerWidget {
                     ),
                     Center(
                       child: Text(
-                        '${MultiLang.texts.version}: 1.0.0',
+                        '${AppLocalizations.of(context).version}: 1.0.0',
                         style: TextStyle(fontSize: 11, color: thirdColor),
                         textAlign: TextAlign.center,
                       ),

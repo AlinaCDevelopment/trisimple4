@@ -18,7 +18,6 @@ import 'screens/auth_screen.dart';
 import 'services/l10n/app_localizations.dart';
 import 'services/translation_service.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
@@ -122,8 +121,8 @@ class _MyAppState extends ConsumerState<MyApp> {
                     horizontal: SizeConfig.screenWidth * 0.10),
                 child: DialogMessage(
                   hideExit: true,
-                  content: MultiLang.texts.connectionError,
-                  title: MultiLang.texts.tryAgain,
+                  content: AppLocalizations.of(context).connectionError,
+                  title: AppLocalizations.of(context).tryAgain,
                 ))),
       ),
     ));
