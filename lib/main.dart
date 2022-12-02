@@ -15,9 +15,9 @@ import 'constants/decorations.dart';
 import 'helpers/wifi_verification.dart';
 import 'providers/locale_provider.dart';
 import 'screens/auth_screen.dart';
+import 'services/l10n/app_localizations.dart';
 import 'services/translation_service.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
