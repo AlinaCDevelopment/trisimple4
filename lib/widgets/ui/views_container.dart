@@ -3,7 +3,6 @@ import '../../providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 import '../../constants/assets_routes.dart';
 import '../../constants/colors.dart';
 import '../../constants/decorations.dart';
@@ -34,7 +33,7 @@ class ViewContainer extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  '${ref.read(authProvider).equipamento!.tipoEquipamento} #${ref.read(authProvider).equipamento!.numeroEquipamento}',
+                  '${ref.read(authProvider).equipamento!.tipo} #${ref.read(authProvider).equipamento!.numeroEquipamento}',
                   style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

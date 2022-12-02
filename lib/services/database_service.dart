@@ -23,40 +23,25 @@ class DatabaseService {
       "id_pulseira": 'test',
       "uniqueCode": '637cbf577b3d9',
     });
-
-    print("resuuuuult:${result.body}");
     final json = jsonDecode(result.body);
     return json['sucess'];
   }
 
-  Future<List<Equipamento>> getEquips() async {
-    final result = await http.get(Uri.parse('$_baseAPI/equipamentos'));
-    return _generateEquips(result.body);
-  }
+  Future<List<Equipamento>> getEquips({int? idEvento, int? idEquip}) async {
+    final result = await http.get(Uri.parse(
+        '$_baseAPI/equipamentos-esntl?id_evento=$idEvento&id_equipamento=$idEquip'));
 
-  Future<List<Equipamento>> _generateEquips(String resultBody) async {
     List<Equipamento> equipamentos = List.empty(growable: true);
 
-    final List<dynamic> resultJson = json.decode(resultBody);
+    final List<dynamic> resultJson = json.decode(result.body);
     for (var equipJson in resultJson) {
-      final estadoEquip =
-          await _getEstadoEquip(equipJson['id_estado'] as int? ?? 1);
-      final tipoEquip = await _getTipoEquip(equipJson['id_tipo'] as int? ?? 1);
-
       equipamentos.add(Equipamento(
           id: equipJson['id'],
           numeroEquipamento: equipJson['numero_equipamento'],
-          tipoEquipamento: tipoEquip,
-          estadoEquipamento: estadoEquip));
+          tipo: equipJson['tipo'],
+          estado: equipJson['estado']));
     }
     return equipamentos;
-  }
-
-  Future<List<Equipamento>> getEquipsByEvento(String idEvento) async {
-    final result =
-        await http.get(Uri.parse('$_baseAPI/equipamentos-evento/$idEvento'));
-
-    return _generateEquips(result.body);
   }
 
   Future<List<Evento>?> readEventos() async {
@@ -72,46 +57,8 @@ class DatabaseService {
   }
 
   Future<Evento?> readEventoById(int id) async {
+    //TODO CREATE THIS ENDPOINT
     return (await readEventos())?.singleWhere((element) => element.id == id);
-  }
-
-  Future<Equipamento?> readEquipById(int id) async {
-    //TODO ASK FOR THIS ENDPOINT
-    return (await getEquips()).singleWhere((element) => element.id == id);
-  }
-
-  Future<String> _getEstadoEquip(int idEstado) async {
-    final result = await http.get(Uri.parse('$_baseAPI/estado_equipamento'));
-    //TODO Pass where paramter instead of using where in the list
-
-    final List<dynamic> resultJson = json.decode(result.body);
-
-    List<EstadoEquipamento> estados =
-        List<EstadoEquipamento>.empty(growable: true);
-
-    for (var equipJson in resultJson) {
-      estados.add(EstadoEquipamento(
-          id: equipJson['id'],
-          estadoEquipamento: equipJson['estado_equipamento']));
-    }
-    final estadoJson = estados.singleWhere((element) => element.id == idEstado);
-    return estadoJson.estadoEquipamento;
-  }
-
-  Future<String> _getTipoEquip(int idTipo) async {
-    final result = await http.get(Uri.parse('$_baseAPI/tipo_equipamento'));
-    //TODO Pass where paramter instead of using where in the list
-
-    final List<dynamic> resultJson = json.decode(result.body);
-
-    List<TipoEquipamento> tipos = List<TipoEquipamento>.empty(growable: true);
-
-    for (var equipJson in resultJson) {
-      tipos.add(TipoEquipamento(
-          id: equipJson['id'], tipoEquipamento: equipJson['tipo_equipamento']));
-    }
-    final tipo = tipos.singleWhere((element) => element.id == idTipo);
-    return tipo.tipoEquipamento;
   }
 
   Future<bool> tryLogin(String password) async {

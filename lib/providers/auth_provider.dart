@@ -39,8 +39,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         //Else use the ones stored inside the preferences
         try {
           if (isConnected) {
-            final equipamento = await DatabaseService.instance
-                .readEquipById(equipamentoLocal.id);
+            final equipamento = (await DatabaseService.instance
+                    .getEquips(idEquip: equipamentoLocal.id))
+                .single;
             final evento =
                 await DatabaseService.instance.readEventoById(eventoLocal.id);
             authState = AuthState(equipamento: equipamento, evento: evento);

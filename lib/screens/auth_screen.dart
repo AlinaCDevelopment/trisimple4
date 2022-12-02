@@ -1,3 +1,5 @@
+import 'package:app_4/helpers/wifi_verification.dart';
+
 import '../services/database_service.dart';
 import '../widgets/ui/dialog_messages.dart';
 import 'package:flutter/material.dart';
@@ -163,34 +165,39 @@ class _AuthFormState extends State<AuthForm> {
       builder: (context, ref, container) {
         return ThemedButton(
             onTap: () async {
-              if (_equipSelected != null &&
-                  _eventoSelected != null &&
-                  _password.isNotEmpty) {
-                bool valid = await ref.read(authProvider.notifier).authenticate(
-                    equipamento: _equipamentos
-                        .singleWhere((element) => element.id == _equipSelected),
-                    evento: widget.eventos.singleWhere(
-                        (element) => element.id == _eventoSelected),
-                    password: _password);
-                if (valid) {
-                  await Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ContainerScreen()),
-                  );
+              final isConnected = await checkWifiWithValidation(context);
+              if (isConnected) {
+                if (_equipSelected != null &&
+                    _eventoSelected != null &&
+                    _password.isNotEmpty) {
+                  bool valid = await ref
+                      .read(authProvider.notifier)
+                      .authenticate(
+                          equipamento: _equipamentos.singleWhere(
+                              (element) => element.id == _equipSelected),
+                          evento: widget.eventos.singleWhere(
+                              (element) => element.id == _eventoSelected),
+                          password: _password);
+                  if (valid) {
+                    await Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ContainerScreen()),
+                    );
+                  } else {
+                    await showMessageDialog(
+                        context,
+                        DialogMessage(
+                            title: 'Upsss!',
+                            content: MultiLang.texts.wrongPassword));
+                  }
                 } else {
                   await showMessageDialog(
                       context,
                       DialogMessage(
                           title: 'Upsss!',
-                          content: MultiLang.texts.wrongPassword));
+                          content: MultiLang.texts.fillAllFields));
                 }
-              } else {
-                await showMessageDialog(
-                    context,
-                    DialogMessage(
-                        title: 'Upsss!',
-                        content: MultiLang.texts.fillAllFields));
               }
             },
             text: MultiLang.texts.signIn);
@@ -229,10 +236,10 @@ class _AuthFormState extends State<AuthForm> {
                 });
                 //AND LATER GET THE RIGHT EQUIPMENT OPTIONS TO SPEED UP THE PROCESS
                 DatabaseService.instance
-                    .getEquipsByEvento(_eventoSelected.toString())
+                    .getEquips(idEvento: _eventoSelected)
                     .then((equipsRead) {
                   _equipamentos = equipsRead
-                      .where((equip) => equip.estadoEquipamento == "Ativo")
+                      .where((equip) => equip.estado == "Ativo")
                       .toList();
                   setState(() {});
                 });
@@ -244,8 +251,7 @@ class _AuthFormState extends State<AuthForm> {
           AuthDropdown(
             _equipamentos
                 .map((equip) => _buildDropItem(
-                    '${equip.tipoEquipamento} #${equip.numeroEquipamento}',
-                    equip.id))
+                    '${equip.tipo} #${equip.numeroEquipamento}', equip.id))
                 .toList(),
             onChanged: (value) {
               _equipSelected = value;
