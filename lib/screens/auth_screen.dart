@@ -5,7 +5,6 @@ import '../services/l10n/app_localizations.dart';
 import '../widgets/ui/dialog_messages.dart';
 import 'package:flutter/material.dart';
 
-import '../services/translation_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';

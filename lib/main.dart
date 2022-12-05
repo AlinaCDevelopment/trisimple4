@@ -3,7 +3,6 @@ import '../widgets/ui/dialog_messages.dart';
 import '../helpers/size_helper.dart';
 import '../screens/splash_screen.dart';
 
-import '../services/translation_service.dart';
 import '../screens/container_screen.dart';
 import '../providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ import 'helpers/wifi_verification.dart';
 import 'providers/locale_provider.dart';
 import 'screens/auth_screen.dart';
 import 'services/l10n/app_localizations.dart';
-import 'services/translation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,27 +60,31 @@ class _MyAppState extends ConsumerState<MyApp> {
             canvasColor: Colors.white,
             hintColor: hintColor,
             iconTheme: const IconThemeData(color: backMaterialColor)),
-        home: FutureBuilder<List<dynamic>>(
-            future: Future.wait([MultiLang.init(locale), checkWifi()]),
+        home: FutureBuilder<bool>(
+            future: checkWifi(),
             builder: (context, snapshot) {
               SizeConfig.init(context);
-              if (snapshot.hasData &&
-                  snapshot.data != null &&
-                  snapshot.data![1] != null) {
-                hasWifi = snapshot.data![1]!;
-                return hasWifi
-                    ? UpgradeAlert(
-                        upgrader: Upgrader(
-                            canDismissDialog: false,
-                            showIgnore: false,
-                            showLater: false,
-                            languageCode: locale.languageCode,
-                            dialogStyle: Platform.isIOS
-                                ? UpgradeDialogStyle.cupertino
-                                : UpgradeDialogStyle.material),
-                        child: _buildHome(ref, hasWifi),
-                      )
-                    : _buildHome(ref, hasWifi);
+              if (snapshot.hasData && snapshot.data != null) {
+                hasWifi = snapshot.data!;
+                try {
+                  return hasWifi
+                      ? UpgradeAlert(
+                          upgrader: Upgrader(
+                              canDismissDialog: false,
+                              showIgnore: false,
+                              showLater: false,
+                              languageCode: locale.languageCode,
+                              dialogStyle: Platform.isIOS
+                                  ? UpgradeDialogStyle.cupertino
+                                  : UpgradeDialogStyle.material),
+                          child: _buildHome(ref, hasWifi),
+                        )
+                      : _buildHome(ref, hasWifi);
+                } catch (e) {
+                  //TODO LATER FIND BETTER SOLUTION
+                  //If an error occurs after runnning for the first time, then don't use the upgradeAlert
+                  return _buildHome(ref, hasWifi);
+                }
               }
               return const SplashScreen();
             }));

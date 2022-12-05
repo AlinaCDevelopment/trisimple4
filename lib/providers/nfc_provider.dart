@@ -6,14 +6,14 @@ import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_manager/platform_tags.dart';
 
 import '../models/event_tag.dart';
+import '../services/l10n/app_localizations.dart';
 
 @immutable
 class NfcState {
-  EventTag? tag;
-  String? error;
+  final EventTag? tag;
+  final String? error;
 
-  NfcState(this.tag);
-  NfcState.error(this.error);
+  const NfcState({this.tag, this.error});
 }
 
 @immutable
@@ -23,11 +23,11 @@ class NfcNotifier extends StateNotifier<NfcState> {
   final _startDateBlock = 7;
   final _lastDateBlock = 8;
 
-  NfcNotifier() : super(NfcState(null));
+  NfcNotifier() : super(NfcState());
 
-  Future<void> inSession(
-      Future<void> Function(NfcTag nfcTag, MifareUltralight mifareTag)
-          onDiscovered) async {
+  Future<void> inSession(BuildContext context,
+      {required Future<void> Function(NfcTag nfcTag, MifareUltralight mifareTag)
+          onDiscovered}) async {
     await NfcManager.instance.startSession(
       onDiscovered: (tag) async {
         try {
@@ -35,19 +35,17 @@ class NfcNotifier extends StateNotifier<NfcState> {
           if (mifare != null) {
             await onDiscovered(tag, mifare);
           } else {
-            state = NfcState.error("A sua tag não é suportada!");
+            state = NfcState(error: ("A sua tag não é suportada!"));
           }
         } on PlatformException catch (platformException) {
-          print('message: ${platformException.message}');
           if (platformException.message == 'Tag was lost.') {
-            state = NfcState.error(
-                "A tag foi perdida. \nMantenha a tag próxima até obter resultados.");
+            state = NfcState(error: (AppLocalizations.of(context).tagLost));
           } else {
-            state = NfcState.error("Ocorreu um erro de plataforma.");
+            state =
+                NfcState(error: (AppLocalizations.of(context).platformError));
           }
         } catch (e) {
-          state =
-              NfcState.error("A tag não está configurada para nenhum bilhete.");
+          state = NfcState(error: (AppLocalizations.of(context).processError));
         }
       },
     );
@@ -64,38 +62,8 @@ class NfcNotifier extends StateNotifier<NfcState> {
     final id = await _readId(nfcTag);
     final eventId = await _readBlock(block: _eventIdBlock, tag: mifareTag);
 
-    state =
-        NfcState(EventTag(id, eventId, startDate: startDate, endDate: endDate));
-  }
-
-  Future<void> clearTag(MifareUltralight mifareTag) async {
-    for (int i = 2; i <= 9; i++) {
-      await _writeBlock(tag: mifareTag, block: i, dataString: '');
-    }
-  }
-
-  Future<void> setTicketId(NfcTag tag, String ticketId) async {
-    bool success = false;
-
-    try {
-      final mifare = MifareUltralight.from(tag);
-
-      if (mifare != null) {
-        await _writeBlock(
-            dataString: ticketId, block: _ticketIdBlock, tag: mifare);
-      } else {
-        state = NfcState.error("A sua tag não é suportada!");
-      }
-    } on PlatformException catch (platformException) {
-      if (platformException.message == 'Tag was lost.') {
-        state = NfcState.error(
-            "A tag foi perdida. \nMantenha a tag próxima até obter resultados.");
-      } else {
-        state = NfcState.error("Ocorreu um erro de plataforma.");
-      }
-    } catch (e) {
-      state = NfcState.error("Ocorreu um erro durante a ESCRITA.");
-    }
+    state = NfcState(
+        tag: EventTag(id, eventId, startDate: startDate, endDate: endDate));
   }
 
   Future<bool> isNfcAvailable() async {
@@ -103,17 +71,14 @@ class NfcNotifier extends StateNotifier<NfcState> {
   }
 
   void reset() {
-    state = NfcState(null);
+    state = NfcState();
   }
 
   //==================================================================================================================
   //QUICK METHODS
-  Future<void> clearTagInSession() async {
-    await inSession((nfcTag, mifareTag) async => await clearTag(mifareTag));
-  }
 
-  Future<void> readTagInSession() async {
-    await inSession((nfcTag, mifareTag) async {
+  Future<void> readTagInSession(BuildContext context) async {
+    await inSession(context, onDiscovered: (nfcTag, mifareTag) async {
       await readTag(mifareTag: mifareTag, nfcTag: nfcTag);
     });
   }

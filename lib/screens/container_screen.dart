@@ -10,7 +10,6 @@ import '../views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../services/translation_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';

@@ -7,7 +7,6 @@ import '../../constants/assets_routes.dart';
 import '../../constants/colors.dart';
 import '../../constants/decorations.dart';
 import '../../services/l10n/app_localizations.dart';
-import '../../services/translation_service.dart';
 
 class ViewContainer extends ConsumerWidget {
   const ViewContainer({super.key, required this.child});

@@ -1,16 +1,17 @@
 import 'package:app_4/helpers/wifi_verification.dart';
+import 'package:app_4/models/event_tag.dart';
 import 'package:app_4/providers/auth_provider.dart';
 
 import '../screens/container_screen.dart';
 import '../services/internal_storage_service.dart';
 import '../services/l10n/app_localizations.dart';
+import '../services/tag_validation_methods.dart';
 import '../views/search_view.dart';
 import '../widgets/themed_button.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import '../providers/nfc_provider.dart';
 import 'package:flutter/material.dart';
 
-import '../services/translation_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';
@@ -26,43 +27,15 @@ class ScanView extends ConsumerWidget {
     ref.listen(nfcProvider, (previous, next) async {
       if (next != null && next.error != null ||
           next != null && next.tag != null) {
-        Widget dialog;
-        bool success = true;
         if (next.error != null && next.error!.isNotEmpty) {
-          dialog = ScanErrorMessage(
-            message: next.error,
-          );
-          success = false;
+          showMessageDialog(
+              context,
+              ScanErrorMessage(
+                message: next.error,
+              ));
         } else {
-          String validationMessage;
-          if (next.tag!.eventID != ref.read(authProvider).evento!.id) {
-            validationMessage = 'O bilhete não pertence ao evento';
-            success = false;
-          } else {
-            success = validateTagDates(next.tag!.startDate, next.tag!.endDate);
-            validationMessage = 'Das ${next.tag!.startDate.hour}h do dia ' +
-                '${next.tag!.startDate.day}-${next.tag!.startDate.month}-${next.tag!.startDate.year}, ' +
-                'até ${next.tag!.startDate.hour}h do dia ' +
-                '${next.tag!.endDate.day}-${next.tag!.endDate.month}-${next.tag!.endDate.year}';
-          }
-
-          dialog = ScanValidationMessage(
-            context,
-            eventTag: next.tag!,
-            availability: success,
-            message: validationMessage,
-          );
-          if (success) {
-            final internet = await checkWifi();
-            if (internet) {
-              //TODO Send to database that this was used
-            } else {
-              ref.read(internalDataProvider.notifier).storeData(1);
-            }
-          }
+          validateTag(context, tag: next.tag!, ref: ref);
         }
-        FlutterBeep.beep(success);
-        await showMessageDialog(context, dialog);
       }
     });
 
@@ -74,7 +47,7 @@ class ScanView extends ConsumerWidget {
           //REAL VERSION
           // /*
           if ((snapshot.data!)) {
-            ref.read(nfcProvider.notifier).readTagInSession();
+            ref.read(nfcProvider.notifier).readTagInSession(context);
             bodyPresented = Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

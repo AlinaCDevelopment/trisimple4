@@ -68,7 +68,7 @@ class DatabaseService {
   }
 
   Future<bool> trySend(String data) async {
-    //TODO Try to send data to the API
+    //TODO LATER Try to send data to the API
     bool dataSent = false;
     return dataSent;
   }

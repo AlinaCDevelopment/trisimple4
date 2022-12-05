@@ -5,7 +5,7 @@ import 'package:app_4/models/database/evento.dart';
 import '../../constants/assets_routes.dart';
 
 import '../../services/l10n/app_localizations.dart';
-import '../../services/translation_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -35,7 +35,7 @@ class ScanErrorMessage extends StatelessWidget {
 }
 
 class ScanValidationMessage extends StatelessWidget {
-  const ScanValidationMessage(this.parentContext,
+  const ScanValidationMessage(
       {Key? key,
       required this.availability,
       required this.eventTag,
@@ -44,7 +44,6 @@ class ScanValidationMessage extends StatelessWidget {
 
   final EventTag eventTag;
   final bool availability;
-  final BuildContext parentContext;
   final String message;
 
   @override
@@ -127,15 +126,6 @@ class ScanValidationMessage extends StatelessWidget {
       ]),
     );
   }
-}
-
-bool validateTagDates(DateTime startDate, DateTime lastDate) {
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day, now.hour, now.minute);
-  return startDate.isBefore(today) && lastDate.isAfter(today) ||
-      startDate.isBefore(today) && lastDate.isAtSameMomentAs(today) ||
-      startDate.isAtSameMomentAs(today) && lastDate.isAfter(today) ||
-      startDate.isAtSameMomentAs(today) && lastDate.isAtSameMomentAs(today);
 }
 
 //TODO REMOVE THIS WHEN DB IS READY

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../services/l10n/app_localizations.dart';
-import '../services/translation_service.dart';
+
 import '../widgets/ui/dialog_messages.dart';
 
 Future<bool> checkWifi() async {
