@@ -1,10 +1,10 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_manager/platform_tags.dart';
 
+import '../constants/nfc_blocks.dart';
 import '../models/event_tag.dart';
 import '../services/l10n/app_localizations.dart';
 
@@ -18,12 +18,7 @@ class NfcState {
 
 @immutable
 class NfcNotifier extends StateNotifier<NfcState> {
-  final _eventIdBlock = 5;
-  final _ticketIdBlock = 6;
-  final _startDateBlock = 7;
-  final _lastDateBlock = 8;
-
-  NfcNotifier() : super(NfcState());
+  NfcNotifier() : super(const NfcState());
 
   Future<void> inSession(BuildContext context,
       {required Future<void> Function(NfcTag nfcTag, MifareUltralight mifareTag)
@@ -57,10 +52,10 @@ class NfcNotifier extends StateNotifier<NfcState> {
     required MifareUltralight mifareTag,
     required NfcTag nfcTag,
   }) async {
-    final startDate = await _readDateTime(mifareTag, _startDateBlock);
-    final endDate = await _readDateTime(mifareTag, _lastDateBlock);
+    final startDate = await _readDateTime(mifareTag, startDateBlock);
+    final endDate = await _readDateTime(mifareTag, lastDateBlock);
     final id = await _readId(nfcTag);
-    final eventId = await _readBlock(block: _eventIdBlock, tag: mifareTag);
+    final eventId = await _readBlock(block: eventIdBlock, tag: mifareTag);
 
     state = NfcState(
         tag: EventTag(id, eventId, startDate: startDate, endDate: endDate));

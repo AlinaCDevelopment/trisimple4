@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import '../helpers/wifi_verification.dart';
 
 import '../models/database/equipamento.dart';

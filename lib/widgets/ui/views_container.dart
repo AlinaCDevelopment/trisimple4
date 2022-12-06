@@ -2,8 +2,6 @@ import '../../helpers/size_helper.dart';
 import '../../providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../constants/assets_routes.dart';
 import '../../constants/colors.dart';
 import '../../constants/decorations.dart';
 import '../../services/l10n/app_localizations.dart';
@@ -16,7 +14,6 @@ class ViewContainer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: backgroundDecoration,
-      //May need to be deleted TODO test with Nfc device
       constraints: const BoxConstraints.expand(),
       child: Column(
         children: [
@@ -84,7 +81,7 @@ class ViewContainer extends ConsumerWidget {
                     Center(
                       child: Text(
                         '${AppLocalizations.of(context).version}: 1.0.0',
-                        style: TextStyle(fontSize: 11, color: thirdColor),
+                        style: const TextStyle(fontSize: 11, color: thirdColor),
                         textAlign: TextAlign.center,
                       ),
                     )
