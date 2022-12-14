@@ -1,14 +1,9 @@
 import 'dart:ui';
-
 import 'package:app_4/models/database/evento.dart';
-
 import '../../constants/assets_routes.dart';
-
 import '../../services/l10n/app_localizations.dart';
-
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
 import '../../helpers/size_helper.dart';
 import '../../models/event_tag.dart';
 
@@ -54,13 +49,6 @@ class ScanValidationMessage extends StatelessWidget {
         : AppLocalizations.of(context).invalid;
     String durationText;
 
-    if (eventTag.endDate.difference(eventTag.startDate).inDays > 0) {
-      durationText = 'Bilhete Passe $durationDays Dias';
-    } else {
-      durationText =
-          'Bilhete Diário ${eventTag.startDate.day} ${_getMonth(eventTag.startDate.month)} ${eventTag.startDate.year}';
-    }
-
     return ScanDialogMessage(
       assetPngImgName: availability ? validImgRoute : invalidImgRoute,
       title: validationText,
@@ -70,7 +58,7 @@ class ScanValidationMessage extends StatelessWidget {
             children: [
               Text(
                 textAlign: TextAlign.center,
-                durationText,
+                'eventTag.title',
                 style: const TextStyle(color: Colors.grey, fontSize: 23),
               ),
               Text(
@@ -93,6 +81,7 @@ class ScanValidationMessage extends StatelessWidget {
                   height: 80,
                   width: 80,
                   child: QrImage(
+                    //TODO ASK IF YOU'RE TO STORE THE UNIQUECODE IN THE TAG
                     data: "1234567890",
                     version: QrVersions.auto,
                     //size: 200.0,
@@ -125,36 +114,6 @@ class ScanValidationMessage extends StatelessWidget {
         )
       ]),
     );
-  }
-}
-
-//TODO REMOVE THIS WHEN DB IS READY
-String _getMonth(int month) {
-  switch (month) {
-    case 1:
-      return 'Janeiro';
-    case 2:
-      return 'Fevereiro';
-    case 3:
-      return 'Março';
-    case 4:
-      return 'Abril';
-    case 5:
-      return 'Maio';
-    case 6:
-      return 'Junho';
-    case 7:
-      return 'Julho';
-    case 8:
-      return 'Agosto';
-    case 9:
-      return 'Setembro';
-    case 10:
-      return 'Outubro';
-    case 11:
-      return 'Novembro';
-    default:
-      return 'Dezembro';
   }
 }
 

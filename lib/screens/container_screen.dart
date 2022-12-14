@@ -38,7 +38,7 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
   @override
   Widget build(BuildContext context) {
     final selectedRouteName = ref.watch(viewProvider);
-    final pendingRecordsCount = ref.watch(internalDataProvider).count;
+    final pendingRecordsCount = ref.watch(pendingCounter).count;
 
     return WillPopScope(
       onWillPop: () async => false,

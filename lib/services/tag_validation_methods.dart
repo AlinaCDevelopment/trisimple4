@@ -13,16 +13,16 @@ Future<void> validateTag(BuildContext context,
   Widget dialog;
   bool success = true;
   String validationMessage;
-  if (tag!.eventID != ref.read(authProvider).evento!.id) {
-    validationMessage = 'A Tag não pertence ao evento';
-    success = false;
-  } else {
-    success = validateTagDates(tag!.startDate, tag!.endDate);
-    validationMessage = 'Das ${tag!.startDate.hour}h do dia ' +
-        '${tag!.startDate.day}-${tag!.startDate.month}-${tag!.startDate.year}, ' +
-        'até ${tag!.startDate.hour}h do dia ' +
-        '${tag!.endDate.day}-${tag!.endDate.month}-${tag!.endDate.year}';
-  }
+  //if (tag!.eventID != ref.read(authProvider).evento!.id) {
+  //  validationMessage = 'A Tag não pertence ao evento';
+  //  success = false;
+  //} else {
+  success = validateTagDates(tag!.startDate, tag!.endDate);
+  validationMessage = 'Das ${tag!.startDate.hour}h do dia ' +
+      '${tag!.startDate.day}-${tag!.startDate.month}-${tag!.startDate.year}, ' +
+      'até ${tag!.startDate.hour}h do dia ' +
+      '${tag!.endDate.day}-${tag!.endDate.month}-${tag!.endDate.year}';
+  //}
 
   dialog = ScanValidationMessage(
     eventTag: tag!,
@@ -34,7 +34,7 @@ Future<void> validateTag(BuildContext context,
     if (internet) {
       //TODO Send to database that this was used
     } else {
-      ref.read(internalDataProvider.notifier).storeData(1);
+      ref.read(pendingCounter.notifier).storeData(1);
     }
   }
 

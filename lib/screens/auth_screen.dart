@@ -223,6 +223,9 @@ class _AuthFormState extends State<AuthForm> {
               textAlign: TextAlign.center,
             ),
           ),
+          SizedBox(
+            height: SizeConfig.screenHeight * 0.01,
+          ),
           AuthDropdown(
             widget.eventos
                 .map((evento) => _buildDropItem(evento.nome, evento.id))

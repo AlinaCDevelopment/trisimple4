@@ -17,7 +17,7 @@ class InternalDatabaseNotifier extends StateNotifier<InternalDataState> {
   }
 }
 
-final internalDataProvider =
+final pendingCounter =
     StateNotifierProvider<InternalDatabaseNotifier, InternalDataState>((ref) {
   return InternalDatabaseNotifier();
 });

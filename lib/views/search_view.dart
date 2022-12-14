@@ -7,8 +7,6 @@ import '../widgets/themed_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-//TODO GO BACK TO APPLOCALIZATIONS.OF CONTEXT
-//TODO CREATE TABLE PULSEIRA WITH PULSEIRA ID AND PHYSIC ID
 class SearchView extends ConsumerWidget {
   SearchView({super.key});
   static const name = 'search';
