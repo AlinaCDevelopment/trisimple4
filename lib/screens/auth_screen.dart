@@ -1,199 +1,277 @@
-import 'package:app_4/constants/assets_routes.dart';
-import 'package:app_4/screens/scan_screen.dart';
+import 'package:app_4/helpers/wifi_verification.dart';
+
+import '../services/database_service.dart';
+import '../services/l10n/app_localizations.dart';
+import '../widgets/ui/dialog_messages.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';
+import '../helpers/size_helper.dart';
+import '../models/database/equipamento.dart';
+import '../models/database/evento.dart';
+import '../providers/auth_provider.dart';
+import '../widgets/themed_button.dart';
+import '../widgets/themed_input.dart';
 import '../widgets/utility/empty_scroll_behaviour.dart';
-
-const _inputPadding = EdgeInsets.symmetric(horizontal: 30);
-const _inputFontSize = 16.0;
-const _bottomFontSize = 13.0;
-
-final _inputRadius = BorderRadius.circular(50);
+import 'container_screen.dart';
+import 'splash_screen.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
 
-  static const routeName = '/auth';
-
   @override
   Widget build(BuildContext context) {
-    final events = List<DropdownMenuItem<dynamic>>.from([
-      buildDropItem('evento 1', '1'),
-      buildDropItem('evento 2', '2'),
-      buildDropItem('evento 3', '3'),
-      buildDropItem('evento 4', '4')
-    ]);
-    final equipments = List<DropdownMenuItem<dynamic>>.from([
-      buildDropItem('equipamento 1', '1'),
-      buildDropItem('equipamento 2', '2'),
-      buildDropItem('equipamento 3', '3'),
-      buildDropItem('equipamento 4', '4')
-    ]);
-    const inputSpacement = SizedBox(
-      height: 8,
-    );
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: Container(
-        decoration: const BoxDecoration(gradient: backGradient),
-        child: CustomScrollView(
-          scrollBehavior: EmptyScrollBehaviour(),
-          physics: const ClampingScrollPhysics(),
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: false,
-              fillOverscroll: false,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            right: 40, left: 40, top: 100, bottom: 20),
-                        child: Image.asset(logoImageRoute)),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: const [
-                          Icon(
-                            Icons.lock_outline,
-                            size: 30,
-                          ),
-                          Text(
-                            'Área Reservada',
-                            style: TextStyle(
-                                color: backColor,
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 90, right: 90, bottom: 45),
-                      child: Text(
-                        'Só é permitida a entrada a pessoas autorizadas pela Trisimple',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).backgroundColor,
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20))),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 48, vertical: 30),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
-                                children: const [
-                                  Text(
-                                    '- APP 4 -\nControlo de Acessos',
-                                    style: TextStyle(
-                                        color: accentColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 29),
-                                    textAlign: TextAlign.center,
+    return FutureBuilder<List<Evento>?>(
+        future: DatabaseService.instance.readEventos(),
+        builder: (context, eventosReading) {
+          if (eventosReading.hasData && eventosReading.data != null) {
+            return Scaffold(
+                resizeToAvoidBottomInset: true,
+                body: Container(
+                  height: SizeConfig.screenHeight,
+                  width: SizeConfig.screenWidth,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(backgroundImgRoute),
+                          fit: BoxFit.fill)),
+                  child: CustomScrollView(
+                    scrollBehavior: EmptyScrollBehaviour(),
+                    physics: const ClampingScrollPhysics(),
+                    slivers: [
+                      SliverFillRemaining(
+                        hasScrollBody: false,
+                        fillOverscroll: false,
+                        child: SizedBox(
+                          height: SizeConfig.screenHeight,
+                          width: SizeConfig.screenWidth,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: SizeConfig.screenHeight * 0.11,
+                                bottom: SizeConfig.screenHeight * 0.07,
+                                right: SizeConfig.screenWidth * 0.14,
+                                left: SizeConfig.screenWidth * 0.14),
+                            child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Image.asset(logoImageRoute),
+                                  _buildTitle(context),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: SizeConfig.screenHeight * 0.02),
+                                    child: AuthForm(
+                                        eventos: eventosReading.data ?? []),
                                   ),
-                                  Text(
-                                    '(1.0.0)',
-                                    style: TextStyle(
-                                      fontSize: 19,
-                                    ),
-                                    textAlign: TextAlign.center,
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            SizeConfig.screenWidth * 0.07),
+                                    child: _buildFooter(context),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Form(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    AuthDropdown(events,
-                                        hintText: 'Seleciona o evento'),
-                                    inputSpacement,
-                                    AuthDropdown(equipments,
-                                        hintText: 'Seleciona o equipamento'),
-                                    inputSpacement,
-                                    const PasswordInput(),
-                                    inputSpacement,
-                                    SubmitButton(),
-                                    const SizedBox(
-                                      height: 50,
-                                    ),
-                                    Column(children: const [
-                                      Text(
-                                        'Para mais informações envie email para:',
-                                        style: TextStyle(
-                                            fontSize: _bottomFontSize),
-                                      ),
-                                      Text(
-                                        'info@trisimple.pt',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: _bottomFontSize),
-                                      ),
-                                    ]),
-                                  ],
-                                ),
-                              )
-                            ],
+                                ]),
                           ),
                         ),
-                      ),
-                    )
-                  ]),
-            )
-          ],
-        ),
+                      )
+                    ],
+                  ),
+                ));
+          } else {
+            return const SplashScreen();
+          }
+        });
+  }
+
+  Padding _buildTitle(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: SizeConfig.screenHeight * 0.04),
+      child: Column(
+        children: [
+          Text(
+            AppLocalizations.of(context).reservedArea,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              AppLocalizations.of(context).controlAccess,
+              style: const TextStyle(
+                  color: secondColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  DropdownMenuItem<dynamic> buildDropItem(String name, String value) {
-    return DropdownMenuItem(value: value, child: DropdownText(name));
+  Column _buildFooter(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          AppLocalizations.of(context).emailLabel,
+          style: const TextStyle(
+            fontSize: 11,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const Text(
+          'info@trisimple.pt',
+          style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(
+          height: SizeConfig.screenHeight * 0.01,
+        ),
+        Text(
+          '${AppLocalizations.of(context).version}: 1.0.0',
+          style: TextStyle(fontSize: 11, color: thirdColor),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
   }
 }
 
-class SubmitButton extends StatelessWidget {
-  const SubmitButton({
-    Key? key,
-  }) : super(key: key);
+class AuthForm extends StatefulWidget {
+  const AuthForm({Key? key, required this.eventos}) : super(key: key);
+  final List<Evento> eventos;
+
+  @override
+  State<AuthForm> createState() => _AuthFormState();
+}
+
+class _AuthFormState extends State<AuthForm> {
+  String _password = '';
+  int? _equipSelected;
+  int? _eventoSelected;
+  List<Equipamento> _equipamentos = [];
+  final inputSpacement = SizedBox(
+    height: SizeConfig.screenHeight * 0.02,
+  );
+  DropdownMenuItem<dynamic> _buildDropItem(String name, dynamic value) {
+    return DropdownMenuItem(value: value, child: DropdownText(name));
+  }
+
+  _buildSubmitButton() {
+    return Consumer(
+      builder: (context, ref, container) {
+        return ThemedButton(
+            onTap: () async {
+              final isConnected = await checkWifiWithValidation(context);
+              if (isConnected) {
+                if (_equipSelected != null &&
+                    _eventoSelected != null &&
+                    _password.isNotEmpty) {
+                  bool valid = await ref
+                      .read(authProvider.notifier)
+                      .authenticate(
+                          equipamento: _equipamentos.singleWhere(
+                              (element) => element.id == _equipSelected),
+                          evento: widget.eventos.singleWhere(
+                              (element) => element.id == _eventoSelected),
+                          password: _password);
+                  if (valid) {
+                    await Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ContainerScreen()),
+                    );
+                  } else {
+                    await showMessageDialog(
+                        context,
+                        DialogMessage(
+                            title: 'Upsss!',
+                            content:
+                                AppLocalizations.of(context).wrongPassword));
+                  }
+                } else {
+                  await showMessageDialog(
+                      context,
+                      DialogMessage(
+                          title: 'Upsss!',
+                          content: AppLocalizations.of(context).fillAllFields));
+                }
+              }
+            },
+            text: AppLocalizations.of(context).signIn);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed(ScanScreen.routeName);
-      },
-      child: Container(
-          height: 48,
-          decoration: BoxDecoration(
-              borderRadius: _inputRadius,
-              gradient: const LinearGradient(
-                  colors: gradientColors,
-                  end: Alignment.bottomLeft,
-                  begin: Alignment.topRight)),
-          child: const Center(
+    return Form(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          FittedBox(
+            fit: BoxFit.scaleDown,
             child: Text(
-              'Inscreve-te',
-              style: TextStyle(fontSize: 20, color: Colors.white),
+              AppLocalizations.of(context).authorizedPeople,
+              style: const TextStyle(
+                fontSize: 12,
+              ),
+              textAlign: TextAlign.center,
             ),
-          )),
+          ),
+          SizedBox(
+            height: SizeConfig.screenHeight * 0.01,
+          ),
+          AuthDropdown(
+            widget.eventos
+                .map((evento) => _buildDropItem(evento.nome, evento.id))
+                .toList(),
+            onChanged: (value) {
+              if (value != null) {
+                _eventoSelected = value;
+                //RESET EQUIP SELECTED
+                setState(() {
+                  _equipSelected = null;
+                  _equipamentos = [];
+                });
+                //AND LATER GET THE RIGHT EQUIPMENT OPTIONS TO SPEED UP THE PROCESS
+                DatabaseService.instance
+                    .getEquips(idEvento: _eventoSelected)
+                    .then((equipsRead) {
+                  _equipamentos = equipsRead
+                      .where((equip) => equip.estado == "Ativo")
+                      .toList();
+                  setState(() {});
+                });
+              }
+            },
+            hintText: AppLocalizations.of(context).eventSelectHint,
+          ),
+          inputSpacement,
+          AuthDropdown(
+            _equipamentos
+                .map((equip) => _buildDropItem(
+                    '${equip.tipo} #${equip.numeroEquipamento}', equip.id))
+                .toList(),
+            onChanged: (value) {
+              _equipSelected = value;
+            },
+            hintText: AppLocalizations.of(context).equipSelectHint,
+          ),
+          inputSpacement,
+          PasswordInput(
+            onChanged: (value) {
+              _password = value;
+            },
+          ),
+          inputSpacement,
+          _buildSubmitButton(),
+        ],
+      ),
     );
   }
 }
@@ -201,49 +279,35 @@ class SubmitButton extends StatelessWidget {
 class PasswordInput extends StatefulWidget {
   const PasswordInput({
     Key? key,
+    required this.onChanged,
   }) : super(key: key);
+  final Function(String) onChanged;
 
   @override
   State<PasswordInput> createState() => _PasswordInputState();
 }
 
 class _PasswordInputState extends State<PasswordInput> {
-  var _isPasswordVisible = false;
+  var _isPasswordHidden = true;
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      obscureText: !_isPasswordVisible,
-      style: TextStyle(color: hintColor),
-      decoration: InputDecoration(
-        focusColor: accentColor,
-        hintText: 'Insere a palavra-passe',
-        contentPadding: _inputPadding,
-        border: InputBorder.none,
-        filled: true,
-        hintStyle: const TextStyle(fontSize: _inputFontSize),
-        fillColor: canvasColor,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: _inputRadius,
+    return ThemedInput(
+      onChanged: widget.onChanged,
+      obscureText: _isPasswordHidden,
+      hintText: AppLocalizations.of(context).passwordHint,
+      suffixIcon: IconButton(
+        icon: Icon(
+          _isPasswordHidden
+              ? Icons.visibility_outlined
+              : Icons.visibility_off_outlined,
+          color: Theme.of(context).iconTheme.color,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: _inputRadius,
-        ),
-        suffixIcon: IconButton(
-          icon: Icon(
-            _isPasswordVisible
-                ? Icons.visibility_outlined
-                : Icons.visibility_off_outlined,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          onPressed: () {
-            setState(() {
-              _isPasswordVisible = !_isPasswordVisible;
-            });
-          },
-        ),
+        onPressed: () {
+          setState(() {
+            _isPasswordHidden = !_isPasswordHidden;
+          });
+        },
       ),
     );
   }
@@ -253,34 +317,44 @@ class AuthDropdown extends StatefulWidget {
   const AuthDropdown(
     this.dropdownItems, {
     this.hintText = '',
+    this.onChanged,
     Key? key,
   }) : super(key: key);
   final List<DropdownMenuItem<dynamic>> dropdownItems;
   final String hintText;
+  final Function(dynamic value)? onChanged;
 
   @override
   State<AuthDropdown> createState() => _AuthDropdownState();
 }
 
 class _AuthDropdownState extends State<AuthDropdown> {
-  String? selectedValue;
+  final _inputRadius = BorderRadius.circular(50);
+  dynamic selectedValue;
 
   @override
   Widget build(BuildContext context) {
+    if (widget.dropdownItems
+        .where((element) => element.value == selectedValue)
+        .isEmpty) {
+      selectedValue = null;
+    }
     return Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(),
-            borderRadius: _inputRadius),
+        decoration:
+            BoxDecoration(color: Colors.white, borderRadius: _inputRadius),
         child: DropdownButtonHideUnderline(
           child: ButtonTheme(
             alignedDropdown: true,
             child: DropdownButton(
+              itemHeight: 50,
               value: selectedValue,
               isExpanded: true,
               hint: DropdownText(widget.hintText),
               items: widget.dropdownItems,
               onChanged: ((value) {
+                if (widget.onChanged != null) {
+                  widget.onChanged!(value);
+                }
                 selectedValue = value;
                 setState(() {});
               }),
@@ -307,7 +381,7 @@ class DropdownText extends StatelessWidget {
       padding: const EdgeInsets.only(left: 10.0),
       child: Text(
         text,
-        style: const TextStyle(color: hintColor, fontSize: _inputFontSize),
+        style: const TextStyle(color: hintColor, fontSize: 15),
       ),
     );
   }
