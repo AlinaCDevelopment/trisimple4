@@ -17,16 +17,6 @@ class DatabaseService {
 
   final _baseAPI = 'http://dev.trisimple.pt';
 
-  Future<bool> setTicketId(String braceletId, String uniqueCode) async {
-    final result =
-        await http.put(Uri.parse('$_baseAPI/pulseira-bilhete'), headers: {
-      "id_pulseira": 'test',
-      "uniqueCode": '637cbf577b3d9',
-    });
-    final json = jsonDecode(result.body);
-    return json['sucess'];
-  }
-
   Future<List<Equipamento>> getEquips({int? idEvento, int? idEquip}) async {
     final result = await http.get(Uri.parse(
         '$_baseAPI/equipamentos-esntl?id_evento=$idEvento&id_equipamento=$idEquip'));
@@ -61,15 +51,36 @@ class DatabaseService {
     return (await readEventos())?.singleWhere((element) => element.id == id);
   }
 
+  Future<EventTag?> getTagByPhysicalId(String id) async {
+    final result =
+        await http.get(Uri.parse('$_baseAPI/bilhetes-esntl?id_fisico=$id'));
+    final List<dynamic> resultJson = json.decode(result.body);
+    if (resultJson.isEmpty) {
+      return null;
+    }
+    final Map<String, dynamic> jsonData = resultJson.first;
+    return EventTag(jsonData['id_interno'], jsonData['id_evento'],
+        startDate: DateTime.parse(jsonData['data_inicio']),
+        ticketId: jsonData['id'],
+        title: jsonData['titulo'],
+        endDate: DateTime.parse(jsonData['data_fim']));
+  }
+
   Future<bool> tryLogin(String password) async {
     final result = await http.get(Uri.parse('$_baseAPI/login/$password'));
     final isPasswordCorrect = json.decode(result.body)['sucess'] == 1;
     return isPasswordCorrect;
   }
 
-  Future<bool> trySend(String data) async {
-    //TODO LATER Try to send data to the API
-    bool dataSent = false;
-    return dataSent;
+  Future<bool> sendEntrance(int idBilhete, DateTime entranceMoment) async {
+    print('entrace');
+    final result =
+        await http.put(Uri.parse('$_baseAPI/registar-entrada'), body: {
+      "id_bilhete": idBilhete.toString(),
+      "data_entrada": entranceMoment.toIso8601String(),
+    });
+    print(entranceMoment.second);
+    final json = jsonDecode(result.body);
+    return json['sucess'] == 1;
   }
 }

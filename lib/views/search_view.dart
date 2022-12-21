@@ -1,4 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
+import 'package:app_4/helpers/wifi_verification.dart';
+import 'package:app_4/services/database_service.dart';
 import 'package:app_4/services/tag_validation_methods.dart';
+import 'package:app_4/widgets/ui/dialog_messages.dart';
 
 import '../helpers/size_helper.dart';
 import '../services/l10n/app_localizations.dart';
@@ -27,10 +34,37 @@ class SearchView extends ConsumerWidget {
                 hintText: AppLocalizations.of(context).codeInsertLabel),
           ),
           ThemedButton(
-              onTap: () {
-                //TODO GET TAG AND RUN THE FOLLOWING COMMAND
-                //   validateTag(context, tag: tag, ref: ref);
-                //TODO LATER CHECK HOW APP 3 DOES THIS AND ASK WHAT TO DO WITH DEBUG SEARCH OPTION, WHAT INFORMATION TO SHOW?
+              onTap: () async {
+                try {
+                  final hasWifi = await checkWifiWithValidation(context);
+                  if (hasWifi) {
+                    try {
+                      final tag = await DatabaseService.instance
+                          .getTagByPhysicalId(text.trim());
+                      if (tag == null) {
+                        //TODO INTERNATIONALIZE
+                        showMessageDialog(
+                            context,
+                            DialogMessage(
+                              title: AppLocalizations.of(context).invalid,
+                              content:
+                                  'There is no ticket for =event= with the inserted code',
+                            ));
+                      } else {
+                        validateTagAndSendData(context, tag: tag, ref: ref);
+                      }
+                    } on SocketException {
+                      print('wifi interrupted');
+                    }
+                  }
+                } catch (e) {
+                  showMessageDialog(
+                      context,
+                      DialogMessage(
+                        title: '',
+                        content: 'Error',
+                      ));
+                }
               },
               text: AppLocalizations.of(context).search)
         ],

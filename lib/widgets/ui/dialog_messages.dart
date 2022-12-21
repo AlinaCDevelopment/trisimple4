@@ -58,7 +58,7 @@ class ScanValidationMessage extends StatelessWidget {
             children: [
               Text(
                 textAlign: TextAlign.center,
-                'eventTag.title',
+                eventTag.title,
                 style: const TextStyle(color: Colors.grey, fontSize: 23),
               ),
               Text(

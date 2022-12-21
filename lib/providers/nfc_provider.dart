@@ -55,10 +55,17 @@ class NfcNotifier extends StateNotifier<NfcState> {
     final startDate = await _readDateTime(mifareTag, startDateBlock);
     final endDate = await _readDateTime(mifareTag, lastDateBlock);
     final id = await _readId(nfcTag);
+    final ticketId =
+        int.parse(await _readBlock(block: ticketIdBlock, tag: mifareTag));
     final eventId = await _readBlock(block: eventIdBlock, tag: mifareTag);
+    final title = await _readTitle(mifareTag);
 
     state = NfcState(
-        tag: EventTag(id, eventId, startDate: startDate, endDate: endDate));
+        tag: EventTag(id, int.parse(eventId),
+            title: title,
+            ticketId: ticketId,
+            startDate: startDate,
+            endDate: endDate));
   }
 
   Future<bool> isNfcAvailable() async {
@@ -87,6 +94,12 @@ class NfcNotifier extends StateNotifier<NfcState> {
     //Multiply by 10 because we're losing a 0 when reading
     var date = DateTime.fromMillisecondsSinceEpoch(int.parse(dataString) * 10);
     return date;
+  }
+
+  Future<String> _readTitle(MifareUltralight mifare) async {
+    final part1 = await _readBlock(tag: mifare, block: titleBlock1);
+    final part2 = await _readBlock(tag: mifare, block: titleBlock2);
+    return '$part1$part2';
   }
 
   Future<String> _readId(NfcTag tag) async {

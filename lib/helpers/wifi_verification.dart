@@ -22,8 +22,8 @@ Future<bool> checkWifiWithValidation(BuildContext context) async {
     await showMessageDialog(
       context,
       DialogMessage(
-        content: AppLocalizations.of(context).connectionError,
-        title: AppLocalizations.of(context).tryAgain,
+        content: AppLocalizations.of(context).tryAgain,
+        title: AppLocalizations.of(context).connectionError,
       ),
     );
   return isConnected;

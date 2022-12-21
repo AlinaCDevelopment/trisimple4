@@ -1,4 +1,9 @@
+import 'dart:async';
 import 'dart:io';
+import 'package:app_4/services/internal_storage_service.dart';
+import 'package:app_4/services/offline_service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
 import '../widgets/ui/dialog_messages.dart';
 import '../helpers/size_helper.dart';
 import '../screens/splash_screen.dart';
@@ -60,37 +65,25 @@ class _MyAppState extends ConsumerState<MyApp> {
             canvasColor: Colors.white,
             hintColor: hintColor,
             iconTheme: const IconThemeData(color: backMaterialColor)),
-        home: FutureBuilder<bool>(
-            future: checkWifi(),
-            builder: (context, snapshot) {
-              SizeConfig.init(context);
-              if (snapshot.hasData && snapshot.data != null) {
-                hasWifi = snapshot.data!;
-                try {
-                  return hasWifi
-                      ? UpgradeAlert(
-                          upgrader: Upgrader(
-                              canDismissDialog: false,
-                              showIgnore: false,
-                              showLater: false,
-                              languageCode: locale.languageCode,
-                              dialogStyle: Platform.isIOS
-                                  ? UpgradeDialogStyle.cupertino
-                                  : UpgradeDialogStyle.material),
-                          child: _buildHome(ref, hasWifi),
-                        )
-                      : _buildHome(ref, hasWifi);
-                } catch (e) {
-                  //TODO LATER FIND BETTER SOLUTION
-                  //If an error occurs after runnning for the first time, then don't use the upgradeAlert
-                  return _buildHome(ref, hasWifi);
-                }
-              }
-              return const SplashScreen();
-            }));
+        //TODO UNITE FUTUREBUILDERS
+        home: AppHome(
+          locale: locale,
+          restart: () => setState(() {}),
+        ));
   }
+}
 
-  Widget _buildHome(WidgetRef ref, bool hasWifi) {
+class AppHome extends ConsumerStatefulWidget {
+  const AppHome({required this.locale, required this.restart});
+  final Locale locale;
+  final VoidCallback restart;
+
+  @override
+  ConsumerState<AppHome> createState() => _AppHomeState();
+}
+
+class _AppHomeState extends ConsumerState<AppHome> {
+  Widget _buildHome(bool hasWifi) {
     return FutureBuilder<bool>(
         future: ref.read(authProvider.notifier).authenticateFromPreviousLogs(),
         builder: (context, snapshot) {
@@ -128,5 +121,82 @@ class _MyAppState extends ConsumerState<MyApp> {
                 ))),
       ),
     ));
+  }
+
+  late final StreamSubscription _streamSubscription;
+  bool _hasWifi = false;
+
+/*   @override
+  initState() {
+    super.initState();
+    _streamSubscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      if (result != ConnectivityResult.none) {
+        print('Changed Connectivity: $result');
+        _hasWifi = await checkWifi();
+        if (_hasWifi) {
+          await OfflineService.instance.sendPending();
+
+          ref.read(pendingCounter.notifier).state =
+              await OfflineService.instance.getPendingCount();
+        }
+      } else {
+        _hasWifi = false;
+      }
+
+      setState(() {});
+    });
+  } */
+
+  @override
+  Widget build(BuildContext context) {
+    Timer.periodic(Duration(seconds: 5), (Timer t) async {
+      _hasWifi = await checkWifi();
+      if (_hasWifi) {
+        await OfflineService.instance.sendPending();
+
+        ref.read(pendingCounter.notifier).state =
+            await OfflineService.instance.getPendingCount();
+      }
+      print('data updated');
+    });
+
+    var hasWifi = false;
+    return FutureBuilder<void>(
+        future: OfflineService.instance.init(),
+        builder: (context, snapshot) {
+          SizeConfig.init(context);
+
+          if (snapshot.connectionState != ConnectionState.done) {
+            return SplashScreen();
+          }
+          return FutureBuilder<bool>(
+              future: checkWifi(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data != null) {
+                  hasWifi = snapshot.data!;
+                  try {
+                    return hasWifi
+                        ? UpgradeAlert(
+                            upgrader: Upgrader(
+                                canDismissDialog: false,
+                                showIgnore: false,
+                                showLater: false,
+                                languageCode: widget.locale.languageCode,
+                                dialogStyle: Platform.isIOS
+                                    ? UpgradeDialogStyle.cupertino
+                                    : UpgradeDialogStyle.material),
+                            child: _buildHome(hasWifi),
+                          )
+                        : _buildHome(hasWifi);
+                  } catch (e) {
+                    //If an error occurs after runnning for the first time, then don't use the upgradeAlert
+                    return _buildHome(hasWifi);
+                  }
+                }
+                return const SplashScreen();
+              });
+        });
   }
 }

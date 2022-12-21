@@ -9,15 +9,15 @@ class InternalDataState {
 }
 
 @immutable
-class InternalDatabaseNotifier extends StateNotifier<InternalDataState> {
-  InternalDatabaseNotifier() : super(const InternalDataState(count: 0));
+class InternalDatabaseNotifier extends StateNotifier<int> {
+  InternalDatabaseNotifier() : super(0);
 
-  Future<void> storeData(int count) async {
-    state = InternalDataState(count: state.count + count);
+  Future<void> increment(int count) async {
+    state = state + count;
   }
 }
 
 final pendingCounter =
-    StateNotifierProvider<InternalDatabaseNotifier, InternalDataState>((ref) {
+    StateNotifierProvider<InternalDatabaseNotifier, int>((ref) {
   return InternalDatabaseNotifier();
 });

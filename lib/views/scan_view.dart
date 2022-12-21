@@ -1,6 +1,8 @@
 import 'package:app_4/helpers/wifi_verification.dart';
 import 'package:app_4/models/event_tag.dart';
 import 'package:app_4/providers/auth_provider.dart';
+import 'package:app_4/services/database_service.dart';
+import 'package:app_4/services/offline_service.dart';
 
 import '../screens/container_screen.dart';
 import '../services/internal_storage_service.dart';
@@ -34,7 +36,7 @@ class ScanView extends ConsumerWidget {
                 message: next.error,
               ));
         } else {
-          validateTag(context, tag: next.tag!, ref: ref);
+          validateTagAndSendData(context, tag: next.tag!, ref: ref);
         }
       }
     });
@@ -44,8 +46,6 @@ class ScanView extends ConsumerWidget {
       builder: (context, snapshot) {
         Widget? bodyPresented;
         if (snapshot.hasData && snapshot.data != null) {
-          //REAL VERSION
-          // /*
           if ((snapshot.data!)) {
             ref.read(nfcProvider.notifier).readTagInSession(context);
             bodyPresented = Column(
@@ -61,28 +61,6 @@ class ScanView extends ConsumerWidget {
                         text: AppLocalizations.of(context).search)),
               ],
             );
-            //    */
-            //TEST VERSION
-            /*
-          if ((true)) {
-            bodyPresented = GestureDetector(
-                onTap: () {
-                  ref.read(nfcProvider.notifier).setDumbPositive();
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(child: const ScranImage()),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 60.0, vertical: 10),
-                        child: ThemedButton(
-                            onTap: () => ref.read(viewProvider.notifier).state =
-                                SearchView.name,
-                            text: AppLocalizations.of(context).search)),
-                  ],
-                ));
-             */
           } else {
             bodyPresented = Center(
                 child: Padding(
