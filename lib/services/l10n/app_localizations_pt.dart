@@ -77,6 +77,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get unavailableNfc => 'NFC INDISPONÍVEL';
 
   @override
+  String ticketIsNotFromEvent(String eventName) {
+    return 'Não foi encontrado nenhum bilhete para \n${eventName}, correspondente ao código lido';
+  }
+
+  @override
   String get unsupportedTag => 'A tag lida não é suportada!';
 
   @override

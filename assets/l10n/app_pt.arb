@@ -29,6 +29,8 @@
     "approachNfc": "Pode aproximar.",
     "unavailableNfc": "NFC INDISPONÍVEL",
 
+    "ticketIsNotFromEvent" : "Não foi encontrado nenhum bilhete para \n{eventName}, correspondente ao código lido",
+
     "unsupportedTag": "A tag lida não é suportada!",
     "tagLost": "A tag foi perdida. \nMantenha a pulseira próxima até obter resultados.",
     "platformError": "Ocorreu um erro de plataforma.",

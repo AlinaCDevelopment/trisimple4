@@ -31,6 +31,16 @@
     "approachNfc": "May approach.",
     "unavailableNfc": "NFC UNAVAILABLE",
 
+
+    "ticketIsNotFromEvent" : "No ticket found for \n{eventName} matching the code read",
+    "@ticketIsNotFromEvent" : {
+        "placeholders": {
+            "eventName": {
+                "type" : "String"
+            }
+        }
+    },
+
     "unsupportedTag": "The tag read is not supported!",
     "tagLost": "Tag was lost. \nKeep the bracelet close until results are shown.",
     "platformError": "A platform error occured.",

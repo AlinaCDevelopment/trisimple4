@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:app_4/helpers/wifi_verification.dart';
+import 'package:app_4/providers/auth_provider.dart';
 import 'package:app_4/services/database_service.dart';
 import 'package:app_4/services/tag_validation_methods.dart';
 import 'package:app_4/widgets/ui/dialog_messages.dart';
@@ -42,14 +43,13 @@ class SearchView extends ConsumerWidget {
                       final tag = await DatabaseService.instance
                           .getTagByPhysicalId(text.trim());
                       if (tag == null) {
-                        //TODO INTERNATIONALIZE
                         showMessageDialog(
                             context,
                             DialogMessage(
-                              title: AppLocalizations.of(context).invalid,
-                              content:
-                                  'There is no ticket for =event= with the inserted code',
-                            ));
+                                title: AppLocalizations.of(context).invalid,
+                                content: AppLocalizations.of(context)
+                                    .ticketIsNotFromEvent(
+                                        ref.read(authProvider).evento!.nome)));
                       } else {
                         validateTagAndSendData(context, tag: tag, ref: ref);
                       }

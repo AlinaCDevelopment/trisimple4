@@ -237,6 +237,12 @@ abstract class AppLocalizations {
   /// **'NFC UNAVAILABLE'**
   String get unavailableNfc;
 
+  /// No description provided for @ticketIsNotFromEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'No ticket found for \n{eventName} matching the code read'**
+  String ticketIsNotFromEvent(String eventName);
+
   /// No description provided for @unsupportedTag.
   ///
   /// In en, this message translates to:
