@@ -65,7 +65,6 @@ class _MyAppState extends ConsumerState<MyApp> {
             canvasColor: Colors.white,
             hintColor: hintColor,
             iconTheme: const IconThemeData(color: backMaterialColor)),
-        //TODO UNITE FUTUREBUILDERS
         home: AppHome(
           locale: locale,
           restart: () => setState(() {}),

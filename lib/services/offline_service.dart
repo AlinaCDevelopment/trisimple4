@@ -25,7 +25,6 @@ class OfflineService {
   ///
   ///Returns: the number of records sent
   Future<int> sendPending() async {
-    //TODO FIX
     final pendingElements = await getPending();
     var pendingSent = 0;
     for (final pending in pendingElements) {
@@ -35,8 +34,8 @@ class OfflineService {
         final idBilhete = pending['id_bilhete'] as int;
         final entrance = pending['entrance'] as String;
 
-        final success = await DatabaseService.instance.sendEntrance(
-            idBilhete, DateTime.parse(entrance));
+        final success = await DatabaseService.instance
+            .sendEntrance(idBilhete, DateTime.parse(entrance));
 
         if (success) {
           await _database
@@ -65,7 +64,6 @@ class OfflineService {
     }
   }
 
-//TODO ORDER BY DATETIMES FROM OLDEST TO MOST RECENT
   Future<List<Map<String, Object?>>> getPending() async {
     var pendingData = await _database.rawQuery('SELECT * FROM pending');
     pendingData = List.of(pendingData, growable: true);

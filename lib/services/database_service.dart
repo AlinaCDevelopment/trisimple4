@@ -47,8 +47,12 @@ class DatabaseService {
   }
 
   Future<Evento?> readEventoById(int id) async {
-    //TODO CREATE THIS ENDPOINT
-    return (await readEventos())?.singleWhere((element) => element.id == id);
+    final result = await http.get(Uri.parse('$_baseAPI/eventos?id_evento=$id'));
+
+    final List<dynamic> resultJson = json.decode(result.body);
+    final eventJson = resultJson.single;
+
+    return Evento(id: eventJson['id'], nome: eventJson['nome']);
   }
 
   Future<EventTag?> getTagByPhysicalId(String id) async {
