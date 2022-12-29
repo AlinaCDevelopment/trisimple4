@@ -28,9 +28,10 @@ class ContainerScreen extends ConsumerStatefulWidget {
 }
 
 class _ContainerScreenState extends ConsumerState<ContainerScreen> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isFail = true;
   final screens = {
-    ScanView.name: ScanView(),
+    ScanView.name: const ScanView(),
     SearchView.name: SearchView(),
     PendingView.name: const PendingView(),
   };
@@ -41,7 +42,15 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
     final pendingRecordsCount = ref.watch(pendingCounter);
 
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async {
+        //Open the drawer when back arrow is pressed
+        if (_scaffoldKey.currentState != null) {
+          if (_scaffoldKey.currentState!.isDrawerOpen == false) {
+            _scaffoldKey.currentState!.openDrawer();
+          }
+        }
+        return false;
+      },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
