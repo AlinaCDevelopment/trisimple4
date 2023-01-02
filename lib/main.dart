@@ -87,7 +87,7 @@ class _AppHomeState extends ConsumerState<AppHome> {
         future: ref.read(authProvider.notifier).authenticateFromPreviousLogs(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
-            if (snapshot.data!) {
+            if (snapshot.data!  ) {
               return const ContainerScreen();
             } else {
               if (hasWifi) {

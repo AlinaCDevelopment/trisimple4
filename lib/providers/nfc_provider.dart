@@ -10,7 +10,7 @@ import '../services/l10n/app_localizations.dart';
 
 @immutable
 class NfcState {
-  final EventTag? tag;
+  final Bilhete? tag;
   final String? error;
 
   const NfcState({this.tag, this.error});
@@ -71,7 +71,7 @@ class NfcNotifier extends StateNotifier<NfcState> {
         await _readBlockAsString(mifareTag, storageSlot: titleStorage);
 
     state = NfcState(
-        tag: EventTag(id, int.parse(eventId),
+        tag: Bilhete(id, int.parse(eventId),
             title: title,
             ticketId: ticketId,
             startDate: startDate,

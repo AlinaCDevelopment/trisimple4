@@ -55,7 +55,7 @@ class DatabaseService {
     return Evento(id: eventJson['id'], nome: eventJson['nome']);
   }
 
-  Future<EventTag?> getTagByPhysicalId(String id) async {
+  Future<Bilhete?> getTicketByPhysicalId(String id) async {
     final result =
         await http.get(Uri.parse('$_baseAPI/bilhetes-esntl?id_fisico=$id'));
     final List<dynamic> resultJson = json.decode(result.body);
@@ -63,7 +63,7 @@ class DatabaseService {
       return null;
     }
     final Map<String, dynamic> jsonData = resultJson.first;
-    return EventTag(jsonData['id_interno'], jsonData['id_evento'],
+    return Bilhete(jsonData['id_interno'], jsonData['id_evento'],
         startDate: DateTime.parse(jsonData['data_inicio']),
         ticketId: jsonData['id'],
         title: jsonData['titulo'],

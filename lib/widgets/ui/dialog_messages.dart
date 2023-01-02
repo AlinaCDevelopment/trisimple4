@@ -37,7 +37,7 @@ class ScanValidationMessage extends StatelessWidget {
       required this.message})
       : super(key: key);
 
-  final EventTag eventTag;
+  final Bilhete eventTag;
   final bool availability;
   final String message;
 

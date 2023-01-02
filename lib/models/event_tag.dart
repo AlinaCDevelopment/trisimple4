@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 @immutable
-class EventTag {
+class Bilhete {
   final DateTime startDate;
   final DateTime endDate;
   final String internalId;
@@ -9,7 +9,7 @@ class EventTag {
   final String title;
   final int eventID;
 
-  const EventTag(this.internalId, this.eventID,
+  const Bilhete(this.internalId, this.eventID,
       {required this.startDate,
       required this.title,
       required this.ticketId,
@@ -17,7 +17,7 @@ class EventTag {
 
   @override
   bool operator ==(Object other) {
-    return other is EventTag &&
+    return other is Bilhete &&
         other.internalId == internalId &&
         other.ticketId == ticketId;
   }

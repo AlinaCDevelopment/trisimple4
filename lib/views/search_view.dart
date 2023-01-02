@@ -41,7 +41,7 @@ class SearchView extends ConsumerWidget {
                   if (hasWifi) {
                     try {
                       final tag = await DatabaseService.instance
-                          .getTagByPhysicalId(text.trim());
+                          .getTicketByPhysicalId(text.trim());
                       if (tag == null) {
                         showMessageDialog(
                             context,

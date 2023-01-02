@@ -65,10 +65,10 @@ Future<void> _validateTag(BuildContext context,
         message: validMessage,
       ));
 } */
-EventTag? lastTag;
+Bilhete? lastTag;
 DateTime? lastMomentSaved;
 Future<void> validateTagAndSendData(BuildContext context,
-    {required EventTag tag, required WidgetRef ref}) async {
+    {required Bilhete tag, required WidgetRef ref}) async {
   Widget dialog;
   bool tagIsValid = true;
   String validationMessage;
@@ -119,7 +119,7 @@ Future<void> validateTagAndSendData(BuildContext context,
 }
 
 Future<void> _sendEntrance(
-    {required EventTag tag,
+    {required Bilhete tag,
     required WidgetRef ref,
     required DateTime moment}) async {
   print('moment sent: ${moment.second}');
