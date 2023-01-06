@@ -22,6 +22,7 @@ class _PendingViewState extends State<PendingView> {
           future: OfflineService.instance.getPending(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data != null) {
+              //TODO Internationalize
               if (snapshot.data!.isEmpty) {
                 return const Text('Sem data pendente.');
               }
