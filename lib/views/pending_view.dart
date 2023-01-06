@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import "package:intl/intl.dart";
 
 import '../screens/splash_screen.dart';
 import '../services/offline_service.dart';
@@ -21,18 +22,26 @@ class _PendingViewState extends State<PendingView> {
           future: OfflineService.instance.getPending(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data != null) {
-              if (snapshot.data!.length == 0) {
-                return Text('No pending data');
+              if (snapshot.data!.isEmpty) {
+                return const Text('Sem data pendente.');
               }
               return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) => ListTile(
-                  title: Text(snapshot.data![index].toString()),
-                ),
-              );
+                  shrinkWrap: true,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) => ListTile(
+                        title: Column(
+                          children: [
+                            Text(
+                                "ID: ${snapshot.data![index]['id_bilhete'].toString()}"),
+                            Text(
+                                "Data de Entrada: ${DateFormat("dd-MM-yyyy").format(DateTime.parse(
+                              snapshot.data![index]['entrance'].toString(),
+                            ))}")
+                          ],
+                        ),
+                      ));
             }
-            return SplashScreen();
+            return const SplashScreen();
           }),
     );
   }
