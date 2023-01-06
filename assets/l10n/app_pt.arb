@@ -44,5 +44,9 @@
     "ticket": "Bilhete",
     "bracelet": "Pulseira",
     
-    "error": "Erro"
+    "error": "Erro",
+
+
+    "noPendingData": "Sem data pendente",
+    "pendingEntranceDate" : "Data de Entrada: {dateTime} "
 }

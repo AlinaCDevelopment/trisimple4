@@ -1,3 +1,4 @@
+import 'package:app_4/services/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "package:intl/intl.dart";
@@ -22,9 +23,8 @@ class _PendingViewState extends State<PendingView> {
           future: OfflineService.instance.getPending(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data != null) {
-              //TODO Internationalize
               if (snapshot.data!.isEmpty) {
-                return const Text('Sem data pendente.');
+                return Text(AppLocalizations.of(context).noPendingData);
               }
               return ListView.builder(
                   shrinkWrap: true,
@@ -34,10 +34,11 @@ class _PendingViewState extends State<PendingView> {
                           children: [
                             Text(
                                 "ID: ${snapshot.data![index]['id_bilhete'].toString()}"),
-                            Text(
-                                "Data de Entrada: ${DateFormat("dd-MM-yyyy").format(DateTime.parse(
-                              snapshot.data![index]['entrance'].toString(),
-                            ))}")
+                            Text(AppLocalizations.of(context)
+                                .pendingEntranceDate(DateFormat("dd-MM-yyyy")
+                                    .format(DateTime.parse(snapshot.data![index]
+                                            ['entrance']
+                                        .toString()))))
                           ],
                         ),
                       ));

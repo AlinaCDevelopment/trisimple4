@@ -107,4 +107,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get error => 'Erro';
+
+  @override
+  String get noPendingData => 'Sem data pendente';
+
+  @override
+  String pendingEntranceDate(String dateTime) {
+    return 'Data de Entrada: $dateTime ';
+  }
 }

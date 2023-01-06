@@ -107,4 +107,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error => 'Error';
+
+  @override
+  String get noPendingData => 'No pending data';
+
+  @override
+  String pendingEntranceDate(String dateTime) {
+    return 'Entrance date: $dateTime ';
+  }
 }

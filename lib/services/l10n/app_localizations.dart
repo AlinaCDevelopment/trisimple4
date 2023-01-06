@@ -296,6 +296,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error'**
   String get error;
+
+  /// No description provided for @noPendingData.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending data'**
+  String get noPendingData;
+
+  /// No description provided for @pendingEntranceDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Entrance date: {dateTime} '**
+  String pendingEntranceDate(String dateTime);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

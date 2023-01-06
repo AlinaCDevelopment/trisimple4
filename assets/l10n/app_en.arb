@@ -51,7 +51,16 @@
     "ticket": "Ticket",
     "bracelet": "Bracelet",
 
-    "error": "Error"
+    "error": "Error",
 
+    "noPendingData": "No pending data",
+    "pendingEntranceDate" : "Entrance date: {dateTime} ",
+    "@pendingEntranceDate" : {
+        "placeholders": {
+            "dateTime": {
+                "type" : "String"
+            }
+        }
+    }
 }
 
