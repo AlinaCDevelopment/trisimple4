@@ -160,7 +160,7 @@ class _AppHomeState extends ConsumerState<AppHome> {
               await OfflineService.instance.getPendingCount();
         }
       }
-      print('data updated');
+      /* print('data updated'); */
     });
 
     var hasWifi = false;
