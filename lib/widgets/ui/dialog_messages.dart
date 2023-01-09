@@ -43,7 +43,6 @@ class ScanValidationMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final durationDays = eventTag.endDate.day - eventTag.startDate.day + 1;
     final validationText = availability
         ? AppLocalizations.of(context).valid
         : AppLocalizations.of(context).invalid;

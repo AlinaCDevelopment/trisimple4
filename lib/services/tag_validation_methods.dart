@@ -76,11 +76,15 @@ Future<void> validateTagAndSendData(BuildContext context,
   //  validationMessage = 'A Tag não pertence ao evento';
   //  success = false;
   //} else {
-  tagIsValid = validateTagDates(tag!.startDate, tag!.endDate);
-  validationMessage = 'Das ${tag!.startDate.hour}h do dia ' +
-      '${tag!.startDate.day}-${tag!.startDate.month}-${tag!.startDate.year}, ' +
-      'até ${tag!.startDate.hour}h do dia ' +
-      '${tag!.endDate.day}-${tag!.endDate.month}-${tag!.endDate.year}';
+  if (tag!.startDate != null) {
+    tagIsValid = validateTagDates(tag!.startDate!, tag!.endDate!);
+    validationMessage = 'Das ${tag!.startDate!.hour}h do dia ' +
+        '${tag!.startDate!.day}-${tag!.startDate!.month}-${tag!.startDate!.year}, ' +
+        'até ${tag!.startDate!.hour}h do dia ' +
+        '${tag!.endDate!.day}-${tag!.endDate!.month}-${tag!.endDate!.year}';
+  } else {
+    validationMessage = 'Sem datas limites';
+  }
   //}
 
   dialog = ScanValidationMessage(

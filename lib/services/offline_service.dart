@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'database_service.dart';
 
 class OfflineService {
-  var _isInitiated = false;
+  var isInitiated = false;
   late Database _database;
   OfflineService._privateConstructor();
 
@@ -51,7 +51,7 @@ class OfflineService {
   }
 
   Future<void> init() async {
-    if (!_isInitiated) {
+    if (!isInitiated) {
       _database = await openDatabase(
         join(await getDatabasesPath(), 'Trisimple4Data_Tables.db'),
         onCreate: (db, version) async {
@@ -60,7 +60,7 @@ class OfflineService {
         },
         version: 2,
       );
-      _isInitiated = true;
+      isInitiated = true;
     }
   }
 

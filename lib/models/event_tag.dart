@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 @immutable
 class Bilhete {
-  final DateTime startDate;
-  final DateTime endDate;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final String internalId;
   final int ticketId;
   final String title;

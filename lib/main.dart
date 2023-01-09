@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:app_4/services/database_service.dart';
 import 'package:app_4/services/internal_storage_service.dart';
 import 'package:app_4/services/offline_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -87,7 +88,7 @@ class _AppHomeState extends ConsumerState<AppHome> {
         future: ref.read(authProvider.notifier).authenticateFromPreviousLogs(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
-            if (snapshot.data!  ) {
+            if (snapshot.data!) {
               return const ContainerScreen();
             } else {
               if (hasWifi) {
@@ -150,13 +151,14 @@ class _AppHomeState extends ConsumerState<AppHome> {
 
   @override
   Widget build(BuildContext context) {
-    Timer.periodic(Duration(seconds: 5), (Timer t) async {
+    Timer.periodic(const Duration(seconds: 5), (Timer t) async {
       _hasWifi = await checkWifi();
-      if (_hasWifi) {
-        await OfflineService.instance.sendPending();
-
-        ref.read(pendingCounter.notifier).state =
-            await OfflineService.instance.getPendingCount();
+      if (_hasWifi && mounted) {
+        if (OfflineService.instance.isInitiated) {
+          await OfflineService.instance.sendPending();
+          ref.read(pendingCounter.notifier).state =
+              await OfflineService.instance.getPendingCount();
+        }
       }
       print('data updated');
     });

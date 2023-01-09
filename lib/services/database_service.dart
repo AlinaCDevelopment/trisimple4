@@ -23,7 +23,12 @@ class DatabaseService {
 
     List<Equipamento> equipamentos = List.empty(growable: true);
 
-    final List<dynamic> resultJson = json.decode(result.body);
+    List<dynamic> resultJson;
+    try {
+      resultJson = json.decode(result.body);
+    } catch (e) {
+      resultJson = List.empty();
+    }
     for (var equipJson in resultJson) {
       equipamentos.add(Equipamento(
           id: equipJson['id'],

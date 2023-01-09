@@ -1,17 +1,9 @@
-import 'package:app_4/helpers/wifi_verification.dart';
-import 'package:app_4/models/event_tag.dart';
-import 'package:app_4/providers/auth_provider.dart';
-import 'package:app_4/services/database_service.dart';
-import 'package:app_4/services/offline_service.dart';
-
+import '../providers/nfc_provider.dart';
 import '../screens/container_screen.dart';
-import '../services/internal_storage_service.dart';
 import '../services/l10n/app_localizations.dart';
 import '../services/tag_validation_methods.dart';
 import '../views/search_view.dart';
 import '../widgets/themed_button.dart';
-import 'package:flutter_beep/flutter_beep.dart';
-import '../providers/nfc_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,7 +39,11 @@ class ScanView extends ConsumerWidget {
         Widget? bodyPresented;
         if (snapshot.hasData && snapshot.data != null) {
           if ((snapshot.data!)) {
-            ref.read(nfcProvider.notifier).readTagInSession(context);
+            ref.read(nfcProvider.notifier).inSession(
+                  context,
+                  onDiscovered: (nfcTag) =>
+                      ref.read(nfcProvider.notifier).readTag(nfcTag: nfcTag),
+                );
             bodyPresented = Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
