@@ -205,8 +205,8 @@ class _ScanDialogMessageState extends State<ScanDialogMessage> {
   }
 }
 
-class DialogMessage extends StatelessWidget {
-  const DialogMessage(
+class MessageDialog extends StatelessWidget {
+  const MessageDialog(
       {super.key,
       required this.title,
       required this.content,
@@ -273,14 +273,110 @@ class DialogMessage extends StatelessWidget {
   }
 }
 
+class InputDialog extends StatelessWidget {
+  InputDialog(
+      {super.key,
+      required this.title,
+      required this.content,
+      this.obscureText = false,
+      this.hideExit = false});
+  final String title;
+  final bool obscureText;
+  final String content;
+  final bool hideExit;
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Container(
+            height: SizeConfig.screenHeight * 0.4,
+            width: SizeConfig.screenWidth * 0.85,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
+            child: Material(
+              color: Colors.transparent,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  if (!hideExit)
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: GestureDetector(
+                        child: const Padding(
+                          padding: EdgeInsets.all(15.0),
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                    ),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: const Color.fromARGB(255, 29, 29, 29)
+                                  .withOpacity(0.7),
+                              fontSize: 30),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.screenHeight * 0.02,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: FittedBox(
+                            child: Text(
+                              content,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  color: Color.fromARGB(115, 14, 14, 14),
+                                  fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.screenWidth * 0.12),
+                          child: TextFormField(
+                            controller: _controller,
+                            obscureText: obscureText,
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                            onPressed: () =>
+                                Navigator.pop(context, _controller.text),
+                            child: Text('submit'))
+                      ]),
+                ],
+              ),
+            )));
+  }
+}
+
 Future<T?> showMessageDialog<T>(BuildContext context, Widget message) async {
-  if (Navigator.canPop(context)) Navigator.pop(context);
-  return await showDialog<T>(
-    context: context,
-    barrierColor: Colors.transparent,
-    builder: (BuildContext context) {
-      return BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), child: message);
-    },
-  );
+  try {
+    if (ModalRoute.of(context)?.isCurrent != true &&
+        Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+    return showDialog<T>(
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), child: message);
+      },
+    );
+  } catch (e) {
+    return null;
+  }
 }

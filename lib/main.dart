@@ -114,7 +114,7 @@ class _AppHomeState extends ConsumerState<AppHome> {
             child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.screenWidth * 0.10),
-                child: DialogMessage(
+                child: MessageDialog(
                   hideExit: true,
                   content: AppLocalizations.of(context).connectionError,
                   title: AppLocalizations.of(context).tryAgain,

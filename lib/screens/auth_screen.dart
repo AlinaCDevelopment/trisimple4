@@ -187,7 +187,7 @@ class _AuthFormState extends State<AuthForm> {
                   } else {
                     await showMessageDialog(
                         context,
-                        DialogMessage(
+                        MessageDialog(
                             title: 'Upsss!',
                             content:
                                 AppLocalizations.of(context).wrongPassword));
@@ -195,7 +195,7 @@ class _AuthFormState extends State<AuthForm> {
                 } else {
                   await showMessageDialog(
                       context,
-                      DialogMessage(
+                      MessageDialog(
                           title: 'Upsss!',
                           content: AppLocalizations.of(context).fillAllFields));
                 }

@@ -45,7 +45,7 @@ class SearchView extends ConsumerWidget {
                       if (tag == null) {
                         showMessageDialog(
                             context,
-                            DialogMessage(
+                            MessageDialog(
                                 title: AppLocalizations.of(context).invalid,
                                 content: AppLocalizations.of(context)
                                     .ticketIsNotFromEvent(
@@ -60,7 +60,7 @@ class SearchView extends ConsumerWidget {
                 } catch (e) {
                   showMessageDialog(
                       context,
-                      DialogMessage(
+                      MessageDialog(
                         title: '',
                         content: 'Error',
                       ));

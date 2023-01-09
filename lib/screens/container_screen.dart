@@ -1,5 +1,7 @@
 import 'dart:io';
 import '../helpers/size_helper.dart';
+import '../helpers/wifi_verification.dart';
+import '../services/database_service.dart';
 import '../services/internal_storage_service.dart';
 import '../services/l10n/app_localizations.dart';
 import '../views/pending_view.dart';
@@ -13,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/assets_routes.dart';
 import '../constants/colors.dart';
+import '../widgets/ui/dialog_messages.dart';
 import '../widgets/ui/views_container.dart';
 import 'auth_screen.dart';
 
@@ -20,6 +23,7 @@ final viewProvider = StateProvider<String>(
   (ref) => ScanView.name,
 );
 
+///Screen which contains the drawer and the inner views, most of the time in the application, this is what the user sees
 class ContainerScreen extends ConsumerStatefulWidget {
   const ContainerScreen({super.key});
 
@@ -233,18 +237,46 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                     builder: (context, ref, child) {
                       return DrawerTile(
                         onTap: () async {
-                          ref.read(authProvider.notifier).resetAuth();
-
-                          //In Android¡'s case we exit the app
-                          if (Platform.isAndroid) {
-                            SystemChannels.platform
-                                .invokeMethod('SystemNavigator.pop');
-                            //iOS doesn't allow apps to exit themselves so we go to AuthScreen
-                          } else {
-                            Navigator.pushReplacement(
+                          final wifi = await checkWifiWithValidation(context);
+                          if (wifi) {
+                            final password = await showMessageDialog<String>(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => const AuthScreen()));
+                                InputDialog(
+                                    title: 'Exiting the app',
+                                    content:
+                                        'The password is necessary to leave the app'));
+                            if (password != null && password.isNotEmpty) {
+                              try {
+                                final isAuth = await DatabaseService.instance
+                                    .tryLogin(password);
+
+                                if (!isAuth) {
+                                  showMessageDialog(
+                                      context,
+                                      MessageDialog(
+                                          content: 'The password was incorrect',
+                                          title: 'Auth error'));
+                                } else {
+                                  ref.read(authProvider.notifier).resetAuth();
+
+                                  //In Android¡'s case we exit the app
+                                  if (Platform.isAndroid) {
+                                    SystemChannels.platform
+                                        .invokeMethod('SystemNavigator.pop');
+                                    //iOS doesn't allow apps to exit themselves so we go to AuthScreen
+                                  } else {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AuthScreen()),
+                                    );
+                                  }
+                                }
+                              } catch (_) {
+                                print('errpr trying to authenticate');
+                              }
+                            }
                           }
                         },
                         isSelected: false,
@@ -255,6 +287,9 @@ class _ContainerScreenState extends ConsumerState<ContainerScreen> {
                   ),
                 ],
               ),
+
+              //============================================================================================
+              //FOOTER
               Padding(
                 padding: EdgeInsets.only(
                     left: 10.0, bottom: SizeConfig.screenHeight * 0.12),
