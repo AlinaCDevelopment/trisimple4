@@ -115,4 +115,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String pendingEntranceDate(String dateTime) {
     return 'Data de Entrada: $dateTime ';
   }
+
+  @override
+  String get logoutTitle => 'Pretende Sair?';
+
+  @override
+  String get logoutContent => 'Confirme que não se encontram registos pendentes, que todos foram sincronizados. As configurações do evento e do equipamento vão ser eliminadas.';
+
+  @override
+  String get logoutConfirm => 'Sim, quero sair.';
 }

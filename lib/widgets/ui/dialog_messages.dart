@@ -361,7 +361,7 @@ class InputDialog extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Pretende Sair?",
+                          AppLocalizations.of(context).logoutTitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: const Color.fromARGB(255, 29, 29, 29)
@@ -371,12 +371,12 @@ class InputDialog extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.screenHeight * 0.02,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
                           child: Text(
-                            "Confirme que não se encontram registos pendentes, que todos foram sincronizados. As configurações do evento e do equipamento vão ser eliminadas.",
+                            AppLocalizations.of(context).logoutContent,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Color.fromARGB(115, 14, 14, 14),
                                 fontSize: 15),
                           ),
@@ -398,11 +398,11 @@ class InputDialog extends StatelessWidget {
                                   color: Color.fromARGB(115, 14, 14, 14),
                                   overflow: TextOverflow.clip),
                               decoration: InputDecoration(
-                                label: const FittedBox(
+                                label: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    'Insere a palavra-passe',
-                                    style: TextStyle(
+                                    AppLocalizations.of(context).passwordHint,
+                                    style: const TextStyle(
                                       fontSize: 15,
                                       color: Color.fromARGB(115, 14, 14, 14),
                                     ),
@@ -448,7 +448,7 @@ class InputDialog extends StatelessWidget {
                           child: ThemedButton(
                               onTap: () =>
                                   Navigator.pop(context, _controller.text),
-                              text: 'Sim, quero sair.'),
+                              text: AppLocalizations.of(context).logoutConfirm),
                         ),
                       ]),
                 ],
