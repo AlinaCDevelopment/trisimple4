@@ -1,11 +1,16 @@
 import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:app_4/models/database/evento.dart';
+import 'package:app_4/screens/auth_screen.dart';
 import '../../constants/assets_routes.dart';
 import '../../services/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../helpers/size_helper.dart';
 import '../../models/event_tag.dart';
+
+import '../themed_button.dart';
+import '../themed_input.dart';
 
 class ScanErrorMessage extends StatelessWidget {
   const ScanErrorMessage({this.message});
@@ -318,7 +323,7 @@ class InputDialog extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          title,
+                          "Pretende Sair?",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: const Color.fromARGB(255, 29, 29, 29)
@@ -328,33 +333,86 @@ class InputDialog extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.screenHeight * 0.02,
                         ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Text(
+                            "Confirme que não se encontram registos pendentes, que todos foram sincronizados. As configurações do evento e do equipamento vão ser eliminadas.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Color.fromARGB(115, 14, 14, 14),
+                                fontSize: 15),
+                          ),
+                        ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: FittedBox(
-                            child: Text(
-                              content,
-                              textAlign: TextAlign.center,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.screenWidth * 0.12,
+                              vertical: SizeConfig.screenWidth * 0.04),
+                          child: Material(
+                            elevation: 4.0,
+                            shadowColor: Colors.black,
+                            borderRadius: BorderRadius.circular(50),
+                            child: TextFormField(
+                              onChanged: (value) {
+                                Colors.amber;
+                              },
+                              obscureText: obscureText,
                               style: const TextStyle(
                                   color: Color.fromARGB(115, 14, 14, 14),
-                                  fontSize: 20),
+                                  overflow: TextOverflow.clip),
+                              decoration: InputDecoration(
+                                label: const FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'Insere a palavra-passe',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Color.fromARGB(115, 14, 14, 14),
+                                    ),
+                                  ),
+                                ),
+                                alignLabelWithHint: true,
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                focusColor: Colors.amber,
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
+                                border: InputBorder.none,
+                                filled: true,
+                                labelStyle: const TextStyle(
+                                    fontSize: 15, overflow: TextOverflow.clip),
+                                fillColor: Colors.white,
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    width: 0.1,
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    width: 0.1,
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                suffixIcon: Icon(
+                                  obscureText
+                                      ? Icons.visibility_outlined
+                                      : Icons.visibility_off_outlined,
+                                  color: Color.fromARGB(115, 14, 14, 14),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: SizeConfig.screenWidth * 0.12),
-                          child: TextFormField(
-                            controller: _controller,
-                            obscureText: obscureText,
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
+                          child: ThemedButton(
+                              onTap: () =>
+                                  Navigator.pop(context, _controller.text),
+                              text: 'Sim, quero sair.'),
                         ),
-                        ElevatedButton(
-                            onPressed: () =>
-                                Navigator.pop(context, _controller.text),
-                            child: Text('submit'))
                       ]),
                 ],
               ),
