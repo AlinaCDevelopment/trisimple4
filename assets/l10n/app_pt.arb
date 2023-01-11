@@ -48,5 +48,9 @@
 
 
     "noPendingData": "Sem data pendente",
-    "pendingEntranceDate" : "Data de Entrada: {dateTime} "
+    "pendingEntranceDate" : "Data de Entrada: {dateTime} ",
+    
+    "logoutTitle" : "Pretende Sair?",
+    "logoutContent" : "Confirme que não se encontram registos pendentes, que todos foram sincronizados. As configurações do evento e do equipamento vão ser eliminadas.",
+    "logoutConfirm" : "Sim, quero sair."
 }

@@ -308,6 +308,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Entrance date: {dateTime} '**
   String pendingEntranceDate(String dateTime);
+
+  /// No description provided for @logoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to logout?'**
+  String get logoutTitle;
+
+  /// No description provided for @logoutContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Check that there aren\'t any pending requests, that all have been sincronized. The configurations of the event and the equipment will be eliminated.'**
+  String get logoutContent;
+
+  /// No description provided for @logoutConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I want to logout.'**
+  String get logoutConfirm;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

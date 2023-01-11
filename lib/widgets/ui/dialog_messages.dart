@@ -384,8 +384,10 @@ class InputDialog extends StatelessWidget {
         child: Container(
             height: SizeConfig.screenHeight * 0.4,
             width: SizeConfig.screenWidth * 0.85,
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                  offset: Offset(5, 10), blurRadius: 80, color: Colors.grey)
+            ], color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
             child: Material(
               color: Colors.transparent,
               child: Stack(
@@ -409,11 +411,8 @@ class InputDialog extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                       PasswordInput(
-                        
-                       ),
                         Text(
-                          "Pretende Sair?",
+                          AppLocalizations.of(context).logoutTitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: const Color.fromARGB(255, 29, 29, 29)
@@ -423,10 +422,10 @@ class InputDialog extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.screenHeight * 0.02,
                         ),
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(horizontal: 30),
                           child: Text(
-                            "Confirme que não se encontram registos pendentes, que todos foram sincronizados. As configurações do evento e do equipamento vão ser eliminadas.",
+                            AppLocalizations.of(context).logoutContent,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Color.fromARGB(115, 14, 14, 14),
@@ -438,63 +437,12 @@ class InputDialog extends StatelessWidget {
                               horizontal: SizeConfig.screenWidth * 0.12,
                               vertical: SizeConfig.screenWidth * 0.04),
                           child: Material(
-                            elevation: 4.0,
-                            shadowColor: Colors.black,
-                            borderRadius: BorderRadius.circular(50),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                Colors.amber;
-                              },
-                              controller: _controller,
-                              obscureText: obscureText,
-                              style: const TextStyle(
-                                  color: Color.fromARGB(115, 14, 14, 14),
-                                  overflow: TextOverflow.clip),
-                              decoration: InputDecoration(
-                                label: const FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    'Insere a palavra-passe',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Color.fromARGB(115, 14, 14, 14),
-                                    ),
-                                  ),
-                                ),
-                                alignLabelWithHint: true,
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                focusColor: Colors.amber,
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 30),
-                                border: InputBorder.none,
-                                filled: true,
-                                labelStyle: const TextStyle(
-                                    fontSize: 15, overflow: TextOverflow.clip),
-                                fillColor: Colors.white,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    width: 0.1,
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    width: 0.1,
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                suffixIcon: Icon(
-                                  obscureText
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                  color: Color.fromARGB(115, 14, 14, 14),
-                                ),
-                              ),
-                            ),
-                          ),
+                              elevation: 4.0,
+                              shadowColor: Colors.black,
+                              borderRadius: BorderRadius.circular(50),
+                              child: PasswordInput(
+                                controller: _controller,
+                              )),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -502,7 +450,7 @@ class InputDialog extends StatelessWidget {
                           child: ThemedButton(
                               onTap: () =>
                                   Navigator.pop(context, _controller.text),
-                              text: 'Sim, quero sair.'),
+                              text: AppLocalizations.of(context).logoutConfirm),
                         ),
                       ]),
                 ],

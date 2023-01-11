@@ -115,4 +115,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String pendingEntranceDate(String dateTime) {
     return 'Entrance date: $dateTime ';
   }
+
+  @override
+  String get logoutTitle => 'Do you want to logout?';
+
+  @override
+  String get logoutContent => 'Check that there aren\'t any pending requests, that all have been sincronized. The configurations of the event and the equipment will be eliminated.';
+
+  @override
+  String get logoutConfirm => 'Yes, I want to logout.';
 }
