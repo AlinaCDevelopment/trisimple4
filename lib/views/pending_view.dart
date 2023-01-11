@@ -25,57 +25,58 @@ class _PendingViewState extends State<PendingView> {
       child: FutureBuilder<List<Map<String, Object?>>>(
           future: OfflineService.instance.getPending(),
           builder: (context, snapshot) {
-            /* if (snapshot.hasData && snapshot.data != null) {
+            if (snapshot.hasData && snapshot.data != null) {
               if (snapshot.data!.isEmpty) {
                 return Text(AppLocalizations.of(context).noPendingData);
-              } */
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: 1,
-                itemBuilder: (context, index) => ListTile(
-                      title: Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(70),
-                            margin: EdgeInsets.only(top: 0),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border:
-                                  Border.all(width: 15, color: Colors.white),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "4",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 80,
-                                    fontWeight: FontWeight.bold,
+              }
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: 1,
+                  itemBuilder: (context, index) => ListTile(
+                        title: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(70),
+                              margin: EdgeInsets.only(top: 0),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border:
+                                    Border.all(width: 15, color: Colors.white),
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "4",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 80,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  AppLocalizations.of(context).pendingText,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                  ),
-                                )
-                              ],
+                                  Text(
+                                    AppLocalizations.of(context).pendingText,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 70),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.screenWidth * 0.08),
-                            child: ThemedButton(
-                                onTap: () => Navigator.pop(context),
-                                text:
-                                    AppLocalizations.of(context).pendingButton),
-                          ),
-                        ],
-                      ),
-                    ));
-            /* return const SplashScreen(); */
+                            Container(
+                              margin: EdgeInsets.only(top: 70),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.screenWidth * 0.08),
+                              child: ThemedButton(
+                                  onTap: () => Navigator.pop(context),
+                                  text: AppLocalizations.of(context)
+                                      .pendingButton),
+                            ),
+                          ],
+                        ),
+                      ));
+            }
+            return const SplashScreen();
           }),
     );
   }
