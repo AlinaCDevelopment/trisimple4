@@ -7,19 +7,22 @@ import '../constants/colors.dart';
 class ThemedInput extends StatelessWidget {
   const ThemedInput(
       {super.key,
-      required this.onChanged,
+      this.onChanged,
+      this.controller,
       this.obscureText = false,
       required this.hintText,
       this.suffixIcon});
-  final Function(String value) onChanged;
+  final Function(String value)? onChanged;
   final bool obscureText;
   final String hintText;
   final Widget? suffixIcon;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       onChanged: onChanged,
+      controller: controller,
       obscureText: obscureText,
       style: const TextStyle(color: hintColor, overflow: TextOverflow.clip),
       decoration: InputDecoration(

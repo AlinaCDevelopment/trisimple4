@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../helpers/size_helper.dart';
 import '../../models/event_tag.dart';
+import '../themed_button.dart';
+import '../themed_password_input.dart';
 
 class ScanErrorMessage extends StatelessWidget {
   const ScanErrorMessage({this.message});
@@ -272,7 +274,7 @@ class MessageDialog extends StatelessWidget {
             )));
   }
 }
-
+/* 
 class InputDialog extends StatelessWidget {
   InputDialog(
       {super.key,
@@ -355,6 +357,153 @@ class InputDialog extends StatelessWidget {
                             onPressed: () =>
                                 Navigator.pop(context, _controller.text),
                             child: Text('submit'))
+                      ]),
+                ],
+              ),
+            )));
+  }
+}
+ */
+
+class InputDialog extends StatelessWidget {
+  InputDialog(
+      {super.key,
+      required this.title,
+      required this.content,
+      this.obscureText = false,
+      this.hideExit = false});
+  final String title;
+  final bool obscureText;
+  final String content;
+  final bool hideExit;
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Container(
+            height: SizeConfig.screenHeight * 0.4,
+            width: SizeConfig.screenWidth * 0.85,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
+            child: Material(
+              color: Colors.transparent,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  if (!hideExit)
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: GestureDetector(
+                        child: const Padding(
+                          padding: EdgeInsets.all(15.0),
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                    ),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                       PasswordInput(
+                        
+                       ),
+                        Text(
+                          "Pretende Sair?",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: const Color.fromARGB(255, 29, 29, 29)
+                                  .withOpacity(0.7),
+                              fontSize: 30),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.screenHeight * 0.02,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Text(
+                            "Confirme que não se encontram registos pendentes, que todos foram sincronizados. As configurações do evento e do equipamento vão ser eliminadas.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Color.fromARGB(115, 14, 14, 14),
+                                fontSize: 15),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.screenWidth * 0.12,
+                              vertical: SizeConfig.screenWidth * 0.04),
+                          child: Material(
+                            elevation: 4.0,
+                            shadowColor: Colors.black,
+                            borderRadius: BorderRadius.circular(50),
+                            child: TextFormField(
+                              onChanged: (value) {
+                                Colors.amber;
+                              },
+                              controller: _controller,
+                              obscureText: obscureText,
+                              style: const TextStyle(
+                                  color: Color.fromARGB(115, 14, 14, 14),
+                                  overflow: TextOverflow.clip),
+                              decoration: InputDecoration(
+                                label: const FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'Insere a palavra-passe',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Color.fromARGB(115, 14, 14, 14),
+                                    ),
+                                  ),
+                                ),
+                                alignLabelWithHint: true,
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                focusColor: Colors.amber,
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
+                                border: InputBorder.none,
+                                filled: true,
+                                labelStyle: const TextStyle(
+                                    fontSize: 15, overflow: TextOverflow.clip),
+                                fillColor: Colors.white,
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    width: 0.1,
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    width: 0.1,
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                suffixIcon: Icon(
+                                  obscureText
+                                      ? Icons.visibility_outlined
+                                      : Icons.visibility_off_outlined,
+                                  color: Color.fromARGB(115, 14, 14, 14),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.screenWidth * 0.12),
+                          child: ThemedButton(
+                              onTap: () =>
+                                  Navigator.pop(context, _controller.text),
+                              text: 'Sim, quero sair.'),
+                        ),
                       ]),
                 ],
               ),

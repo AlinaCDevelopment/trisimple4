@@ -2,6 +2,7 @@ import 'package:app_4/helpers/wifi_verification.dart';
 
 import '../services/database_service.dart';
 import '../services/l10n/app_localizations.dart';
+import '../widgets/themed_password_input.dart';
 import '../widgets/ui/dialog_messages.dart';
 import 'package:flutter/material.dart';
 
@@ -271,43 +272,6 @@ class _AuthFormState extends State<AuthForm> {
           inputSpacement,
           _buildSubmitButton(),
         ],
-      ),
-    );
-  }
-}
-
-class PasswordInput extends StatefulWidget {
-  const PasswordInput({
-    Key? key,
-    required this.onChanged,
-  }) : super(key: key);
-  final Function(String) onChanged;
-
-  @override
-  State<PasswordInput> createState() => _PasswordInputState();
-}
-
-class _PasswordInputState extends State<PasswordInput> {
-  var _isPasswordHidden = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return ThemedInput(
-      onChanged: widget.onChanged,
-      obscureText: _isPasswordHidden,
-      hintText: AppLocalizations.of(context).passwordHint,
-      suffixIcon: IconButton(
-        icon: Icon(
-          _isPasswordHidden
-              ? Icons.visibility_outlined
-              : Icons.visibility_off_outlined,
-          color: Theme.of(context).iconTheme.color,
-        ),
-        onPressed: () {
-          setState(() {
-            _isPasswordHidden = !_isPasswordHidden;
-          });
-        },
       ),
     );
   }
