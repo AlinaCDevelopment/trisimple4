@@ -52,5 +52,8 @@
     
     "logoutTitle" : "Pretende Sair?",
     "logoutContent" : "Confirme que não se encontram registos pendentes, que todos foram sincronizados. As configurações do evento e do equipamento vão ser eliminadas.",
-    "logoutConfirm" : "Sim, quero sair."
+    "logoutConfirm" : "Sim, quero sair.",
+
+    "pendingText" : "Existem registos por comunicar...",
+    "pendingButton" : "Comunicar pendentes"
 }

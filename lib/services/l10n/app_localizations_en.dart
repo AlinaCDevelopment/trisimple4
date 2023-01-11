@@ -124,4 +124,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logoutConfirm => 'Yes, I want to logout.';
+
+  @override
+  String get pendingText => 'There are pending requests to send...';
+
+  @override
+  String get pendingButton => 'Send Pending Requests';
 }

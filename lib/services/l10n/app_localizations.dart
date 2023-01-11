@@ -326,6 +326,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yes, I want to logout.'**
   String get logoutConfirm;
+
+  /// No description provided for @pendingText.
+  ///
+  /// In en, this message translates to:
+  /// **'There are pending requests to send...'**
+  String get pendingText;
+
+  /// No description provided for @pendingButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Pending Requests'**
+  String get pendingButton;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

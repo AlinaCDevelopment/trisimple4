@@ -124,4 +124,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get logoutConfirm => 'Sim, quero sair.';
+
+  @override
+  String get pendingText => 'Existem registos por comunicar...';
+
+  @override
+  String get pendingButton => 'Comunicar pendentes';
 }

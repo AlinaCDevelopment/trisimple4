@@ -54,7 +54,7 @@ class _PendingViewState extends State<PendingView> {
                                   ),
                                 ),
                                 Text(
-                                  "Existem registos por comunicar...",
+                                  AppLocalizations.of(context).pendingText,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 25,
@@ -69,7 +69,8 @@ class _PendingViewState extends State<PendingView> {
                                 horizontal: SizeConfig.screenWidth * 0.08),
                             child: ThemedButton(
                                 onTap: () => Navigator.pop(context),
-                                text: "Comunicar pendentes"),
+                                text:
+                                    AppLocalizations.of(context).pendingButton),
                           ),
                         ],
                       ),

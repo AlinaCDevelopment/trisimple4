@@ -64,6 +64,9 @@
     },
     "logoutTitle" : "Do you want to logout?",
     "logoutContent" : "Check that there aren't any pending requests, that all have been sincronized. The configurations of the event and the equipment will be eliminated.",
-    "logoutConfirm" : "Yes, I want to logout."
+    "logoutConfirm" : "Yes, I want to logout.",
+
+    "pendingText" : "There are pending requests to send...",
+    "pendingButton" : "Send Pending Requests"
 }
 
